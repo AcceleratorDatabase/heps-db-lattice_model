@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0" xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+  <persistence-unit name="modelAPIPU" transaction-type="RESOURCE_LOCAL">
+    <provider>org.eclipse.persistence.jpa.PersistenceProvider</provider>
+    <class>org.openepics.model.entity.BeamParameter</class>
+    <class>org.openepics.model.entity.BeamlineSequence</class>
+    <class>org.openepics.model.entity.Element</class>
+    <class>org.openepics.model.entity.ElementInstall</class>
+    <class>org.openepics.model.entity.ElementProp</class>
+    <class>org.openepics.model.entity.ElementType</class>
+    <class>org.openepics.model.entity.ElementTypeProp</class>
+    <class>org.openepics.model.entity.Gold</class>
+    <class>org.openepics.model.entity.Lattice</class>
+    <class>org.openepics.model.entity.MachineMode</class>
+    <class>org.openepics.model.entity.Model</class>
+    <class>org.openepics.model.entity.ModelCode</class>
+    <class>org.openepics.model.entity.ModelGeometry</class>
+    <class>org.openepics.model.entity.ModelLine</class>
+    <class>org.openepics.model.entity.GoldModel</class>
+    <class>org.openepics.model.entity.ElementInstallDevice</class>
+    <class>org.openepics.model.entity.GoldLattice</class>
+    <properties>
+      <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/model"/>
+      <property name="javax.persistence.jdbc.password" value="model_test"/>
+      <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
+      <property name="javax.persistence.jdbc.user" value="paul"/>
+      <property name="eclipselink.ddl-generation" value="create-tables"/>
+    </properties>
+  </persistence-unit>
+</persistence>
