@@ -383,7 +383,7 @@ public class ModelDB {
         
 //        x.setModelHeader("LINAC", "XAL", "DESIGN", "Test", "A database upload test");
         
-        List<Model> ml = x.getAllModelsForModelLineAndMachineMode("LINAC", "LIVE");
+        List<Model> ml = x.getAllModelsForModelLineAndMachineMode("LINAC", "DESIGN");
 //        List<Model> ml = x.getAllModelsForModelLine("LINAC");
         if (!ml.isEmpty()) {
             Iterator<Model> it = ml.iterator();

@@ -5,20 +5,18 @@
     <class>org.openepics.model.entity.BeamParameter</class>
     <class>org.openepics.model.entity.BeamlineSequence</class>
     <class>org.openepics.model.entity.Element</class>
-    <class>org.openepics.model.entity.ElementInstall</class>
+    <class>org.openepics.model.entity.ElementInstallDevice</class>
     <class>org.openepics.model.entity.ElementProp</class>
     <class>org.openepics.model.entity.ElementType</class>
     <class>org.openepics.model.entity.ElementTypeProp</class>
-    <class>org.openepics.model.entity.Gold</class>
+    <class>org.openepics.model.entity.GoldLattice</class>
+    <class>org.openepics.model.entity.GoldModel</class>
     <class>org.openepics.model.entity.Lattice</class>
     <class>org.openepics.model.entity.MachineMode</class>
     <class>org.openepics.model.entity.Model</class>
     <class>org.openepics.model.entity.ModelCode</class>
     <class>org.openepics.model.entity.ModelGeometry</class>
     <class>org.openepics.model.entity.ModelLine</class>
-    <class>org.openepics.model.entity.GoldModel</class>
-    <class>org.openepics.model.entity.ElementInstallDevice</class>
-    <class>org.openepics.model.entity.GoldLattice</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/model"/>
       <property name="javax.persistence.jdbc.password" value="model_test"/>
