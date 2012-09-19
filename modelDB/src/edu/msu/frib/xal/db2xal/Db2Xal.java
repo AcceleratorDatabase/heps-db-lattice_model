@@ -16,19 +16,7 @@ import org.openepics.model.entity.ElementTypeProp;
  */
 public class Db2Xal {
     
-    public void write2XDXF() {
-        StringBuilder sb = new StringBuilder("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
-            + "<!DOCTYPE xdxf SYSTEM \"xdxf.dtd\">\n");
-        sb.append("<xdxf date=\"");
-        Date date = new Date();
-        sb.append(date.toString());
-        sb.append("\" system=\"");
-        // TODO figure out the accelerator system name from DB
-        sb.append("accelerator\" ");
-        sb.append("ver=\"1.0.0\">\n");
-        
-        
-        
+    public void write2ModelParam() {
         
     }
     
@@ -56,6 +44,22 @@ public class Db2Xal {
         sb.append("</deviceMapping>\n");
         
         System.out.println(sb);
+    }
+    
+    public void write2XDXF() {
+        StringBuilder sb = new StringBuilder("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+            + "<!DOCTYPE xdxf SYSTEM \"xdxf.dtd\">\n");
+        sb.append("<xdxf date=\"");
+        Date date = new Date();
+        sb.append(date.toString());
+        sb.append("\" system=\"");
+        // TODO figure out the accelerator system name from DB
+        sb.append("accelerator\" ");
+        sb.append("ver=\"1.0.0\">\n");
+        
+        
+        
+        
     }
     
     /**

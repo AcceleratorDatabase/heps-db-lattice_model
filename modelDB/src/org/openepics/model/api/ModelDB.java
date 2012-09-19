@@ -368,6 +368,10 @@ public class ModelDB {
     public void setElement() {
         // TODO save an individual element's model data
         Element e = new Element();
+        Date date = new Date();
+        e.setInsertDate(date);
+        e.setBeamParameterCollection(null);
+        
     }
     
     
