@@ -162,7 +162,7 @@ public class ModelDB {
      */
     public List<ElementTypeProp> getAllElementClassMappings() {
         Query q;
-        q = em.createQuery("ElementTypeProp.findByElementTypePropName").setParameter("elementTypePropName", "XAL_class_mapping");
+        q = em.createNamedQuery("ElementTypeProp.findByElementTypePropName").setParameter("elementTypePropName", "XAL_class_mapping");
         List<ElementTypeProp> maps = q.getResultList();
         return maps;
     }

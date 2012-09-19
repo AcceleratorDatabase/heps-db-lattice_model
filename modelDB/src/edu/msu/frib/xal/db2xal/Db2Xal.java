@@ -54,13 +54,16 @@ public class Db2Xal {
         }
         
         sb.append("</deviceMapping>\n");
+        
+        System.out.println(sb);
     }
     
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-
+        Db2Xal x = new Db2Xal();
+        x.write2IMPL();
     }
     
 }
