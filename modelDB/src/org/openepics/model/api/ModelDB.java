@@ -11,6 +11,7 @@ import javax.persistence.*;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementType;
+import org.openepics.model.entity.ElementTypeProp;
 import org.openepics.model.entity.GoldLattice;
 import org.openepics.model.entity.Lattice;
 import org.openepics.model.entity.MachineMode;
@@ -136,6 +137,13 @@ public class ModelDB {
         return mList;        
     }
     
+    /**
+     * get all models with specified model line and machine mode
+     * 
+     * @param line model line name
+     * @param mode machine mode
+     * @return modes with specified model line and machine mode
+     */
     public List<Model> getAllModelsForModelLineAndMachineMode(String line, String mode) {
         Query q;
         q = em.createQuery("SELECT m FROM Model m JOIN m.latticeId l "
@@ -145,6 +153,18 @@ public class ModelDB {
         
         List<Model> mList = q.getResultList();
         return mList;
+    }
+    
+    /**
+     * get all element type to modeling class mappings
+     * 
+     * @return element type to model class mappings
+     */
+    public List<ElementTypeProp> getAllElementClassMappings() {
+        Query q;
+        q = em.createQuery("ElementTypeProp.findByElementTypePropName").setParameter("elementTypePropName", "XAL_class_mapping");
+        List<ElementTypeProp> maps = q.getResultList();
+        return maps;
     }
     
     /**

@@ -15,6 +15,11 @@ public class Db2Xal {
         sb.append("");
     }
     
+    public void write2IMPL() {
+        StringBuilder sb = new StringBuilder("");
+        sb.append("");        
+    }
+    
     /**
      * @param args the command line arguments
      */
