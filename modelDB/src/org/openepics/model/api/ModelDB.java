@@ -168,6 +168,20 @@ public class ModelDB {
     }
     
     /**
+     * get all elements within the specified sequence
+     * 
+     * @param seq sequence name
+     * @return elements within the specified sequence
+     */
+    public List<Element> getAllElementForSequence(String seq) {
+        Query q;
+        q = em.createQuery("SELECT e FROM Element e JOIN e.sequenceId s "
+                + "WHERE s.sequenceName = :sequenceName").setParameter("sequenceName", seq);
+        List<Element> eList = q.getResultList();
+        return eList;
+    }
+    
+    /**
      * Set a new element type
      * @param elem_type element type
      * @param elem_type_desc description for this element type
