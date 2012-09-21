@@ -98,9 +98,14 @@ public class Db2Xal {
                 sb.append(e.getS());
                 sb.append("\">\n");
                 // insert node attributes
+                if (!e.getElementTypeId().getElementType().equals("MARK") 
+                        && !e.getElementTypeId().getElementType().equals("marker")) {
+                    sb.append("         <attributes>\n");
+                    // TODO
+                    sb.append("         </attributes>\n");
+                }
                 
                 sb.append("      </node>\n");
-                        
             }
             
             // close the sequence
@@ -114,7 +119,13 @@ public class Db2Xal {
         sb.append("</xdxf>");
         
         System.out.println(sb);
-   }
+    }
+    
+    private List getAttributesForElement(String elm) {
+        List atts = null;
+        
+        return atts;
+    }
     
     /**
      * @param args the command line arguments

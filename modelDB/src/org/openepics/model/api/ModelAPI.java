@@ -45,6 +45,39 @@ public class ModelAPI {
     }
     
     /**
+     * Get all models for the specified model line
+     * 
+     * @param line model line name
+     * @return models for the specified model line
+     */
+    public static List<Model> getAllModelsForModelLine(String line) {
+        Query q;
+        q = em.createQuery("SELECT m FROM Model m JOIN m.latticeId l "
+                + "JOIN l.modelLineId ml WHERE ml.modelLineName = :lineName").setParameter("lineName", line);
+        List<Model> mList = q.getResultList();
+        
+        return mList;        
+    }
+    
+    /**
+     * get all models with specified model line and machine mode
+     * 
+     * @param line model line name
+     * @param mode machine mode
+     * @return modes with specified model line and machine mode
+     */
+    public static List<Model> getAllModelsForModelLineAndMachineMode(String line, String mode) {
+        Query q;
+        q = em.createQuery("SELECT m FROM Model m JOIN m.latticeId l "
+                + "WHERE "
+                + "l.modelLineId.modelLineName = :lineName "
+                + "AND l.machineModeId.machineModeName = :modeName").setParameter("lineName", line).setParameter("modeName", mode);
+        
+        List<Model> mList = q.getResultList();
+        return mList;
+    }
+    
+    /**
      * Set a new model information
      * 
      * @param model_line model line name

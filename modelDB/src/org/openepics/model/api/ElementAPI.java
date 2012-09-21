@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import org.openepics.model.entity.Element;
+import org.openepics.model.entity.ElementType;
 
 /**
  *
@@ -46,6 +47,20 @@ public class ElementAPI {
         e.setInsertDate(date);
 //        e.setBeamParameterCollection(null);
         
+    }
+    
+    /**
+     * Set a new element type
+     * @param elem_type element type
+     * @param elem_type_desc description for this element type
+     */
+    public static void setElementType(String elem_type, String elem_type_desc) {
+        ElementType et = new ElementType();
+        et.setElementType(elem_type);
+        et.setElementTypeDescription(elem_type_desc);
+        em.getTransaction().begin();
+        em.persist(et);
+        em.getTransaction().commit();
     }
     
     
