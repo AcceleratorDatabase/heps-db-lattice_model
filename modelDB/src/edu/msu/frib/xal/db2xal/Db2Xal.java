@@ -86,7 +86,20 @@ public class Db2Xal {
             while (eIt.hasNext()) {
                 Element e = eIt.next();
                 sb.append("      <node id=\"");
-                sb.append("");
+                sb.append(e.getElementName());
+                sb.append("\" type=\"");
+                sb.append(e.getElementTypeId().getElementType());
+                sb.append("\" pos=\"");
+                sb.append(e.getPos());
+                sb.append("\" len=\"");
+                sb.append(e.getLen());
+                sb.append("\" s=\"");
+                sb.append(e.getS());
+                sb.append("\">\n");
+                // insert node attributes
+                
+                sb.append("      </node>\n");
+                        
             }
             
             // close the sequence

@@ -384,7 +384,7 @@ public class ModelDB {
         Element e = new Element();
         Date date = new Date();
         e.setInsertDate(date);
-        e.setBeamParameterCollection(null);
+//        e.setBeamParameterCollection(null);
         
     }
     

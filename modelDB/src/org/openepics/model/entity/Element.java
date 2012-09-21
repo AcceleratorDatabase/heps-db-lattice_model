@@ -5,7 +5,6 @@
 package org.openepics.model.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import java.util.Date;
 import javax.persistence.Basic;
 import javax.persistence.Column;
@@ -17,16 +16,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author chu
+ * @author paul
  */
 @Entity
 @Table(name = "element")
@@ -45,7 +42,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Element.findByDz", query = "SELECT e FROM Element e WHERE e.dz = :dz"),
     @NamedQuery(name = "Element.findByPitch", query = "SELECT e FROM Element e WHERE e.pitch = :pitch"),
     @NamedQuery(name = "Element.findByYaw", query = "SELECT e FROM Element e WHERE e.yaw = :yaw"),
-    @NamedQuery(name = "Element.findByRoll", query = "SELECT e FROM Element e WHERE e.roll = :roll")})
+    @NamedQuery(name = "Element.findByRoll", query = "SELECT e FROM Element e WHERE e.roll = :roll"),
+    @NamedQuery(name = "Element.findByPos", query = "SELECT e FROM Element e WHERE e.pos = :pos")})
 public class Element implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -79,6 +77,8 @@ public class Element implements Serializable {
     private Double yaw;
     @Column(name = "roll")
     private Double roll;
+    @Column(name = "pos")
+    private Double pos;
     @JoinColumn(name = "sequence_id", referencedColumnName = "beamline_sequence_id")
     @ManyToOne
     private BeamlineSequence sequenceId;
@@ -88,12 +88,6 @@ public class Element implements Serializable {
     @JoinColumn(name = "element_type_id", referencedColumnName = "element_type_id")
     @ManyToOne
     private ElementType elementTypeId;
-    @OneToMany(mappedBy = "elementId")
-    private Collection<ElementInstallDevice> elementInstallDeviceCollection;
-    @OneToMany(mappedBy = "elementId")
-    private Collection<BeamParameter> beamParameterCollection;
-    @OneToMany(mappedBy = "elementId")
-    private Collection<ElementProp> elementPropCollection;
 
     public Element() {
     }
@@ -206,6 +200,14 @@ public class Element implements Serializable {
         this.roll = roll;
     }
 
+    public Double getPos() {
+        return pos;
+    }
+
+    public void setPos(Double pos) {
+        this.pos = pos;
+    }
+
     public BeamlineSequence getSequenceId() {
         return sequenceId;
     }
@@ -228,33 +230,6 @@ public class Element implements Serializable {
 
     public void setElementTypeId(ElementType elementTypeId) {
         this.elementTypeId = elementTypeId;
-    }
-
-    @XmlTransient
-    public Collection<ElementInstallDevice> getElementInstallDeviceCollection() {
-        return elementInstallDeviceCollection;
-    }
-
-    public void setElementInstallDeviceCollection(Collection<ElementInstallDevice> elementInstallDeviceCollection) {
-        this.elementInstallDeviceCollection = elementInstallDeviceCollection;
-    }
-
-    @XmlTransient
-    public Collection<BeamParameter> getBeamParameterCollection() {
-        return beamParameterCollection;
-    }
-
-    public void setBeamParameterCollection(Collection<BeamParameter> beamParameterCollection) {
-        this.beamParameterCollection = beamParameterCollection;
-    }
-
-    @XmlTransient
-    public Collection<ElementProp> getElementPropCollection() {
-        return elementPropCollection;
-    }
-
-    public void setElementPropCollection(Collection<ElementProp> elementPropCollection) {
-        this.elementPropCollection = elementPropCollection;
     }
 
     @Override
