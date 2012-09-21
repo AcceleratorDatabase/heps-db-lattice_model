@@ -101,6 +101,17 @@ public class Db2Xal {
                 if (!e.getElementTypeId().getElementType().equals("MARK") 
                         && !e.getElementTypeId().getElementType().equals("marker")) {
                     sb.append("         <attributes>\n");
+                    // for all magnets
+                    if (e.getElementTypeId().getElementType().equals("DH") ||
+                            e.getElementTypeId().getElementType().equals("DV") ||
+                            e.getElementTypeId().getElementType().equals("QH") ||
+                            e.getElementTypeId().getElementType().equals("QV") ||
+                            e.getElementTypeId().getElementType().equals("DCH") ||
+                            e.getElementTypeId().getElementType().equals("DCV") ) {
+                        sb.append("            <magnet>");
+                        
+                        sb.append("            </magnet>");
+                    }
                     // TODO
                     sb.append("         </attributes>\n");
                 }
