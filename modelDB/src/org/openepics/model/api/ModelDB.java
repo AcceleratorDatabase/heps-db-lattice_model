@@ -9,7 +9,6 @@ import java.util.Iterator;
 import java.util.List;
 import javax.persistence.*;
 import org.openepics.model.entity.BeamlineSequence;
-import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementType;
 import org.openepics.model.entity.ElementTypeProp;
 import org.openepics.model.entity.GoldLattice;
@@ -31,18 +30,6 @@ public class ModelDB {
     EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
-    
-    /**
-     * Get all accelerator sequences.
-     * @return all sequences
-     */
-    public List<BeamlineSequence> getAllSequences() {
-        Query q;
-        q = em.createNamedQuery("BeamlineSequence.findAll");
-        List<BeamlineSequence> seqList = q.getResultList();
-
-        return seqList;        
-    }
     
     /**
      * Set a new beamline sequence
@@ -68,24 +55,6 @@ public class ModelDB {
     }
     
     /**
-     * Get all modeling codes
-     * @return all modeling codes
-     */
-    public List<ModelCode> getAllModelCodes() {
-        Query q;
-        q = em.createNamedQuery("ModelCode.findAll");
-        List<ModelCode> codeList = q.getResultList();
-        
-        return codeList;
-    }
-    
-    public List<ModelCode> getAlgorithmsForModelCode(String code_name) {
-        Query q;
-        q = em.createNamedQuery("ModelCode.findByCodeName").setParameter("codeName", code_name);
-        return q.getResultList();
-    }
-    
-    /**
      * 
      * @param mode
      * @param line
@@ -107,21 +76,6 @@ public class ModelDB {
         }
     }
         
-    /**
-     * Get all models for the specified machine mode
-     * 
-     * @param mode machine mode name
-     * @return models for the specified machine mode
-     */
-    public List<Model> getAllModelsForMachineMode(String mode) {
-        Query q;
-        q = em.createQuery("SELECT m FROM Model m JOIN m.latticeId l "
-                + "JOIN l.machineModeId mm WHERE mm.machineModeName = :modeName").setParameter("modeName", mode);
-        List<Model> mList = q.getResultList();
-        
-        return mList;               
-    }
-    
     /**
      * Get all models for the specified model line
      * 
@@ -168,20 +122,6 @@ public class ModelDB {
     }
     
     /**
-     * get all elements within the specified sequence
-     * 
-     * @param seq sequence name
-     * @return elements within the specified sequence
-     */
-    public List<Element> getAllElementForSequence(String seq) {
-        Query q;
-        q = em.createQuery("SELECT e FROM Element e JOIN e.sequenceId s "
-                + "WHERE s.sequenceName = :sequenceName").setParameter("sequenceName", seq);
-        List<Element> eList = q.getResultList();
-        return eList;
-    }
-    
-    /**
      * Set a new element type
      * @param elem_type element type
      * @param elem_type_desc description for this element type
@@ -195,155 +135,6 @@ public class ModelDB {
         em.getTransaction().commit();
     }
     
-    /**
-     * Set a new machine mode in DB
-     * @param machine_mode_name machine mode name
-     * @param machine_mode_desc description for this machine mode
-     */
-    public void setMachineMode(String machine_mode_name, String machine_mode_desc) {
-        MachineMode mm = new MachineMode();
-        mm.setMachineModeName(machine_mode_name);
-        mm.setMachineModeDescription(machine_mode_desc);
-        em.getTransaction().begin();
-        em.persist(mm);
-        em.getTransaction().commit();
-    }
-    
-    /**
-     * Set a new model code in DB
-     * @param codeName model code name, e.g. XAL
-     * @param algorithm algorithm used, e.g. EnvelopeTracker
-     */
-    public void setModelCode(String codeName, String algorithm) {
-        ModelCode mc = new ModelCode();
-        mc.setCodeName(codeName);
-        mc.setAlgorithm(algorithm);
-        em.getTransaction().begin();
-        em.persist(mc);
-        em.getTransaction().commit();
-    }
-    
-    /**
-     * Set a new model geometry in DB
-     * @param model_geometry_name model geometry name
-     * @param model_geometry_desc description for this model geometry
-     */
-    public void setModelGeometry(String model_geometry_name, String model_geometry_desc) {
-        ModelGeometry mg = new ModelGeometry();
-        mg.setModelGeometryName(model_geometry_name);
-        mg.setModelGeometryDescription(model_geometry_desc);
-        em.getTransaction().begin();
-        em.persist(mg);
-        em.getTransaction().commit();
-    }
-    
-    /**
-     * Set a new model line in DB
-     * @param model_line_name model line's name
-     * @param model_line_desc description for this model line
-     * @param start_pos starting position for this model line
-     * @param end_pos ending position for this model line
-     * @param start_marker starting marker  name
-     * @param end_marker ending marker name
-     */
-    public void setModelLine(String model_line_name, String model_line_desc, 
-            double start_pos, double end_pos, String start_marker, String end_marker) {
-        ModelLine ml = new ModelLine();
-        ml.setModelLineName(model_line_name);
-        ml.setModelLineDescription(model_line_desc);
-        ml.setStartPosition(start_pos);
-        ml.setEndPosition(end_pos);
-        ml.setStartMarker(start_marker);
-        ml.setEndMarker(end_marker);
-        em.getTransaction().begin();
-        em.persist(ml);
-        em.getTransaction().commit();
-    }
-    
-    /**
-     * Set a new model information
-     * 
-     * @param model_line model line name
-     * @param model_code code used 
-     * @param machine_mode machine mode for this model
-     * @param model_name a name for this model
-     * @param model_desc description for this model
-     */
-    public void setModelHeader(String model_line, String model_code, String machine_mode, 
-            String model_name, String model_desc) {
-
-        Model m = new Model();
-
-        Query q;
-        
-        // check if such lattice exists
-        q = em.createNativeQuery("SELECT l.Lattice_Id FROM Lattice l, Model_Line ml, Machine_Mode mm "
-                + "WHERE l.model_Line_Id=ml.model_Line_Id AND l.machine_Mode_Id=mm.machine_Mode_Id "
-                + "AND ml.model_Line_Name=\"" + model_line + "\" AND mm.machine_Mode_Name=\"" 
-                + machine_mode + "\"");
-        q.setParameter("modelLineName", model_line);
-        q.setParameter("machineModeName", machine_mode);
-        List<Integer> lattices = q.getResultList();
-        // check if the specified lattice exists
-        if (lattices.isEmpty()) {
-            Lattice l = new Lattice();
-            // check if the specified model_line exists
-            q = em.createNamedQuery("ModelLine.findByModelLineName").setParameter("modelLineName", model_line);
-            // if the model_line exists, use it; otherwise, create a new model_line
-            List<ModelLine> mlList = q.getResultList();
-            if (mlList.isEmpty()) {
-                ModelLine ml = new ModelLine();
-                ml.setModelLineName(model_line);
-                em.persist(ml);
-              
-                l.setModelLineId(ml);
-            } else {
-                l.setModelLineId(mlList.get(0));
-            }
-            
-            
-            // check if the machine_mode exists
-            q = em.createNamedQuery("MachineMode.findByMachineModeName").setParameter("machineModeName", machine_mode);
-            // if the model_line exists, use it; otherwise, create a new model_line
-            List<MachineMode> mmList = q.getResultList();
-            if (mmList.isEmpty()) {
-                MachineMode mm = new MachineMode();
-                mm.setMachineModeName(machine_mode);
-                em.persist(mm);
-                l.setMachineModeId(mm);
-            } else {
-                l.setMachineModeId(mmList.get(0));
-            } 
-            em.persist(l);
-            m.setLatticeId(l);
-        } else {
-            q = em.createNamedQuery("Lattice.findByLatticeId").setParameter("latticeId", lattices.get(0));
-            m.setLatticeId((Lattice) q.getResultList().get(0));
-        }
-               
-        // check if the specified model_code exists
-        q = em.createNamedQuery("ModelCode.findByCodeName").setParameter("codeName", model_code);
-        List<ModelCode> mcList = q.getResultList();
-        if (mcList.size() > 0) {
-            ModelCode mc = (ModelCode) q.getResultList().get(0);
-            m.setModelCodeId(mc);
-        }
-        else {
-            // create new model_code
-            ModelCode mc = new ModelCode();
-            mc.setCodeName(model_code);
-            em.persist(mc);
-            m.setModelCodeId(mc);
-        }
-        
-        m.setModelName(model_name);
-        m.setModelDesc(model_desc);
-        m.setCreatedBy(System.getProperty("user.name"));
-        m.setCreateDate(new Date());
-        em.getTransaction().begin();
-        em.persist(m);
-        em.getTransaction().commit();
-    }
     
     /**
      * Tag a Lattice as Gold
@@ -379,15 +170,6 @@ public class ModelDB {
         em.getTransaction().commit();
     }
     
-    public void setElement() {
-        // TODO save an individual element's model data
-        Element e = new Element();
-        Date date = new Date();
-        e.setInsertDate(date);
-//        e.setBeamParameterCollection(null);
-        
-    }
-    
     
     public void saveModelData() {
         // TODO save model output data
@@ -402,7 +184,7 @@ public class ModelDB {
      */
     public static void main(String[] args) {
         ModelDB x = new ModelDB();
-        List seqs = x.getAllSequences();
+        List seqs = BeamlineSequenceAPI.getAllSequences();
         System.out.println("There are " + seqs.size() + " sequences.");
         
 //        x.setModelCode("XAL", "EnvelopeTracker");
@@ -412,14 +194,14 @@ public class ModelDB {
 
 //        x.setElementType("SH", "horizontal sextupole");
           
-//        x.setMachineMode("USER", "user defined model");
+//        MachineModeAPI.setMachineMode("USER", "user defined model");
                   
 //        List<ModelCode> mcList = x.getAllModelCodes();
 //        System.out.println("There are " + mcList.size() + " mode codes.");
         
 //        System.out.println("1st XAL algorithm: " + x.getAlgorithmsForModelCode("XAL").get(0).getAlgorithm());
         
-//        x.setModelHeader("LINAC", "XAL", "DESIGN", "Test", "A database upload test");
+//        ModelAPI.setModelHeader("LINAC", "XAL", "DESIGN", "Test", "A database upload test");
         
         List<Model> ml = x.getAllModelsForModelLineAndMachineMode("LINAC", "DESIGN");
 //        List<Model> ml = x.getAllModelsForModelLine("LINAC");

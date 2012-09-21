@@ -7,6 +7,8 @@ package edu.msu.frib.xal.db2xal;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
+import org.openepics.model.api.BeamlineSequenceAPI;
+import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ModelDB;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
@@ -62,8 +64,7 @@ public class Db2Xal {
         // TODO set up combo sequences
         
         // get all sequences
-        ModelDB mdb = new ModelDB();
-        List<BeamlineSequence> blsList = mdb.getAllSequences();
+        List<BeamlineSequence> blsList = BeamlineSequenceAPI.getAllSequences();
         Iterator<BeamlineSequence> blsIt = blsList.iterator();
         
         // loop through each sequence
@@ -81,7 +82,7 @@ public class Db2Xal {
             sb.append("      </attributes>\n");
             
             // loop through each node
-            List<Element> eList = mdb.getAllElementForSequence(bls.getSequenceName());
+            List<Element> eList = ElementAPI.getAllElementForSequence(bls.getSequenceName());
             Iterator<Element> eIt = eList.iterator();
             while (eIt.hasNext()) {
                 Element e = eIt.next();
