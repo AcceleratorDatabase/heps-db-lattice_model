@@ -40,7 +40,7 @@ public class ElementAPI {
         return eList;
     }
     
-    public void setElement() {
+    public void setElement(double len, double s, double dx, double dy, double dz) {
         // TODO save an individual element's model data
         Element e = new Element();
         Date date = new Date();

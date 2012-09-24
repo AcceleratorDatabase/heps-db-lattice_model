@@ -8,6 +8,6 @@ package org.openepics.model.api;
  *
  * @author chu
  */
-public class ElementProp {
+public class ElementPropAPI {
     
 }
