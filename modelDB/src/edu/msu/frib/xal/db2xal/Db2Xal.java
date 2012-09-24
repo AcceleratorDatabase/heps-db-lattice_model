@@ -98,8 +98,13 @@ public class Db2Xal {
                 sb.append(e.getS());
                 sb.append("\">\n");
                 // insert node attributes
-                if (!e.getElementTypeId().getElementType().equals("MARK") 
-                        && !e.getElementTypeId().getElementType().equals("marker")) {
+                if (e.getElementTypeId().getElementType().equals("DH") ||
+                            e.getElementTypeId().getElementType().equals("DV") ||
+                            e.getElementTypeId().getElementType().equals("QH") ||
+                            e.getElementTypeId().getElementType().equals("QV") ||
+                            e.getElementTypeId().getElementType().equals("DCH") ||
+                            e.getElementTypeId().getElementType().equals("DCV") ||
+                            e.getElementTypeId().getElementType().equals("BPM") ) {
                     sb.append("         <attributes>\n");
                     // for all magnets
                     if (e.getElementTypeId().getElementType().equals("DH") ||
@@ -108,9 +113,9 @@ public class Db2Xal {
                             e.getElementTypeId().getElementType().equals("QV") ||
                             e.getElementTypeId().getElementType().equals("DCH") ||
                             e.getElementTypeId().getElementType().equals("DCV") ) {
-                        sb.append("            <magnet>");
+                        sb.append("            <magnet>\n");
                         
-                        sb.append("            </magnet>");
+                        sb.append("            </magnet>\n");
                     }
                     // TODO
                     sb.append("         </attributes>\n");

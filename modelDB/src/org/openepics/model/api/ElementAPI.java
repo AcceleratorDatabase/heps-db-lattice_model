@@ -40,11 +40,31 @@ public class ElementAPI {
         return eList;
     }
     
-    public void setElement(double len, double s, double dx, double dy, double dz) {
+    /**
+     * 
+     * @param s
+     * @param len
+     * @param dx
+     * @param dy
+     * @param dz
+     * @param pitch
+     * @param yaw
+     * @param roll
+     * @param pos 
+     */
+    public void setElement(double s, double len, double dx, double dy, double dz, double pitch, double yaw, double roll, double pos) {
         // TODO save an individual element's model data
         Element e = new Element();
         Date date = new Date();
         e.setInsertDate(date);
+        e.setCreatedBy(System.getProperty("user.name"));
+        e.setDx(dx);
+        e.setDy(dy);
+        e.setDz(dz);
+        e.setPitch(pitch);
+        e.setYaw(yaw);
+        e.setRoll(roll);
+        e.setPos(pos);
 //        e.setBeamParameterCollection(null);
         
     }
