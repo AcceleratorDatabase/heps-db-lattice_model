@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -118,21 +119,86 @@ public class Db2Xal {
                             e.getElementTypeId().getElementType().equals("QV") ||
                             e.getElementTypeId().getElementType().equals("DCH") ||
                             e.getElementTypeId().getElementType().equals("DCV") ||
+                            e.getElementTypeId().getElementType().equals("QHE") ||
+                            e.getElementTypeId().getElementType().equals("QVE") ||
                             e.getElementTypeId().getElementType().equals("BPM") ||
+                            e.getElementTypeId().getElementType().equals("WS") ||
                             e.getElementTypeId().getElementType().equals("RG")) {
                     sb.append("         <attributes>\n");
+                    
+                    // set alignment data
+                    if (e.getElementTypeId().getElementType().equals("DH") ||
+                            e.getElementTypeId().getElementType().equals("DV") ||
+                            e.getElementTypeId().getElementType().equals("QH") ||
+                            e.getElementTypeId().getElementType().equals("QV") ||
+                            e.getElementTypeId().getElementType().equals("QHE") ||
+                            e.getElementTypeId().getElementType().equals("QVE") ||
+                            e.getElementTypeId().getElementType().equals("DCH") ||
+                            e.getElementTypeId().getElementType().equals("DCV") ||
+                            e.getElementTypeId().getElementType().equals("BPM")) {
+                                               
+                        sb.append("            <align ");
+                        Map attMap = getAlignmentAttributesForElement(e.getElementName());
+                        Set keySet = attMap.keySet();
+                        Iterator<String> keyIt = keySet.iterator();
+                        while (keyIt.hasNext()) {
+                            String key = keyIt.next();
+                            sb.append(key);
+                            sb.append("=\"");
+                            sb.append(attMap.get(key));
+                            sb.append("\" ");
+                        }
+                                                
+                        sb.append("/>\n");
+                    }
+                    // set apertures
+                    if (e.getElementTypeId().getElementType().equals("DH") ||
+                            e.getElementTypeId().getElementType().equals("DV") ||
+                            e.getElementTypeId().getElementType().equals("QH") ||
+                            e.getElementTypeId().getElementType().equals("QV") ||
+                            e.getElementTypeId().getElementType().equals("QHE") ||
+                            e.getElementTypeId().getElementType().equals("QVE") ||
+                            e.getElementTypeId().getElementType().equals("DCH") ||
+                            e.getElementTypeId().getElementType().equals("DCV") ) {
+                        
+                        sb.append("            <aperture ");
+                        Map attMap = getApertureAttributesForElement(e.getElementName());
+                        Set keySet = attMap.keySet();
+                        Iterator<String> keyIt = keySet.iterator();
+                        while (keyIt.hasNext()) {
+                            String key = keyIt.next();
+                            sb.append(key);
+                            sb.append("=\"");
+                            sb.append(attMap.get(key));
+                            sb.append("\" ");
+                        }
+                                                
+                        sb.append("/>\n");
+                    }
+                    
                     // for all magnets
                     if (e.getElementTypeId().getElementType().equals("DH") ||
                             e.getElementTypeId().getElementType().equals("DV") ||
                             e.getElementTypeId().getElementType().equals("QH") ||
                             e.getElementTypeId().getElementType().equals("QV") ||
+                            e.getElementTypeId().getElementType().equals("QHE") ||
+                            e.getElementTypeId().getElementType().equals("QVE") ||
                             e.getElementTypeId().getElementType().equals("DCH") ||
                             e.getElementTypeId().getElementType().equals("DCV") ) {
-                        Map attMap = getAttributesForElement(e.getElementName());
                         
-                        sb.append("            <magnet>\n");
+                        sb.append("            <magnet ");
+                        Map attMap = getMagnetAttributesForElement(e.getElementName());
+                        Set keySet = attMap.keySet();
+                        Iterator<String> keyIt = keySet.iterator();
+                        while (keyIt.hasNext()) {
+                            String key = keyIt.next();
+                            sb.append(key);
+                            sb.append("=\"");
+                            sb.append(attMap.get(key));
+                            sb.append("\" ");
+                        }
                         
-                        sb.append("            </magnet>\n");
+                        sb.append("/>\n");
                     }
                     // TODO
                     sb.append("         </attributes>\n");
@@ -156,23 +222,69 @@ public class Db2Xal {
         System.out.println(sb);
     }
     
-    private Map getAttributesForElement(String elm) {
+    private Map getMagnetAttributesForElement(String elm) {
         HashMap<String, Object> atts = new HashMap<>();
         
         Query q;
-        q = em.createQuery("SELECT ep from ElementProp ep WHERE ep.elementId.elementName = :elementname")
+        q = em.createQuery("SELECT ep from ElementProp ep WHERE ep.elementId.elementName = :elementname AND ep.propCategory = \"magnet\"")
                 .setParameter("elementname", elm);
         List<ElementProp> attrList = q.getResultList();
         
         Iterator<ElementProp> it = attrList.iterator();
         while (it.hasNext()) {
             ElementProp ep = it.next();
-            atts.put(ep.getElementPropName(), ep.getElementPropDouble());
+            if (ep.getElementPropDouble() != null) {
+                atts.put(ep.getElementPropName(), ep.getElementPropDouble());
+            }
+            if (ep.getElementPropInt() != null) {
+                atts.put(ep.getElementPropName(), ep.getElementPropInt());
+            }
+            if (ep.getElementPropString() != null) {
+                atts.put(ep.getElementPropName(), ep.getElementPropString());
+            }
         }
         
         return atts;
     }
     
+    private Map getApertureAttributesForElement(String elm) {
+        HashMap<String, Object> atts = new HashMap<>();
+        
+        Query q;
+        q = em.createQuery("SELECT ep from ElementProp ep WHERE ep.elementId.elementName = :elementname AND ep.propCategory = \"aperture\"")
+                .setParameter("elementname", elm);
+        List<ElementProp> attrList = q.getResultList();
+        
+        Iterator<ElementProp> it = attrList.iterator();
+        while (it.hasNext()) {
+            ElementProp ep = it.next();
+            if (ep.getElementPropDouble() != null) {
+                atts.put(ep.getElementPropName(), ep.getElementPropDouble());
+            }
+        }
+        
+        return atts;
+    }
+    
+    private Map getAlignmentAttributesForElement(String elm) {
+        HashMap<String, Object> atts = new HashMap<>();
+        
+        Query q;
+        q = em.createQuery("SELECT ep from ElementProp ep WHERE ep.elementId.elementName = :elementname AND ep.propCategory = \"align\"")
+                .setParameter("elementname", elm);
+        List<ElementProp> attrList = q.getResultList();
+        
+        Iterator<ElementProp> it = attrList.iterator();
+        while (it.hasNext()) {
+            ElementProp ep = it.next();
+            if (ep.getElementPropDouble() != null) {
+                atts.put(ep.getElementPropName(), ep.getElementPropDouble());
+            }
+        }
+        
+        return atts;
+    }
+        
     /**
      * @param args the command line arguments
      */
