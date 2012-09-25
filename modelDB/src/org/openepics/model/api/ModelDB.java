@@ -4,20 +4,11 @@
  */
 package org.openepics.model.api;
 
-import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import javax.persistence.*;
-import org.openepics.model.entity.BeamlineSequence;
-import org.openepics.model.entity.ElementType;
 import org.openepics.model.entity.ElementTypeProp;
-import org.openepics.model.entity.GoldLattice;
-import org.openepics.model.entity.Lattice;
-import org.openepics.model.entity.MachineMode;
 import org.openepics.model.entity.Model;
-import org.openepics.model.entity.ModelCode;
-import org.openepics.model.entity.ModelGeometry;
-import org.openepics.model.entity.ModelLine;
 
 /**
  *

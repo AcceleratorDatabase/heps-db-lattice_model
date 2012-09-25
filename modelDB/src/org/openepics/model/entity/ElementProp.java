@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author chu
+ * @author paul
  */
 @Entity
 @Table(name = "element_prop")
@@ -31,7 +31,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ElementProp.findByElementPropString", query = "SELECT e FROM ElementProp e WHERE e.elementPropString = :elementPropString"),
     @NamedQuery(name = "ElementProp.findByElementPropInt", query = "SELECT e FROM ElementProp e WHERE e.elementPropInt = :elementPropInt"),
     @NamedQuery(name = "ElementProp.findByElementPropDouble", query = "SELECT e FROM ElementProp e WHERE e.elementPropDouble = :elementPropDouble"),
-    @NamedQuery(name = "ElementProp.findByElementPropIndex", query = "SELECT e FROM ElementProp e WHERE e.elementPropIndex = :elementPropIndex")})
+    @NamedQuery(name = "ElementProp.findByElementPropIndex", query = "SELECT e FROM ElementProp e WHERE e.elementPropIndex = :elementPropIndex"),
+    @NamedQuery(name = "ElementProp.findByPropCategory", query = "SELECT e FROM ElementProp e WHERE e.propCategory = :propCategory"),
+    @NamedQuery(name = "ElementProp.findByElementPropName", query = "SELECT e FROM ElementProp e WHERE e.elementPropName = :elementPropName")})
 public class ElementProp implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -48,6 +50,10 @@ public class ElementProp implements Serializable {
     private Double elementPropDouble;
     @Column(name = "element_prop_index")
     private Integer elementPropIndex;
+    @Column(name = "prop_category")
+    private String propCategory;
+    @Column(name = "element_prop_name")
+    private String elementPropName;
     @JoinColumn(name = "element_type_prop_id", referencedColumnName = "element_type_prop_id")
     @ManyToOne
     private ElementTypeProp elementTypePropId;
@@ -100,6 +106,22 @@ public class ElementProp implements Serializable {
 
     public void setElementPropIndex(Integer elementPropIndex) {
         this.elementPropIndex = elementPropIndex;
+    }
+
+    public String getPropCategory() {
+        return propCategory;
+    }
+
+    public void setPropCategory(String propCategory) {
+        this.propCategory = propCategory;
+    }
+
+    public String getElementPropName() {
+        return elementPropName;
+    }
+
+    public void setElementPropName(String elementPropName) {
+        this.elementPropName = elementPropName;
     }
 
     public ElementTypeProp getElementTypePropId() {

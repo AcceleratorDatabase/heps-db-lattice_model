@@ -5,13 +5,22 @@
 package edu.msu.frib.xal.db2xal;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceUnit;
+import javax.persistence.Query;
 import org.openepics.model.api.BeamlineSequenceAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ModelDB;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
+import org.openepics.model.entity.ElementProp;
 import org.openepics.model.entity.ElementTypeProp;
 
 /**
@@ -19,7 +28,12 @@ import org.openepics.model.entity.ElementTypeProp;
  * @author chu
  */
 public class Db2Xal {
-    
+    @PersistenceUnit
+    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
+    EntityManager em = emf.createEntityManager();
+
+    @PersistenceContext
+        
     public void write2ModelParam() {
         
     }
@@ -104,7 +118,8 @@ public class Db2Xal {
                             e.getElementTypeId().getElementType().equals("QV") ||
                             e.getElementTypeId().getElementType().equals("DCH") ||
                             e.getElementTypeId().getElementType().equals("DCV") ||
-                            e.getElementTypeId().getElementType().equals("BPM") ) {
+                            e.getElementTypeId().getElementType().equals("BPM") ||
+                            e.getElementTypeId().getElementType().equals("RG")) {
                     sb.append("         <attributes>\n");
                     // for all magnets
                     if (e.getElementTypeId().getElementType().equals("DH") ||
@@ -113,6 +128,8 @@ public class Db2Xal {
                             e.getElementTypeId().getElementType().equals("QV") ||
                             e.getElementTypeId().getElementType().equals("DCH") ||
                             e.getElementTypeId().getElementType().equals("DCV") ) {
+                        Map attMap = getAttributesForElement(e.getElementName());
+                        
                         sb.append("            <magnet>\n");
                         
                         sb.append("            </magnet>\n");
@@ -129,7 +146,9 @@ public class Db2Xal {
         }
         
         // TODO for power supplies
+        sb.append("   <powersupplies>\n");
         
+        sb.append("   </powersupplies>\n");
         
         // close
         sb.append("</xdxf>");
@@ -137,8 +156,19 @@ public class Db2Xal {
         System.out.println(sb);
     }
     
-    private List getAttributesForElement(String elm) {
-        List atts = null;
+    private Map getAttributesForElement(String elm) {
+        HashMap<String, Object> atts = new HashMap<>();
+        
+        Query q;
+        q = em.createQuery("SELECT ep from ElementProp ep WHERE ep.elementId.elementName = :elementname")
+                .setParameter("elementname", elm);
+        List<ElementProp> attrList = q.getResultList();
+        
+        Iterator<ElementProp> it = attrList.iterator();
+        while (it.hasNext()) {
+            ElementProp ep = it.next();
+            atts.put(ep.getElementPropName(), ep.getElementPropDouble());
+        }
         
         return atts;
     }
