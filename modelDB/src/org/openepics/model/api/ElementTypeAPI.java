@@ -29,10 +29,10 @@ public class ElementTypeAPI {
      * Get all element types.
      * @return all element types
      */
-    public static List<BeamlineSequence> getAllElementTypes() {
+    public static List<ElementType> getAllElementTypes() {
         Query q;
         q = em.createNamedQuery("ElementType.findAll");
-        List<BeamlineSequence> typeList = q.getResultList();
+        List<ElementType> typeList = q.getResultList();
 
         return typeList;        
     }
