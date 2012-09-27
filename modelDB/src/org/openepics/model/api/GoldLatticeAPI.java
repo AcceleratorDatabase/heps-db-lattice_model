@@ -35,8 +35,8 @@ public class GoldLatticeAPI {
     public static GoldLattice getGoldLatticeForMachineModeAndModelLine(String mode, String line) {
         Query q;
         q = em.createQuery("SELECT g FROM Gold g WHERE "
-                + "g.modelLineId.modelLineName = :lineName "
-                + "AND g.machineModeId.machineModeName = :modeName "
+                + "g.latticeId.modelLineId.modelLineName = :lineName "
+                + "AND g.latticeId.machineModeId.machineModeName = :modeName "
                 + "AND g.goldStatusInd = :gind").setParameter("lineName", line)
                 .setParameter("modeName", mode).setParameter("gind", GoldLattice.PRESENT); 
         List<GoldLattice> gmList = q.getResultList();
@@ -44,6 +44,9 @@ public class GoldLatticeAPI {
             return null;
         }
         else { 
+            if (gmList.size() > 1) {
+                System.out.println("Warning: there are more than 1 Gold Lattice for the specified model line and machine mode combination!");
+            }
             return gmList.get(0);   
         }
     }
@@ -53,7 +56,7 @@ public class GoldLatticeAPI {
      * 
      * @param l the Lattice to be tagged as Gold
      */
-    public void setGoldLattice(Lattice l) {
+    public static void setGoldLattice(Lattice l) {
         GoldLattice gl = new GoldLattice();
         Date date = new Date();
         gl.setCreateDate(date);
@@ -82,4 +85,14 @@ public class GoldLatticeAPI {
         em.getTransaction().commit();
     }   
     
+    /**
+     * Tag a Gold lattice by lattice ID
+     * @param latticeId 
+     */
+    public static void setGoldLattice(int latticeId) {
+        Query q;
+        q = em.createNamedQuery("Lattice.findByLatticeId").setParameter("latticeId", latticeId);
+        Lattice lat = (Lattice) q.getResultList().get(0);
+        setGoldLattice(lat);
+    }
 }

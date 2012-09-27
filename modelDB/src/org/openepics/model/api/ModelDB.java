@@ -68,7 +68,7 @@ public class ModelDB {
         
 //        ModelAPI.setModelHeader("LINAC", "XAL", "DESIGN", "Test", "A database upload test");
         
-        List<Model> ml = ModelAPI.getAllModelsForModelLineAndMachineMode("LINAC", "DESIGN");
+        List<Model> ml = ModelAPI.getAllModelsForModelLineAndMachineMode("LINAC", "LIVE");
 //        List<Model> ml = x.getAllModelsForModelLine("LINAC");
         if (!ml.isEmpty()) {
             Iterator<Model> it = ml.iterator();

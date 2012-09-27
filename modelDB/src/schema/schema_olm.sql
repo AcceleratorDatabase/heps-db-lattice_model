@@ -327,6 +327,7 @@ CREATE  TABLE IF NOT EXISTS `model`.`element_prop` (
   `element_prop_int` INT(11) NULL DEFAULT NULL ,
   `element_prop_double` DOUBLE NULL DEFAULT NULL ,
   `element_prop_index` INT(11) NULL DEFAULT NULL ,
+  `prop_category` VARCHAR(45) NULL ,
   `element_prop_name` VARCHAR(45) NULL ,
   PRIMARY KEY (`element_prop_id`) ,
   INDEX `FK_element_id_idx` (`element_id` ASC) ,
@@ -353,6 +354,7 @@ CREATE  TABLE IF NOT EXISTS `model`.`gold_lattice` (
   `updated_by` VARCHAR(45) NULL DEFAULT NULL ,
   `update_date` DATETIME NULL DEFAULT NULL ,
   `gold_status_ind` INT(11) NULL DEFAULT NULL ,
+  `created_by` VARCHAR(45) NULL ,
   PRIMARY KEY (`gold_id`) ,
   INDEX `FK_gold_lattice_id_idx` (`lattice_id` ASC) ,
   CONSTRAINT `FK_gold_lattice_lattice_id`
