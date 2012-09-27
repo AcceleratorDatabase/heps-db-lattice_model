@@ -30,6 +30,19 @@ public class ModelAPI {
     @PersistenceContext
     
     /**
+     * get all models
+     * 
+     * @return all models
+     */
+    public List<Model> getAllModels() {
+         final Query q = em.createNamedQuery("Model.findAll");
+         List<Model> mc = q.getResultList();
+        
+        return mc;
+       
+    }
+    
+    /**
      * Get all models for the specified machine mode
      * 
      * @param mode machine mode name

@@ -48,6 +48,19 @@ public class ModelCodeAPI {
     }
     
     /**
+     * get all models run with the specific model code
+     * @param name model code name
+     * @return all models run with this model code
+     */
+    public static List<ModelCode> getAllModelCodesWithName(String name) {
+        final Query q = em.createNamedQuery("ModelCode.findByCodeName");
+        q.setParameter("codeName", name);
+        List<ModelCode> mc = q.getResultList();
+        
+        return mc;
+    }
+    
+    /**
      * Set a new model code in DB
      * @param codeName model code name, e.g. XAL
      * @param algorithm algorithm used, e.g. EnvelopeTracker
