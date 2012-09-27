@@ -13,6 +13,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import org.openepics.model.entity.Element;
+import org.openepics.model.entity.ElementProp;
 import org.openepics.model.entity.ElementType;
 
 /**
@@ -38,6 +39,19 @@ public class ElementAPI {
                 + "WHERE s.sequenceName = :sequenceName").setParameter("sequenceName", seq);
         List<Element> eList = q.getResultList();
         return eList;
+    }
+    
+    /**
+     * get all properties for the specified element
+     * @param elementName element name
+     * @return all properties for the specified element
+     */
+    public static List<ElementProp> getAllPropertiesForElement(String elementName) {
+        Query q;
+        q = em.createQuery("SELECT ep FROM ElementProp ep JOIN ep.elementId e "
+                + "WHERE e.elementName = :elementName").setParameter("elementName", elementName);
+        List<ElementProp> epList = q.getResultList();
+        return epList;
     }
     
     /**

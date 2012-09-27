@@ -112,57 +112,17 @@ public class Db2Xal {
                 sb.append("\" s=\"");
                 sb.append(e.getS());
                 sb.append("\">\n");
-                // insert node attributes
-                if (e.getElementTypeId().getElementType().equals("DH") ||
-                            e.getElementTypeId().getElementType().equals("DV") ||
-                            e.getElementTypeId().getElementType().equals("QH") ||
-                            e.getElementTypeId().getElementType().equals("QV") ||
-                            e.getElementTypeId().getElementType().equals("DCH") ||
-                            e.getElementTypeId().getElementType().equals("DCV") ||
-                            e.getElementTypeId().getElementType().equals("QHE") ||
-                            e.getElementTypeId().getElementType().equals("QVE") ||
-                            e.getElementTypeId().getElementType().equals("BPM") ||
-                            e.getElementTypeId().getElementType().equals("WS") ||
-                            e.getElementTypeId().getElementType().equals("RG")) {
+                // check if there is any attribute for the element
+                List<ElementProp> epList = ElementAPI.getAllPropertiesForElement(e.getElementName());
+                if (!epList.isEmpty()) {
+                    // insert node attributes
                     sb.append("         <attributes>\n");
                     
                     // set alignment data
-                    if (e.getElementTypeId().getElementType().equals("DH") ||
-                            e.getElementTypeId().getElementType().equals("DV") ||
-                            e.getElementTypeId().getElementType().equals("QH") ||
-                            e.getElementTypeId().getElementType().equals("QV") ||
-                            e.getElementTypeId().getElementType().equals("QHE") ||
-                            e.getElementTypeId().getElementType().equals("QVE") ||
-                            e.getElementTypeId().getElementType().equals("DCH") ||
-                            e.getElementTypeId().getElementType().equals("DCV") ||
-                            e.getElementTypeId().getElementType().equals("BPM")) {
-                                               
+                    Map attMap = getAlignmentAttributesForElement(e.getElementName());
+                    if (!attMap.isEmpty()) {                                              
                         sb.append("            <align ");
-                        Map attMap = getAlignmentAttributesForElement(e.getElementName());
-                        Set keySet = attMap.keySet();
-                        Iterator<String> keyIt = keySet.iterator();
-                        while (keyIt.hasNext()) {
-                            String key = keyIt.next();
-                            sb.append(key);
-                            sb.append("=\"");
-                            sb.append(attMap.get(key));
-                            sb.append("\" ");
-                        }
-                                                
-                        sb.append("/>\n");
-                    }
-                    // set apertures
-                    if (e.getElementTypeId().getElementType().equals("DH") ||
-                            e.getElementTypeId().getElementType().equals("DV") ||
-                            e.getElementTypeId().getElementType().equals("QH") ||
-                            e.getElementTypeId().getElementType().equals("QV") ||
-                            e.getElementTypeId().getElementType().equals("QHE") ||
-                            e.getElementTypeId().getElementType().equals("QVE") ||
-                            e.getElementTypeId().getElementType().equals("DCH") ||
-                            e.getElementTypeId().getElementType().equals("DCV") ) {
                         
-                        sb.append("            <aperture ");
-                        Map attMap = getApertureAttributesForElement(e.getElementName());
                         Set keySet = attMap.keySet();
                         Iterator<String> keyIt = keySet.iterator();
                         while (keyIt.hasNext()) {
@@ -176,32 +136,83 @@ public class Db2Xal {
                         sb.append("/>\n");
                     }
                     
-                    // for all magnets
-                    if (e.getElementTypeId().getElementType().equals("DH") ||
-                            e.getElementTypeId().getElementType().equals("DV") ||
-                            e.getElementTypeId().getElementType().equals("QH") ||
-                            e.getElementTypeId().getElementType().equals("QV") ||
-                            e.getElementTypeId().getElementType().equals("QHE") ||
-                            e.getElementTypeId().getElementType().equals("QVE") ||
-                            e.getElementTypeId().getElementType().equals("DCH") ||
-                            e.getElementTypeId().getElementType().equals("DCV") ) {
+                    // set apertures
+                    Map attMap1 = getApertureAttributesForElement(e.getElementName());
+                    if (!attMap1.isEmpty()) {                        
+                        sb.append("            <aperture ");
+                        
+                        Set keySet1 = attMap1.keySet();
+                        Iterator<String> keyIt1 = keySet1.iterator();
+                        while (keyIt1.hasNext()) {
+                            String key1 = keyIt1.next();
+                            sb.append(key1);
+                            sb.append("=\"");
+                            sb.append(attMap1.get(key1));
+                            sb.append("\" ");
+                        }
+                                                
+                        sb.append("/>\n");
+                    }
+                    
+                    // set magnet attributes
+                    Map attMap2 = getMagnetAttributesForElement(e.getElementName());
+                    if (!attMap2.isEmpty()) {
                         
                         sb.append("            <magnet ");
-                        Map attMap = getMagnetAttributesForElement(e.getElementName());
-                        Set keySet = attMap.keySet();
-                        Iterator<String> keyIt = keySet.iterator();
-                        while (keyIt.hasNext()) {
-                            String key = keyIt.next();
-                            sb.append(key);
+                        
+                        Set keySet2 = attMap2.keySet();
+                        Iterator<String> keyIt2 = keySet2.iterator();
+                        while (keyIt2.hasNext()) {
+                            String key2 = keyIt2.next();
+                            sb.append(key2);
                             sb.append("=\"");
-                            sb.append(attMap.get(key));
+                            sb.append(attMap.get(key2));
                             sb.append("\" ");
                         }
                         
                         sb.append("/>\n");
                     }
-                    // TODO
+                    
+                    // set bpm attributes 
+                    Map attMap3 = getBpmAttributesForElement(e.getElementName());
+                    if (!attMap3.isEmpty()) {
+                        
+                        sb.append("            <bpm ");
+                        
+                        Set keySet3 = attMap3.keySet();
+                        Iterator<String> keyIt3 = keySet3.iterator();
+                        while (keyIt3.hasNext()) {
+                            String key3 = keyIt3.next();
+                            sb.append(key3);
+                            sb.append("=\"");
+                            sb.append(attMap.get(key3));
+                            sb.append("\" ");
+                        }
+                        
+                        sb.append("/>\n");
+                    }
+                    
+                    // set rfgap attributes
+                    Map attMap4 = getRfgapAttributesForElement(e.getElementName());
+                    if (!attMap4.isEmpty()) {
+                        
+                        sb.append("            <bpm ");
+                        
+                        Set keySet4 = attMap4.keySet();
+                        Iterator<String> keyIt4 = keySet4.iterator();
+                        while (keyIt4.hasNext()) {
+                            String key4 = keyIt4.next();
+                            sb.append(key4);
+                            sb.append("=\"");
+                            sb.append(attMap.get(key4));
+                            sb.append("\" ");
+                        }
+                        
+                        sb.append("/>\n");
+                    }                    
+                    
                     sb.append("         </attributes>\n");
+                
                 }
                 
                 sb.append("      </node>\n");
@@ -226,7 +237,9 @@ public class Db2Xal {
         HashMap<String, Object> atts = new HashMap<>();
         
         Query q;
-        q = em.createQuery("SELECT ep from ElementProp ep WHERE ep.elementId.elementName = :elementname AND ep.propCategory = \"magnet\"")
+        q = em.createQuery("SELECT ep from ElementProp ep "
+                + "WHERE ep.elementId.elementName = :elementname "
+                + "AND ep.propCategory = \"magnet\"")
                 .setParameter("elementname", elm);
         List<ElementProp> attrList = q.getResultList();
         
@@ -251,7 +264,9 @@ public class Db2Xal {
         HashMap<String, Object> atts = new HashMap<>();
         
         Query q;
-        q = em.createQuery("SELECT ep from ElementProp ep WHERE ep.elementId.elementName = :elementname AND ep.propCategory = \"aperture\"")
+        q = em.createQuery("SELECT ep from ElementProp ep "
+                + "WHERE ep.elementId.elementName = :elementname "
+                + "AND ep.propCategory = \"aperture\"")
                 .setParameter("elementname", elm);
         List<ElementProp> attrList = q.getResultList();
         
@@ -270,7 +285,9 @@ public class Db2Xal {
         HashMap<String, Object> atts = new HashMap<>();
         
         Query q;
-        q = em.createQuery("SELECT ep from ElementProp ep WHERE ep.elementId.elementName = :elementname AND ep.propCategory = \"align\"")
+        q = em.createQuery("SELECT ep from ElementProp ep "
+                + "WHERE ep.elementId.elementName = :elementname "
+                + "AND ep.propCategory = \"align\"")
                 .setParameter("elementname", elm);
         List<ElementProp> attrList = q.getResultList();
         
@@ -284,12 +301,57 @@ public class Db2Xal {
         
         return atts;
     }
+    
+    private Map getBpmAttributesForElement(String elm) {
+        HashMap<String, Object> atts = new HashMap<>();
+        
+        Query q;
+        q = em.createQuery("SELECT ep from ElementProp ep "
+                + "WHERE ep.elementId.elementName = :elementname "
+                + "AND ep.propCategory = \"bpm\"")
+                .setParameter("elementname", elm);
+        List<ElementProp> attrList = q.getResultList();
+        
+        Iterator<ElementProp> it = attrList.iterator();
+        while (it.hasNext()) {
+            ElementProp ep = it.next();
+            if (ep.getElementPropDouble() != null) {
+                atts.put(ep.getElementPropName(), ep.getElementPropDouble());
+            }
+        }
+        
+        return atts;
+    } 
+    
+    private Map getRfgapAttributesForElement(String elm) {
+        HashMap<String, Object> atts = new HashMap<>();
+        
+        Query q;
+        q = em.createQuery("SELECT ep from ElementProp ep "
+                + "WHERE ep.elementId.elementName = :elementname "
+                + "AND ep.propCategory = \"rfgap\"")
+                .setParameter("elementname", elm);
+        List<ElementProp> attrList = q.getResultList();
+        
+        Iterator<ElementProp> it = attrList.iterator();
+        while (it.hasNext()) {
+            ElementProp ep = it.next();
+            if (ep.getElementPropDouble() != null) {
+                atts.put(ep.getElementPropName(), ep.getElementPropDouble());
+            }
+        }
+        
+        return atts;
+    } 
+    
         
     /**
      * @param args the command line arguments
      */
     public static void main(String[] args) {
         Db2Xal x = new Db2Xal();
+//        x.write2IMPL();
+//        x.write2ModelParam();
         x.write2XDXF();
     }
     
