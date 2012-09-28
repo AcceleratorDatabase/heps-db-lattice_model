@@ -34,12 +34,16 @@ public class ModelDB {
         return maps;
     }
     
-    
-    
+    /**
+     * upload model data to database
+     */ 
     public void saveModelData() {
         // TODO save model output data
     }
     
+    /**
+     * upload model input data to database
+     */
     public void saveModelInputData() {
         // TODO save model input data
     }

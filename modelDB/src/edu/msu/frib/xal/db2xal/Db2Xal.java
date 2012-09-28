@@ -5,7 +5,6 @@
 package edu.msu.frib.xal.db2xal;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -15,9 +14,9 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
-import javax.persistence.Query;
 import org.openepics.model.api.BeamlineSequenceAPI;
 import org.openepics.model.api.ElementAPI;
+import org.openepics.model.api.ElementPropAPI;
 import org.openepics.model.api.ModelDB;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
@@ -98,7 +97,7 @@ public class Db2Xal {
             
             // loop through each node
             // need to treat RF specially
-            List<Element> eList = ElementAPI.getAllElementForSequence(bls.getSequenceName());
+            List<Element> eList = BeamlineSequenceAPI.getAllElementsForSequence(bls.getSequenceName());
             Iterator<Element> eIt = eList.iterator();
             while (eIt.hasNext()) {
                 Element e = eIt.next();
@@ -120,7 +119,7 @@ public class Db2Xal {
                     sb.append("         <attributes>\n");
                     
                     // set alignment data
-                    Map attMap = getAlignmentAttributesForElement(e.getElementName());
+                    Map attMap = ElementPropAPI.getAlignmentAttributesForElement(e.getElementName());
                     if (!attMap.isEmpty()) {                                              
                         sb.append("            <align ");
                         
@@ -138,7 +137,7 @@ public class Db2Xal {
                     }
                     
                     // set apertures
-                    Map attMap1 = getApertureAttributesForElement(e.getElementName());
+                    Map attMap1 = ElementPropAPI.getApertureAttributesForElement(e.getElementName());
                     if (!attMap1.isEmpty()) {                        
                         sb.append("            <aperture ");
                         
@@ -156,7 +155,7 @@ public class Db2Xal {
                     }
                     
                     // set magnet attributes
-                    Map attMap2 = getMagnetAttributesForElement(e.getElementName());
+                    Map attMap2 = ElementPropAPI.getMagnetAttributesForElement(e.getElementName());
                     if (!attMap2.isEmpty()) {
                         
                         sb.append("            <magnet ");
@@ -175,7 +174,7 @@ public class Db2Xal {
                     }
                     
                     // set bpm attributes 
-                    Map attMap3 = getBpmAttributesForElement(e.getElementName());
+                    Map attMap3 = ElementPropAPI.getBpmAttributesForElement(e.getElementName());
                     if (!attMap3.isEmpty()) {
                         
                         sb.append("            <bpm ");
@@ -194,10 +193,10 @@ public class Db2Xal {
                     }
                     
                     // set rfgap attributes
-                    Map attMap4 = getRfgapAttributesForElement(e.getElementName());
+                    Map attMap4 = ElementPropAPI.getRfgapAttributesForElement(e.getElementName());
                     if (!attMap4.isEmpty()) {
                         
-                        sb.append("            <bpm ");
+                        sb.append("            <rfgap ");
                         
                         Set keySet4 = attMap4.keySet();
                         Iterator<String> keyIt4 = keySet4.iterator();
@@ -232,119 +231,7 @@ public class Db2Xal {
         sb.append("</xdxf>");
         
         System.out.println(sb);
-    }
-    
-    private Map getMagnetAttributesForElement(String elm) {
-        HashMap<String, Object> atts = new HashMap<>();
-        
-        Query q;
-        q = em.createQuery("SELECT ep from ElementProp ep "
-                + "WHERE ep.elementId.elementName = :elementname "
-                + "AND ep.propCategory = \"magnet\"")
-                .setParameter("elementname", elm);
-        List<ElementProp> attrList = q.getResultList();
-        
-        Iterator<ElementProp> it = attrList.iterator();
-        while (it.hasNext()) {
-            ElementProp ep = it.next();
-            if (ep.getElementPropDouble() != null) {
-                atts.put(ep.getElementPropName(), ep.getElementPropDouble());
-            }
-            if (ep.getElementPropInt() != null) {
-                atts.put(ep.getElementPropName(), ep.getElementPropInt());
-            }
-            if (ep.getElementPropString() != null) {
-                atts.put(ep.getElementPropName(), ep.getElementPropString());
-            }
-        }
-        
-        return atts;
-    }
-    
-    private Map getApertureAttributesForElement(String elm) {
-        HashMap<String, Object> atts = new HashMap<>();
-        
-        Query q;
-        q = em.createQuery("SELECT ep from ElementProp ep "
-                + "WHERE ep.elementId.elementName = :elementname "
-                + "AND ep.propCategory = \"aperture\"")
-                .setParameter("elementname", elm);
-        List<ElementProp> attrList = q.getResultList();
-        
-        Iterator<ElementProp> it = attrList.iterator();
-        while (it.hasNext()) {
-            ElementProp ep = it.next();
-            if (ep.getElementPropDouble() != null) {
-                atts.put(ep.getElementPropName(), ep.getElementPropDouble());
-            }
-        }
-        
-        return atts;
-    }
-    
-    private Map getAlignmentAttributesForElement(String elm) {
-        HashMap<String, Object> atts = new HashMap<>();
-        
-        Query q;
-        q = em.createQuery("SELECT ep from ElementProp ep "
-                + "WHERE ep.elementId.elementName = :elementname "
-                + "AND ep.propCategory = \"align\"")
-                .setParameter("elementname", elm);
-        List<ElementProp> attrList = q.getResultList();
-        
-        Iterator<ElementProp> it = attrList.iterator();
-        while (it.hasNext()) {
-            ElementProp ep = it.next();
-            if (ep.getElementPropDouble() != null) {
-                atts.put(ep.getElementPropName(), ep.getElementPropDouble());
-            }
-        }
-        
-        return atts;
-    }
-    
-    private Map getBpmAttributesForElement(String elm) {
-        HashMap<String, Object> atts = new HashMap<>();
-        
-        Query q;
-        q = em.createQuery("SELECT ep from ElementProp ep "
-                + "WHERE ep.elementId.elementName = :elementname "
-                + "AND ep.propCategory = \"bpm\"")
-                .setParameter("elementname", elm);
-        List<ElementProp> attrList = q.getResultList();
-        
-        Iterator<ElementProp> it = attrList.iterator();
-        while (it.hasNext()) {
-            ElementProp ep = it.next();
-            if (ep.getElementPropDouble() != null) {
-                atts.put(ep.getElementPropName(), ep.getElementPropDouble());
-            }
-        }
-        
-        return atts;
-    } 
-    
-    private Map getRfgapAttributesForElement(String elm) {
-        HashMap<String, Object> atts = new HashMap<>();
-        
-        Query q;
-        q = em.createQuery("SELECT ep from ElementProp ep "
-                + "WHERE ep.elementId.elementName = :elementname "
-                + "AND ep.propCategory = \"rfgap\"")
-                .setParameter("elementname", elm);
-        List<ElementProp> attrList = q.getResultList();
-        
-        Iterator<ElementProp> it = attrList.iterator();
-        while (it.hasNext()) {
-            ElementProp ep = it.next();
-            if (ep.getElementPropDouble() != null) {
-                atts.put(ep.getElementPropName(), ep.getElementPropDouble());
-            }
-        }
-        
-        return atts;
-    } 
-    
+    }   
         
     /**
      * @param args the command line arguments

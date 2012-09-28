@@ -12,6 +12,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import org.openepics.model.entity.BeamlineSequence;
+import org.openepics.model.entity.Element;
 
 /**
  *
@@ -34,6 +35,52 @@ public class BeamlineSequenceAPI {
         List<BeamlineSequence> seqList = q.getResultList();
 
         return seqList;        
+    }
+    
+    /**
+     * get all elements within the specified sequence
+     * 
+     * @param seq sequence name
+     * @return elements within the specified sequence
+     */
+    public static List<Element> getAllElementsForSequence(String seq) {
+        Query q;
+        q = em.createQuery("SELECT e FROM Element e JOIN e.sequenceId s "
+                + "WHERE s.sequenceName = :sequenceName").setParameter("sequenceName", seq);
+        List<Element> eList = q.getResultList();
+        return eList;
+    }
+    
+    /**
+     * get the first element in the specified sequence
+     * 
+     * @param seq sequence name
+     * @return the first element name in the specified sequence
+     */
+    public static String getEntranceElementForSequence(String seq) {
+       // TODO fill in code
+       return null; 
+    }
+    
+    /**
+     * get all elements of the specified type and within the specified sequence
+     * @param seq sequence name
+     * @param type element type
+     * @return all elements of the specified type and within the specified sequence
+     */
+    public static List<Element> getAllElementsOfTypeForSequence(String seq, String type) {
+        // TODO fill in code
+        return null;
+    }
+    
+    /**
+     * get element count for the specified sequence
+     * @param seq sequence name
+     * @return 
+     */
+    public static int getElementCountForSequence(String seq) {
+        // TODO fill in code
+        return 0;
     }
     
     /**
