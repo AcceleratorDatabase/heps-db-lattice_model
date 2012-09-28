@@ -57,16 +57,10 @@ public class GoldLatticeAPI {
      * @param l the Lattice to be tagged as Gold
      */
     public static void setGoldLattice(Lattice l) {
+        // move present Gold to previous Gold
         GoldLattice gl = new GoldLattice();
         Date date = new Date();
-        gl.setCreateDate(date);
-        gl.setCreatedBy(System.getProperty("user.name"));
-        gl.setGoldStatusInd(GoldLattice.PRESENT);
-        gl.setLatticeId(l);
         em.getTransaction().begin();
-        em.persist(gl);
-        
-        // move present Gold to previous Gold
         try {
             GoldLattice g_old = getGoldLatticeForMachineModeAndModelLine(
                     gl.getLatticeId().getMachineModeId().getMachineModeName(), 
@@ -81,6 +75,12 @@ public class GoldLatticeAPI {
         catch (NullPointerException e) {
             // do nothing
         }
+        
+        gl.setCreateDate(date);
+        gl.setCreatedBy(System.getProperty("user.name"));
+        gl.setGoldStatusInd(GoldLattice.PRESENT);
+        gl.setLatticeId(l);
+        em.persist(gl);
         
         em.getTransaction().commit();
     }   

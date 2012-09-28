@@ -97,6 +97,7 @@ public class Db2Xal {
             sb.append("      </attributes>\n");
             
             // loop through each node
+            // need to treat RF specially
             List<Element> eList = ElementAPI.getAllElementForSequence(bls.getSequenceName());
             Iterator<Element> eIt = eList.iterator();
             while (eIt.hasNext()) {
