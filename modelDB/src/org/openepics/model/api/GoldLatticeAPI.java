@@ -18,6 +18,7 @@ import org.openepics.model.entity.Lattice;
 /**
  *
  * @author chu
+ * @author lv
  */
 public class GoldLatticeAPI {
     @PersistenceUnit
@@ -25,6 +26,17 @@ public class GoldLatticeAPI {
     static EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
+    
+    /**
+     * get all present gold lattices
+     * 
+     * @return all present gold lattices
+     */
+    public static List<Lattice> getAllPresentGoldModels() {
+        // TODO fill in code
+        
+        return null;
+    }
     
     /**
      * get the gold model for the specified machine mode and model line
@@ -61,21 +73,15 @@ public class GoldLatticeAPI {
         GoldLattice gl = new GoldLattice();
         Date date = new Date();
         em.getTransaction().begin();
-        try {
-            GoldLattice g_old = getGoldLatticeForMachineModeAndModelLine(
+        GoldLattice g_old = getGoldLatticeForMachineModeAndModelLine(
                     gl.getLatticeId().getMachineModeId().getMachineModeName(), 
                 gl.getLatticeId().getModelLineId().getModelLineName());
-        
+        if (g_old != null) {
             g_old.setGoldStatusInd(GoldLattice.PREVIOUS);
             g_old.setUpdateDate(date);
             g_old.setUpdatedBy(System.getProperty("user.name"));
             em.persist(g_old);
-        } 
-        // if there is no Gold for this line/mode, skip it
-        catch (NullPointerException e) {
-            // do nothing
         }
-        
         gl.setCreateDate(date);
         gl.setCreatedBy(System.getProperty("user.name"));
         gl.setGoldStatusInd(GoldLattice.PRESENT);

@@ -20,6 +20,7 @@ import org.openepics.model.entity.Model;
 /**
  *
  * @author chu
+ * @author lv
  */
 public class GoldModelAPI {
 
@@ -28,6 +29,26 @@ public class GoldModelAPI {
     static EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
+    
+    /**
+     * get all present gold models
+     * 
+     * @return all present gold models
+     */
+    public static List<Model> getAllPresentGoldModels() {
+        // TODO fill in code
+        
+        return null;
+    }
+    
+    
+    /**
+     * get the Gold Model for the specified machine mode and model line
+     * 
+     * @param mode Machine Mode name
+     * @param line Model Line name
+     * @return Gold Model for the specified machine mode and model line 
+     */
     public static GoldModel getGoldModelForMachineModeAndModelLine(String mode, String line) {
         Query q;
 
@@ -48,31 +69,36 @@ public class GoldModelAPI {
 
     }
 
-    
+    /**
+     * 
+     * @param m 
+     */
     public static void setGoldModel(Model m) {
         GoldModel gm = new GoldModel();
         Date date = new Date();
-        try {
-            GoldModel gm_old = GoldModelAPI.getGoldModelForMachineModeAndModelLine(
+        GoldModel gm_old = GoldModelAPI.getGoldModelForMachineModeAndModelLine(
                     gm.getModelId().getLatticeId().getMachineModeId().getMachineModeName(),
                     gm.getModelId().getLatticeId().getModelLineId().getModelLineName());
+        em.getTransaction().begin();
+        if (gm_old!=null) {
             gm_old.setGoldStatusInd(GoldModel.PREVIOUS);
             gm_old.setUpdateDate(date);
             gm.setUpdatedBy(System.getProperty("user.name"));
             em.persist(gm_old);
-        } catch (NullPointerException e) {
-            // do nothing
         }
         gm.setCreateDate(date);
         gm.setCreatedBy(System.getProperty("user.name"));
         gm.setGoldStatusInd(GoldModel.PRESENT);
         gm.setModelId(m);
-        em.getTransaction().begin();
         em.persist(gm);
         em.getTransaction().commit();
     }
     
-     public static void setGoldModel(int modelId) {
+    /**
+     * 
+     * @param modelId 
+     */
+    public static void setGoldModel(int modelId) {
         Query q;
         q = em.createNamedQuery("Model.findByModelId").setParameter("modelId", modelId);
         Model m = (Model) q.getResultList().get(0);
