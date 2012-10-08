@@ -4,7 +4,9 @@
  */
 package org.openepics.model.api;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,9 +14,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
-import org.openepics.model.entity.GoldLattice;
 import org.openepics.model.entity.GoldModel;
-import org.openepics.model.entity.Lattice;
 import org.openepics.model.entity.Model;
 
 /**
@@ -37,8 +37,22 @@ public class GoldModelAPI {
      */
     public static List<Model> getAllPresentGoldModels() {
         // TODO fill in code
-        
-        return null;
+        Query q;
+        q = em.createNamedQuery("GoldModel.findByGoldStatusInd")
+                .setParameter("goldStatusInd", GoldModel.PRESENT);
+        List<GoldModel> gmList = q.getResultList();
+        List<Model> mList = new ArrayList<>();
+        if (gmList.isEmpty()) {
+            mList = null;
+        } else {
+            Iterator it = gmList.iterator();
+            while (it.hasNext()) {
+                GoldModel gm = (GoldModel) it.next();
+                Model m = gm.getModelId();
+                mList.add(m);
+            }
+        }
+        return mList;
     }
     
     
@@ -49,7 +63,7 @@ public class GoldModelAPI {
      * @param line Model Line name
      * @return Gold Model for the specified machine mode and model line 
      */
-    public static GoldModel getGoldModelForMachineModeAndModelLine(String mode, String line) {
+    public static Model getGoldModelForMachineModeAndModelLine(String mode, String line) {
         Query q;
 
         q = em.createQuery("SELECT g FROM GoldModel g WHERE"
@@ -64,7 +78,9 @@ public class GoldModelAPI {
             if (gmList.size() > 1) {
                 System.out.println("Warning: there are more than 1 Gold Model for the specified model line and machine mode combination!");
             }
-            return gmList.get(0);
+            
+            Model m = gmList.get(0).getModelId();
+            return m;            
         }
 
     }
@@ -76,9 +92,13 @@ public class GoldModelAPI {
     public static void setGoldModel(Model m) {
         GoldModel gm = new GoldModel();
         Date date = new Date();
-        GoldModel gm_old = GoldModelAPI.getGoldModelForMachineModeAndModelLine(
-                    gm.getModelId().getLatticeId().getMachineModeId().getMachineModeName(),
-                    gm.getModelId().getLatticeId().getModelLineId().getModelLineName());
+        List<GoldModel> gList = em.createQuery("SELECT g FROM GoldModel g WHERE"
+                + " g.modelId.latticeId.machineModeId.machineModeName=:modeName"
+                + " AND g.modelId.latticeId.modelLineId.modelLineName=:lineName"
+                + " AND g.goldStatusInd=:gind").setParameter("modeName", gm.getModelId().getLatticeId().getMachineModeId().getMachineModeName())
+                .setParameter("lineName", gm.getModelId().getLatticeId().getModelLineId().getModelLineName()).setParameter("gind", GoldModel.PRESENT).getResultList();
+        GoldModel gm_old = gList.get(0);
+        
         em.getTransaction().begin();
         if (gm_old!=null) {
             gm_old.setGoldStatusInd(GoldModel.PREVIOUS);

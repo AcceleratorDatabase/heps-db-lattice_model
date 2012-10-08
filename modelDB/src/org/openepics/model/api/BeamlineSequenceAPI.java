@@ -17,6 +17,7 @@ import org.openepics.model.entity.Element;
 /**
  *
  * @author chu
+ * @author lv
  */
 public class BeamlineSequenceAPI {
     @PersistenceUnit
@@ -58,8 +59,21 @@ public class BeamlineSequenceAPI {
      * @return the first element name in the specified sequence
      */
     public static String getEntranceElementForSequence(String seq) {
-       // TODO fill in code
-       return null; 
+        Query q;
+
+        q = em.createNamedQuery("BeamlineSequence.findBySequenceName").setParameter("sequenceName", seq);
+        List<BeamlineSequence> bList = q.getResultList();
+        if (bList.isEmpty()) {
+            return null;
+        } else {
+            if (bList.size() > 1) {
+                System.out.println("Warning: there are more than 1 BeamlineSequence for the specified sequence name!");
+                return null;
+            } else {
+                BeamlineSequence bls = bList.get(0);
+                return bls.getFirstElementName();
+            }
+        }
     }
     
     /**
@@ -69,18 +83,26 @@ public class BeamlineSequenceAPI {
      * @return all elements of the specified type and within the specified sequence
      */
     public static List<Element> getAllElementsOfTypeForSequence(String seq, String type) {
-        // TODO fill in code
-        return null;
+        Query q;
+        q=em.createQuery("SELECT e FROM Element e WHERE "
+                + "e.sequenceId.sequenceName=:seqName "
+                + "AND e.elementTypeId.elementType= :type")
+                .setParameter("seqName", seq).setParameter("type", type);
+        List<Element> eList=q.getResultList();
+        return eList;
     }
     
     /**
      * get element count for the specified sequence
      * @param seq sequence name
-     * @return 
+     * @return element count for the specified sequence
      */
     public static int getElementCountForSequence(String seq) {
-        // TODO fill in code
-        return 0;
+       Query q;
+       q=em.createQuery("SELECT e FROM Element e WHERE e.sequenceId.sequenceName=:seqName")
+               .setParameter("seqName", seq);
+       List<Element> eList=q.getResultList();
+       return eList.size();
     }
     
     /**

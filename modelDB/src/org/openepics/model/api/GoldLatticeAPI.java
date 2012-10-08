@@ -4,7 +4,9 @@
  */
 package org.openepics.model.api;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -33,9 +35,23 @@ public class GoldLatticeAPI {
      * @return all present gold lattices
      */
     public static List<Lattice> getAllPresentGoldModels() {
-        // TODO fill in code
-        
-        return null;
+        Query q;
+        q = em.createNamedQuery("GoldLattice.findByGoldStatusInd")
+                .setParameter("goldStatusInd", GoldLattice.PRESENT);
+        List<Lattice> glList = q.getResultList();
+        List<Lattice> lList = new ArrayList<>();
+        if (glList.isEmpty()) {
+            lList = null;
+        } else {
+            Iterator it = glList.iterator();
+            while (it.hasNext()) {
+                GoldLattice gl = (GoldLattice) it.next();
+                Lattice l = gl.getLatticeId();
+                lList.add(l);
+            }
+        }
+        return lList;
+     
     }
     
     /**
@@ -44,13 +60,13 @@ public class GoldLatticeAPI {
      * @param line model line
      * @return the gold model for the specified machine mode and model line
      */
-    public static GoldLattice getGoldLatticeForMachineModeAndModelLine(String mode, String line) {
+    public static Lattice getGoldLatticeForMachineModeAndModelLine(String mode, String line) {
         Query q;
-        q = em.createQuery("SELECT g FROM Gold g WHERE "
-                + "g.latticeId.modelLineId.modelLineName = :lineName "
-                + "AND g.latticeId.machineModeId.machineModeName = :modeName "
-                + "AND g.goldStatusInd = :gind").setParameter("lineName", line)
-                .setParameter("modeName", mode).setParameter("gind", GoldLattice.PRESENT); 
+        q=em.createQuery("SELECT g FROM GoldLattice g WHERE"
+                + " g.latticeId.machineModeId.machineModeName = :modeName "
+                + "AND g.latticeId.modelLineId.modelLineName = :lineName "
+                + "AND g.goldStatusInd = :gind").setParameter("modeName",mode)
+                .setParameter("lineName", line).setParameter("gind", GoldLattice.PRESENT);
         List<GoldLattice> gmList = q.getResultList();
         if (gmList.isEmpty()) {
             return null;
@@ -59,7 +75,9 @@ public class GoldLatticeAPI {
             if (gmList.size() > 1) {
                 System.out.println("Warning: there are more than 1 Gold Lattice for the specified model line and machine mode combination!");
             }
-            return gmList.get(0);   
+            // find the lattice corresponding to the Gold tag
+            Lattice lat = gmList.get(0).getLatticeId();
+            return lat;   
         }
     }
         
@@ -72,10 +90,14 @@ public class GoldLatticeAPI {
         // move present Gold to previous Gold
         GoldLattice gl = new GoldLattice();
         Date date = new Date();
+        List<GoldLattice> gList = em.createQuery("SELECT g FROM GoldLattice g WHERE"
+                + " g.latticeId.machineModeId.machineModeName = :modeName "
+                + "AND g.latticeId.modelLineId.modelLineName = :lineName "
+                + "AND g.goldStatusInd = :gind").setParameter("modeName",gl.getLatticeId().getMachineModeId().getMachineModeName())
+                .setParameter("lineName", gl.getLatticeId().getModelLineId().getModelLineName()).setParameter("gind", GoldLattice.PRESENT).getResultList();
+        GoldLattice g_old = gList.get(0);
+        
         em.getTransaction().begin();
-        GoldLattice g_old = getGoldLatticeForMachineModeAndModelLine(
-                    gl.getLatticeId().getMachineModeId().getMachineModeName(), 
-                gl.getLatticeId().getModelLineId().getModelLineName());
         if (g_old != null) {
             g_old.setGoldStatusInd(GoldLattice.PREVIOUS);
             g_old.setUpdateDate(date);
