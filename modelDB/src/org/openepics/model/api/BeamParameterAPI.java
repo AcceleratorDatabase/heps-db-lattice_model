@@ -23,6 +23,7 @@ import org.openepics.model.entity.BeamParameter;
 /**
  *
  * @author chu
+ * @author lv
  */
 public class BeamParameterAPI {
     @PersistenceUnit
