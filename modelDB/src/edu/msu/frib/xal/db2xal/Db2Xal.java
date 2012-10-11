@@ -115,7 +115,7 @@ public class Db2Xal {
                 List<ElementProp> epList = ElementAPI.getAllPropertiesForElement(e.getElementName());
                 sb.append("         <attributes>\n");
 
-                // set alignment data
+                // set alignment data from element
                 sb.append("            <align ");
                 sb.append("yaw=\"");
                 sb.append(e.getYaw());
