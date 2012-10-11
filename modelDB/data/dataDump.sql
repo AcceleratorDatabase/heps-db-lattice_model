@@ -57,6 +57,7 @@ CREATE TABLE `gold_lattice` (
   `updated_by` varchar(45) DEFAULT NULL,
   `update_date` datetime DEFAULT NULL,
   `gold_status_ind` int(11) DEFAULT NULL,
+  `created_by` varchar(45) DEFAULT NULL,
   PRIMARY KEY (`gold_id`),
   KEY `FK_gold_lattice_id_idx` (`lattice_id`),
   CONSTRAINT `FK_gold_lattice_id` FOREIGN KEY (`lattice_id`) REFERENCES `lattice` (`lattice_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
@@ -113,7 +114,7 @@ CREATE TABLE `beamline_sequence` (
   `sequence_length` double DEFAULT NULL,
   `sequence_description` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`beamline_sequence_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=10 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB AUTO_INCREMENT=11 DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -348,7 +349,7 @@ CREATE TABLE `element_prop` (
 
 LOCK TABLES `element_prop` WRITE;
 /*!40000 ALTER TABLE `element_prop` DISABLE KEYS */;
-INSERT INTO `element_prop` VALUES (1,9,NULL,NULL,NULL,-2.646994073,NULL,'magnet','dfltMagFld'),(2,9,NULL,NULL,NULL,0.15,NULL,'magnet','len'),(3,9,NULL,NULL,-1,NULL,NULL,'magnet','polarity'),(4,9,NULL,NULL,NULL,0.05,NULL,'aperture','x'),(5,9,NULL,NULL,NULL,0,NULL,'align','x'),(6,9,NULL,NULL,NULL,0,NULL,'align','y'),(7,9,NULL,NULL,NULL,0,NULL,'align','z'),(8,9,NULL,NULL,NULL,0,NULL,'align','pitch'),(9,9,NULL,NULL,NULL,0,NULL,'align','yaw'),(10,9,NULL,NULL,NULL,0,NULL,'align','roll');
+INSERT INTO `element_prop` VALUES (1,9,NULL,NULL,NULL,-2.646994073,NULL,'magnet','dfltMagFld'),(2,9,NULL,NULL,NULL,0.15,NULL,'magnet','len'),(3,9,NULL,NULL,-1,NULL,NULL,'magnet','polarity'),(4,9,NULL,NULL,NULL,0.05,NULL,'aperture','x');
 /*!40000 ALTER TABLE `element_prop` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -383,7 +384,7 @@ CREATE TABLE `model` (
   KEY `FK_lattice_idx` (`lattice_id`),
   CONSTRAINT `FK_lattice` FOREIGN KEY (`lattice_id`) REFERENCES `lattice` (`lattice_id`) ON DELETE NO ACTION ON UPDATE NO ACTION,
   CONSTRAINT `FK_model_code` FOREIGN KEY (`model_code_id`) REFERENCES `model_code` (`model_code_id`) ON DELETE NO ACTION ON UPDATE NO ACTION
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8;
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -516,10 +517,6 @@ LOCK TABLES `element_install_device` WRITE;
 /*!40000 ALTER TABLE `element_install_device` DISABLE KEYS */;
 /*!40000 ALTER TABLE `element_install_device` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Dumping events for database 'model'
---
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
@@ -530,4 +527,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2012-09-25 16:27:07
+-- Dump completed on 2012-10-09 23:34:10
