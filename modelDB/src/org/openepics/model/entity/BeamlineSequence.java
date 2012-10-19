@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author chu
+ * @author paul
  */
 @Entity
 @Table(name = "beamline_sequence")
@@ -55,8 +55,8 @@ public class BeamlineSequence implements Serializable {
     private Double sequenceLength;
     @Column(name = "sequence_description")
     private String sequenceDescription;
-    @OneToMany(mappedBy = "sequenceId")
-    private Collection<Element> elementCollection;
+    @OneToMany(mappedBy = "beamlineSequenceId")
+    private Collection<BlsequenceLattice> blsequenceLatticeCollection;
 
     public BeamlineSequence() {
     }
@@ -122,12 +122,12 @@ public class BeamlineSequence implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Element> getElementCollection() {
-        return elementCollection;
+    public Collection<BlsequenceLattice> getBlsequenceLatticeCollection() {
+        return blsequenceLatticeCollection;
     }
 
-    public void setElementCollection(Collection<Element> elementCollection) {
-        this.elementCollection = elementCollection;
+    public void setBlsequenceLatticeCollection(Collection<BlsequenceLattice> blsequenceLatticeCollection) {
+        this.blsequenceLatticeCollection = blsequenceLatticeCollection;
     }
 
     @Override

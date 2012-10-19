@@ -109,7 +109,7 @@ public class ModelAPI {
         // check if such lattice exists
         q = em.createNativeQuery("SELECT l.Lattice_Id FROM Lattice l, Model_Line ml, Machine_Mode mm "
                 + "WHERE l.model_Line_Id=ml.model_Line_Id AND l.machine_Mode_Id=mm.machine_Mode_Id "
-                + "AND ml.model_Line_Name=\"" + model_line + "\" AND mm.machine_Mode_Name=\"" 
+                + " AND mm.machine_Mode_Name=\"" 
                 + machine_mode + "\"");
         q.setParameter("modelLineName", model_line);
         q.setParameter("machineModeName", machine_mode);
@@ -125,10 +125,9 @@ public class ModelAPI {
                 ModelLine ml = new ModelLine();
                 ml.setModelLineName(model_line);
                 em.persist(ml);
-              
-                l.setModelLineId(ml);
+                m.setModelLineId(ml);
             } else {
-                l.setModelLineId(mlList.get(0));
+                m.setModelLineId((ModelLine) q.getResultList().get(0));
             }
             
             

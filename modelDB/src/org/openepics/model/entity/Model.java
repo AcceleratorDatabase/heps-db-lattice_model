@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author chu
+ * @author paul
  */
 @Entity
 @Table(name = "model")
@@ -95,8 +95,13 @@ public class Model implements Serializable {
     @JoinColumn(name = "lattice_id", referencedColumnName = "lattice_id")
     @ManyToOne
     private Lattice latticeId;
+    @JoinColumn(name = "model_line_id", referencedColumnName = "model_line_id")
+    @ManyToOne
+    private ModelLine modelLineId;
     @OneToMany(mappedBy = "modelId")
     private Collection<BeamParameter> beamParameterCollection;
+    @OneToMany(mappedBy = "modelId")
+    private Collection<ElementProp> elementPropCollection;
     @OneToMany(mappedBy = "modelId")
     private Collection<GoldModel> goldModelCollection;
 
@@ -251,6 +256,14 @@ public class Model implements Serializable {
         this.latticeId = latticeId;
     }
 
+    public ModelLine getModelLineId() {
+        return modelLineId;
+    }
+
+    public void setModelLineId(ModelLine modelLineId) {
+        this.modelLineId = modelLineId;
+    }
+
     @XmlTransient
     public Collection<BeamParameter> getBeamParameterCollection() {
         return beamParameterCollection;
@@ -258,6 +271,15 @@ public class Model implements Serializable {
 
     public void setBeamParameterCollection(Collection<BeamParameter> beamParameterCollection) {
         this.beamParameterCollection = beamParameterCollection;
+    }
+
+    @XmlTransient
+    public Collection<ElementProp> getElementPropCollection() {
+        return elementPropCollection;
+    }
+
+    public void setElementPropCollection(Collection<ElementProp> elementPropCollection) {
+        this.elementPropCollection = elementPropCollection;
     }
 
     @XmlTransient

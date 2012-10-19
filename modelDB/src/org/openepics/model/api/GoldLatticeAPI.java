@@ -94,7 +94,7 @@ public class GoldLatticeAPI {
                 + " g.latticeId.machineModeId.machineModeName = :modeName "
                 + "AND g.latticeId.modelLineId.modelLineName = :lineName "
                 + "AND g.goldStatusInd = :gind").setParameter("modeName",gl.getLatticeId().getMachineModeId().getMachineModeName())
-                .setParameter("lineName", gl.getLatticeId().getModelLineId().getModelLineName()).setParameter("gind", GoldLattice.PRESENT).getResultList();
+                .setParameter("gind", GoldLattice.PRESENT).getResultList();
         GoldLattice g_old = gList.get(0);
         
         em.getTransaction().begin();
