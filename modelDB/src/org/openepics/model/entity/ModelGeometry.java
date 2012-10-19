@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author chu
+ * @author paul
  */
 @Entity
 @Table(name = "model_geometry")

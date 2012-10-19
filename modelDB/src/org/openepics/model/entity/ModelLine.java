@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author chu
+ * @author paul
  */
 @Entity
 @Table(name = "model_line")
@@ -56,7 +56,7 @@ public class ModelLine implements Serializable {
     @Column(name = "end_marker")
     private String endMarker;
     @OneToMany(mappedBy = "modelLineId")
-    private Collection<Lattice> latticeCollection;
+    private Collection<Model> modelCollection;
 
     public ModelLine() {
     }
@@ -122,12 +122,12 @@ public class ModelLine implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Lattice> getLatticeCollection() {
-        return latticeCollection;
+    public Collection<Model> getModelCollection() {
+        return modelCollection;
     }
 
-    public void setLatticeCollection(Collection<Lattice> latticeCollection) {
-        this.latticeCollection = latticeCollection;
+    public void setModelCollection(Collection<Model> modelCollection) {
+        this.modelCollection = modelCollection;
     }
 
     @Override

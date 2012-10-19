@@ -96,7 +96,7 @@ public class GoldModelAPI {
                 + " g.modelId.latticeId.machineModeId.machineModeName=:modeName"
                 + " AND g.modelId.latticeId.modelLineId.modelLineName=:lineName"
                 + " AND g.goldStatusInd=:gind").setParameter("modeName", gm.getModelId().getLatticeId().getMachineModeId().getMachineModeName())
-                .setParameter("lineName", gm.getModelId().getLatticeId().getModelLineId().getModelLineName()).setParameter("gind", GoldModel.PRESENT).getResultList();
+                .setParameter("gind", GoldModel.PRESENT).getResultList();
         GoldModel gm_old = gList.get(0);
         
         em.getTransaction().begin();

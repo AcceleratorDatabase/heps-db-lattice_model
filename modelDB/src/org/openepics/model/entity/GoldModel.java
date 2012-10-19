@@ -23,7 +23,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author chu
+ * @author paul
  */
 @Entity
 @Table(name = "gold_model")
@@ -62,7 +62,7 @@ public class GoldModel implements Serializable {
     public static final int PRESENT = 0;
     
     public static final int PREVIOUS = 1;
-
+    
     public GoldModel() {
     }
 

@@ -26,7 +26,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author chu
+ * @author paul
  */
 @Entity
 @Table(name = "lattice")
@@ -34,6 +34,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Lattice.findAll", query = "SELECT l FROM Lattice l"),
     @NamedQuery(name = "Lattice.findByLatticeId", query = "SELECT l FROM Lattice l WHERE l.latticeId = :latticeId"),
+    @NamedQuery(name = "Lattice.findByModelLineId", query = "SELECT l FROM Lattice l WHERE l.modelLineId = :modelLineId"),
     @NamedQuery(name = "Lattice.findByLatticeName", query = "SELECT l FROM Lattice l WHERE l.latticeName = :latticeName"),
     @NamedQuery(name = "Lattice.findByLatticeDescription", query = "SELECT l FROM Lattice l WHERE l.latticeDescription = :latticeDescription"),
     @NamedQuery(name = "Lattice.findByCreatedBy", query = "SELECT l FROM Lattice l WHERE l.createdBy = :createdBy"),
@@ -47,6 +48,8 @@ public class Lattice implements Serializable {
     @Basic(optional = false)
     @Column(name = "lattice_id")
     private Integer latticeId;
+    @Column(name = "model_line_id")
+    private Integer modelLineId;
     @Column(name = "lattice_name")
     private String latticeName;
     @Column(name = "lattice_description")
@@ -65,15 +68,14 @@ public class Lattice implements Serializable {
     private Collection<Element> elementCollection;
     @OneToMany(mappedBy = "latticeId")
     private Collection<Model> modelCollection;
-    @JoinColumn(name = "model_line_id", referencedColumnName = "model_line_id")
-    @ManyToOne
-    private ModelLine modelLineId;
     @JoinColumn(name = "model_geometry_id", referencedColumnName = "model_geometry_id")
     @ManyToOne
     private ModelGeometry modelGeometryId;
     @JoinColumn(name = "machine_mode_id", referencedColumnName = "machine_mode_id")
     @ManyToOne
     private MachineMode machineModeId;
+    @OneToMany(mappedBy = "latticeId")
+    private Collection<BlsequenceLattice> blsequenceLatticeCollection;
     @OneToMany(mappedBy = "latticeId")
     private Collection<GoldLattice> goldLatticeCollection;
 
@@ -90,6 +92,14 @@ public class Lattice implements Serializable {
 
     public void setLatticeId(Integer latticeId) {
         this.latticeId = latticeId;
+    }
+
+    public Integer getModelLineId() {
+        return modelLineId;
+    }
+
+    public void setModelLineId(Integer modelLineId) {
+        this.modelLineId = modelLineId;
     }
 
     public String getLatticeName() {
@@ -158,14 +168,6 @@ public class Lattice implements Serializable {
         this.modelCollection = modelCollection;
     }
 
-    public ModelLine getModelLineId() {
-        return modelLineId;
-    }
-
-    public void setModelLineId(ModelLine modelLineId) {
-        this.modelLineId = modelLineId;
-    }
-
     public ModelGeometry getModelGeometryId() {
         return modelGeometryId;
     }
@@ -180,6 +182,15 @@ public class Lattice implements Serializable {
 
     public void setMachineModeId(MachineMode machineModeId) {
         this.machineModeId = machineModeId;
+    }
+
+    @XmlTransient
+    public Collection<BlsequenceLattice> getBlsequenceLatticeCollection() {
+        return blsequenceLatticeCollection;
+    }
+
+    public void setBlsequenceLatticeCollection(Collection<BlsequenceLattice> blsequenceLatticeCollection) {
+        this.blsequenceLatticeCollection = blsequenceLatticeCollection;
     }
 
     @XmlTransient

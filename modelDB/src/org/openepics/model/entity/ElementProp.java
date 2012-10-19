@@ -60,6 +60,9 @@ public class ElementProp implements Serializable {
     @JoinColumn(name = "element_id", referencedColumnName = "element_id")
     @ManyToOne
     private Element elementId;
+    @JoinColumn(name = "model_id", referencedColumnName = "model_id")
+    @ManyToOne
+    private Model modelId;
 
     public ElementProp() {
     }
@@ -138,6 +141,14 @@ public class ElementProp implements Serializable {
 
     public void setElementId(Element elementId) {
         this.elementId = elementId;
+    }
+
+    public Model getModelId() {
+        return modelId;
+    }
+
+    public void setModelId(Model modelId) {
+        this.modelId = modelId;
     }
 
     @Override

@@ -48,8 +48,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Element.findByRoll", query = "SELECT e FROM Element e WHERE e.roll = :roll"),
     @NamedQuery(name = "Element.findByPos", query = "SELECT e FROM Element e WHERE e.pos = :pos")})
 public class Element implements Serializable {
-    @OneToMany(mappedBy = "elementId")
-    private Collection<ElementProp> elementPropCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -84,15 +82,18 @@ public class Element implements Serializable {
     private Double roll;
     @Column(name = "pos")
     private Double pos;
-    @JoinColumn(name = "sequence_id", referencedColumnName = "beamline_sequence_id")
-    @ManyToOne
-    private BeamlineSequence sequenceId;
     @JoinColumn(name = "lattice_id", referencedColumnName = "lattice_id")
     @ManyToOne
     private Lattice latticeId;
     @JoinColumn(name = "element_type_id", referencedColumnName = "element_type_id")
     @ManyToOne
     private ElementType elementTypeId;
+    @OneToMany(mappedBy = "elementId")
+    private Collection<ElementInstallDevice> elementInstallDeviceCollection;
+    @OneToMany(mappedBy = "elementId")
+    private Collection<BeamParameter> beamParameterCollection;
+    @OneToMany(mappedBy = "elementId")
+    private Collection<ElementProp> elementPropCollection;
 
     public Element() {
     }
@@ -213,14 +214,6 @@ public class Element implements Serializable {
         this.pos = pos;
     }
 
-    public BeamlineSequence getSequenceId() {
-        return sequenceId;
-    }
-
-    public void setSequenceId(BeamlineSequence sequenceId) {
-        this.sequenceId = sequenceId;
-    }
-
     public Lattice getLatticeId() {
         return latticeId;
     }
@@ -235,6 +228,33 @@ public class Element implements Serializable {
 
     public void setElementTypeId(ElementType elementTypeId) {
         this.elementTypeId = elementTypeId;
+    }
+
+    @XmlTransient
+    public Collection<ElementInstallDevice> getElementInstallDeviceCollection() {
+        return elementInstallDeviceCollection;
+    }
+
+    public void setElementInstallDeviceCollection(Collection<ElementInstallDevice> elementInstallDeviceCollection) {
+        this.elementInstallDeviceCollection = elementInstallDeviceCollection;
+    }
+
+    @XmlTransient
+    public Collection<BeamParameter> getBeamParameterCollection() {
+        return beamParameterCollection;
+    }
+
+    public void setBeamParameterCollection(Collection<BeamParameter> beamParameterCollection) {
+        this.beamParameterCollection = beamParameterCollection;
+    }
+
+    @XmlTransient
+    public Collection<ElementProp> getElementPropCollection() {
+        return elementPropCollection;
+    }
+
+    public void setElementPropCollection(Collection<ElementProp> elementPropCollection) {
+        this.elementPropCollection = elementPropCollection;
     }
 
     @Override
@@ -260,15 +280,6 @@ public class Element implements Serializable {
     @Override
     public String toString() {
         return "org.openepics.model.entity.Element[ elementId=" + elementId + " ]";
-    }
-
-    @XmlTransient
-    public Collection<ElementProp> getElementPropCollection() {
-        return elementPropCollection;
-    }
-
-    public void setElementPropCollection(Collection<ElementProp> elementPropCollection) {
-        this.elementPropCollection = elementPropCollection;
     }
     
 }
