@@ -53,6 +53,21 @@ public class BeamlineSequenceAPI {
     }
     
     /**
+     * Get the Sequence with the specified sequence name
+     * @param seqName sequence name
+     * @return the sequence with the specified sequence name
+     */
+    public static BeamlineSequence getSequenceByName(String seqName) {
+        Query q;
+        q = em.createNamedQuery("BeamlineSequence.findBySequenceName").setParameter("sequenceName", seqName);
+        List<BeamlineSequence> seqList = q.getResultList();
+        if(seqList.isEmpty()) return null;
+        else{
+            return seqList.get(0);
+        }
+    }
+    
+    /**
      * get the first element in the specified sequence
      * 
      * @param seq sequence name

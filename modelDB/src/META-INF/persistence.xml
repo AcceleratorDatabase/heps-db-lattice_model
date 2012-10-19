@@ -19,9 +19,9 @@
     <class>org.openepics.model.entity.ModelLine</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/model"/>
-      <property name="javax.persistence.jdbc.password" value="model_test"/>
+      <property name="javax.persistence.jdbc.password" value="123456"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
-      <property name="javax.persistence.jdbc.user" value="paul"/>
+      <property name="javax.persistence.jdbc.user" value="root"/>
     </properties>
   </persistence-unit>
 </persistence>

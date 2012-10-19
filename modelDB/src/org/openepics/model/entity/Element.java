@@ -106,7 +106,7 @@ public class Element implements Serializable {
     }
 
     public void setElementId(Integer elementId) {
-        this.elementId = elementId;
+         this.elementId = elementId;
     }
 
     public String getElementName() {
@@ -154,7 +154,7 @@ public class Element implements Serializable {
     }
 
     public void setLen(Double len) {
-        this.len = len;
+       this.len = len;
     }
 
     public Double getDx() {
