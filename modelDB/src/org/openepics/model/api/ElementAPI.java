@@ -39,6 +39,22 @@ public class ElementAPI {
         return epList;
     }
     
+     /**
+     * get Element for the specified element name
+     * @param name element name
+     * @return element for the specified element name
+     */
+       public static Element getElementByName(String name) {
+        Query q;
+        q = em.createNamedQuery("Element.findByElementName").setParameter("elementName", name);
+        List<Element> eList = q.getResultList();
+        if(eList.isEmpty()) return null;
+        else{
+            return eList.get(0);
+        }
+    }
+
+    
     /**
      * 
      * @param s
@@ -66,6 +82,30 @@ public class ElementAPI {
         e.setPos(pos);
 //        e.setBeamParameterCollection(null);
         
-    }    
+    }   
+    
+     /**
+     * set element install error for the specified element
+     * @param e element 
+     * @param dx
+     * @param dy
+     * @param dz
+     * @param pitch
+     * @param yaw
+     * @param roll
+    */
+    public static  void setEleInsErr(Element e, double dx, double dy, double dz, double pitch, double yaw, double roll) {
+        // TODO save an individual element's model data
+        
+        Date date = new Date();
+        e.setInsertDate(date);
+        e.setCreatedBy(System.getProperty("user.name"));
+        e.setDx(dx);
+        e.setDy(dy);
+        e.setDz(dz);
+        e.setPitch(pitch);
+        e.setYaw(yaw);
+        e.setRoll(roll);
+     }  
     
 }

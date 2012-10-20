@@ -38,6 +38,21 @@ public class ElementTypeAPI {
     }
     
     /**
+     * Get the ElementType for specified type
+     * @param type element type
+     * @return the element type for specified type
+     */
+    public static ElementType getElementTypeByType(String type) {
+        Query q;
+        q = em.createNamedQuery("ElementType.findByElementType").setParameter("elementType",type);
+        List<ElementType> eltList = q.getResultList();
+        if(eltList.isEmpty()) return null;
+        else{
+            return eltList.get(0);
+        }
+    }
+    
+    /**
      * set element type definition in DB
      * 
      * @param type element type

@@ -116,7 +116,7 @@ public class ModelAPI {
         List<Integer> lattices = q.getResultList();
         // check if the specified lattice exists
         if (lattices.isEmpty()) {
-            Lattice l = new Lattice();
+            Lattice l = new Lattice(); 
             // check if the specified model_line exists
             q = em.createNamedQuery("ModelLine.findByModelLineName").setParameter("modelLineName", model_line);
             // if the model_line exists, use it; otherwise, create a new model_line

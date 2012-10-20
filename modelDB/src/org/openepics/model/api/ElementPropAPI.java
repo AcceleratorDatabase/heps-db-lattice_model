@@ -14,6 +14,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
+import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
 
 /**
@@ -168,8 +169,30 @@ public class ElementPropAPI {
         return atts;
     } 
 
-    public void setElementProperty(String propCategory, String propName, Object prop) {
-        // TODO fill in code
+    /**
+     * set ElementProp for the specified Element
+     * 
+     * @param e Element 
+     * @param propCategory prop category
+     * @param propName elment prop name
+     * @param prop elment prop value 
+     * @return initialized ElementProp
+     */
+    public static ElementProp setElementProperty(Element e, String propCategory, String propName, Object prop) {
+        ElementProp ep = new ElementProp();
+        ep.setElementId(e);
+        ep.setPropCategory(propCategory);
+        ep.setElementPropName(propName);
+        try{
+           double dval=Double.parseDouble(prop.toString());
+           int ival=(int)dval;
+           if(Math.abs(dval-ival)<Math.pow(10, -10)) ep.setElementPropInt(ival);
+           else ep.setElementPropDouble(dval);
+        }catch(Exception e1){
+           ep.setElementPropString(prop.toString());
+        }
+        return ep;
+       
         
     }
     
