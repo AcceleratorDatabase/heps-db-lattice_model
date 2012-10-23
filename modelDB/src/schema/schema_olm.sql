@@ -19,58 +19,17 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`machine_mode`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`machine_mode` (
-  `machine_mode_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `machine_mode_name` VARCHAR(45) NULL DEFAULT NULL ,
-  `machine_mode_description` VARCHAR(255) NULL DEFAULT NULL ,
-  PRIMARY KEY (`machine_mode_id`) )
-ENGINE = InnoDB
-AUTO_INCREMENT = 4
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `model`.`model_geometry`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`model_geometry` (
-  `model_geometry_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `model_geometry_name` VARCHAR(45) NULL DEFAULT NULL ,
-  `model_geometry_description` VARCHAR(255) NULL DEFAULT NULL ,
-  PRIMARY KEY (`model_geometry_id`) )
-ENGINE = InnoDB
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
 -- Table `model`.`lattice`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `model`.`lattice` (
   `lattice_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `model_line_id` INT(11) NULL DEFAULT NULL ,
-  `machine_mode_id` INT(11) NULL DEFAULT NULL ,
-  `model_geometry_id` INT(11) NULL DEFAULT NULL ,
   `lattice_name` VARCHAR(255) NULL DEFAULT NULL ,
   `lattice_description` VARCHAR(255) NULL DEFAULT NULL ,
   `created_by` VARCHAR(45) NULL DEFAULT NULL ,
   `create_date` DATETIME NULL DEFAULT NULL ,
   `updated_by` VARCHAR(45) NULL DEFAULT NULL ,
   `update_date` DATETIME NULL DEFAULT NULL ,
-  PRIMARY KEY (`lattice_id`) ,
-  INDEX `FK_machine_mode_idx` (`machine_mode_id` ASC) ,
-  INDEX `FK_model_line_idx` (`model_line_id` ASC) ,
-  INDEX `FK_model_geometry_idx` (`model_geometry_id` ASC) ,
-  CONSTRAINT `FK_machine_mode`
-    FOREIGN KEY (`machine_mode_id` )
-    REFERENCES `model`.`machine_mode` (`machine_mode_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
-  CONSTRAINT `FK_model_geometry`
-    FOREIGN KEY (`model_geometry_id` )
-    REFERENCES `model`.`model_geometry` (`model_geometry_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+  PRIMARY KEY (`lattice_id`) )
 ENGINE = InnoDB
 AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
@@ -115,19 +74,27 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`model_line`
+-- Table `model`.`model_geometry`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`model_line` (
-  `model_line_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `model_line_name` VARCHAR(45) NULL DEFAULT NULL ,
-  `model_line_description` VARCHAR(255) NULL DEFAULT NULL ,
-  `start_position` DOUBLE NULL DEFAULT NULL ,
-  `end_position` DOUBLE NULL DEFAULT NULL ,
-  `start_marker` VARCHAR(45) NULL DEFAULT NULL ,
-  `end_marker` VARCHAR(45) NULL DEFAULT NULL ,
-  PRIMARY KEY (`model_line_id`) )
+CREATE  TABLE IF NOT EXISTS `model`.`model_geometry` (
+  `model_geometry_id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `model_geometry_name` VARCHAR(45) NULL DEFAULT NULL ,
+  `model_geometry_description` VARCHAR(255) NULL DEFAULT NULL ,
+  PRIMARY KEY (`model_geometry_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `model`.`machine_mode`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `model`.`machine_mode` (
+  `machine_mode_id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `machine_mode_name` VARCHAR(45) NULL DEFAULT NULL ,
+  `machine_mode_description` VARCHAR(255) NULL DEFAULT NULL ,
+  PRIMARY KEY (`machine_mode_id`) )
+ENGINE = InnoDB
+AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -139,6 +106,23 @@ CREATE  TABLE IF NOT EXISTS `model`.`model_code` (
   `code_name` VARCHAR(45) NULL DEFAULT NULL ,
   `algorithm` VARCHAR(45) NULL DEFAULT NULL ,
   PRIMARY KEY (`model_code_id`) )
+ENGINE = InnoDB
+AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `model`.`model_line`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `model`.`model_line` (
+  `model_line_id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `model_line_name` VARCHAR(45) NULL DEFAULT NULL ,
+  `model_line_description` VARCHAR(255) NULL DEFAULT NULL ,
+  `start_position` DOUBLE NULL DEFAULT NULL ,
+  `end_position` DOUBLE NULL DEFAULT NULL ,
+  `start_marker` VARCHAR(45) NULL DEFAULT NULL ,
+  `end_marker` VARCHAR(45) NULL DEFAULT NULL ,
+  PRIMARY KEY (`model_line_id`) )
 ENGINE = InnoDB
 AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
@@ -167,13 +151,18 @@ CREATE  TABLE IF NOT EXISTS `model`.`model` (
   `chrome_y_2` DOUBLE NULL DEFAULT NULL ,
   `final_beam_energy` DOUBLE NULL DEFAULT NULL ,
   `model_line_id` INT(11) NULL DEFAULT NULL ,
+  `machine_mode_id` INT(11) NULL DEFAULT NULL ,
+  `model_geometry_id` INT(11) NULL DEFAULT NULL ,
   PRIMARY KEY (`model_id`) ,
   INDEX `FK_model_code_idx` (`model_code_id` ASC) ,
   INDEX `FK_lattice_idx` (`lattice_id` ASC) ,
   INDEX `FK_model_line_id` (`model_line_id` ASC) ,
-  CONSTRAINT `FK_model_line_id`
-    FOREIGN KEY (`model_line_id` )
-    REFERENCES `model`.`model_line` (`model_line_id` )
+  INDEX `FK_model_geometry_id` (`model_geometry_id` ASC) ,
+  INDEX `FK_machine_model_id` (`machine_mode_id` ASC) ,
+  INDEX `FK_model_code_id` (`model_code_id` ASC) ,
+  CONSTRAINT `FK_model_geometry_id`
+    FOREIGN KEY (`model_geometry_id` )
+    REFERENCES `model`.`model_geometry` (`model_geometry_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `FK_lattice`
@@ -181,9 +170,19 @@ CREATE  TABLE IF NOT EXISTS `model`.`model` (
     REFERENCES `model`.`lattice` (`lattice_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `FK_model_code`
+  CONSTRAINT `FK_machine_model_id`
+    FOREIGN KEY (`machine_mode_id` )
+    REFERENCES `model`.`machine_mode` (`machine_mode_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK_model_code_id`
     FOREIGN KEY (`model_code_id` )
     REFERENCES `model`.`model_code` (`model_code_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK_model_line_id`
+    FOREIGN KEY (`model_line_id` )
+    REFERENCES `model`.`model_line` (`model_line_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -411,6 +410,30 @@ CREATE  TABLE IF NOT EXISTS `model`.`gold_model` (
   CONSTRAINT `FK_gold_model`
     FOREIGN KEY (`model_id` )
     REFERENCES `model`.`model` (`model_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `model`.`rf_gap`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `model`.`rf_gap` (
+  `rf_gap_id` INT(11) NOT NULL ,
+  `cavity_id` INT(11) NULL DEFAULT NULL ,
+  `pos` DOUBLE NULL DEFAULT NULL ,
+  `TTF` DOUBLE NULL DEFAULT NULL ,
+  `ampFactor` DOUBLE NULL DEFAULT NULL ,
+  `endCell_ind` INT(11) NULL DEFAULT NULL ,
+  `gapOffset` DOUBLE NULL DEFAULT NULL ,
+  `length` DOUBLE NULL DEFAULT NULL ,
+  `phaseFactor` DOUBLE NULL DEFAULT NULL ,
+  PRIMARY KEY (`rf_gap_id`) ,
+  INDEX `FK_cavity_id` (`cavity_id` ASC) ,
+  CONSTRAINT `FK_cavity_id`
+    FOREIGN KEY (`cavity_id` )
+    REFERENCES `model`.`element` (`element_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
