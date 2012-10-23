@@ -92,8 +92,7 @@ public class GoldLatticeAPI {
         Date date = new Date();
         List<GoldLattice> gList = em.createQuery("SELECT g FROM GoldLattice g WHERE"
                 + " g.latticeId.machineModeId.machineModeName = :modeName "
-                + "AND g.latticeId.modelLineId.modelLineName = :lineName "
-                + "AND g.goldStatusInd = :gind").setParameter("modeName",gl.getLatticeId().getMachineModeId().getMachineModeName())
+                + "AND g.goldStatusInd = :gind")
                 .setParameter("gind", GoldLattice.PRESENT).getResultList();
         GoldLattice g_old = gList.get(0);
         

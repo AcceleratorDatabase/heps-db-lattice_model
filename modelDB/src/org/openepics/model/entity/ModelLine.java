@@ -16,12 +16,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author paul
+ * @author chu
  */
 @Entity
 @Table(name = "model_line")
@@ -42,8 +43,10 @@ public class ModelLine implements Serializable {
     @Basic(optional = false)
     @Column(name = "model_line_id")
     private Integer modelLineId;
+    @Size(max = 45)
     @Column(name = "model_line_name")
     private String modelLineName;
+    @Size(max = 255)
     @Column(name = "model_line_description")
     private String modelLineDescription;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -51,8 +54,10 @@ public class ModelLine implements Serializable {
     private Double startPosition;
     @Column(name = "end_position")
     private Double endPosition;
+    @Size(max = 45)
     @Column(name = "start_marker")
     private String startMarker;
+    @Size(max = 45)
     @Column(name = "end_marker")
     private String endMarker;
     @OneToMany(mappedBy = "modelLineId")

@@ -16,12 +16,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author paul
+ * @author chu
  */
 @Entity
 @Table(name = "beamline_sequence")
@@ -42,17 +43,22 @@ public class BeamlineSequence implements Serializable {
     @Basic(optional = false)
     @Column(name = "beamline_sequence_id")
     private Integer beamlineSequenceId;
+    @Size(max = 45)
     @Column(name = "sequence_name")
     private String sequenceName;
+    @Size(max = 45)
     @Column(name = "first_element_name")
     private String firstElementName;
+    @Size(max = 45)
     @Column(name = "last_element_name")
     private String lastElementName;
+    @Size(max = 255)
     @Column(name = "predecessor_sequence")
     private String predecessorSequence;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "sequence_length")
     private Double sequenceLength;
+    @Size(max = 255)
     @Column(name = "sequence_description")
     private String sequenceDescription;
     @OneToMany(mappedBy = "beamlineSequenceId")

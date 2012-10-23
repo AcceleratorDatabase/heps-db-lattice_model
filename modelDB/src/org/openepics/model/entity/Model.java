@@ -21,12 +21,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author paul
+ * @author chu
  */
 @Entity
 @Table(name = "model")
@@ -56,15 +57,19 @@ public class Model implements Serializable {
     @Basic(optional = false)
     @Column(name = "model_id")
     private Integer modelId;
+    @Size(max = 255)
     @Column(name = "model_name")
     private String modelName;
+    @Size(max = 255)
     @Column(name = "model_desc")
     private String modelDesc;
+    @Size(max = 45)
     @Column(name = "created_by")
     private String createdBy;
     @Column(name = "create_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
+    @Size(max = 45)
     @Column(name = "updated_by")
     private String updatedBy;
     @Column(name = "update_date")
@@ -89,15 +94,21 @@ public class Model implements Serializable {
     private Double chromeY2;
     @Column(name = "final_beam_energy")
     private Double finalBeamEnergy;
-    @JoinColumn(name = "model_code_id", referencedColumnName = "model_code_id")
-    @ManyToOne
-    private ModelCode modelCodeId;
-    @JoinColumn(name = "lattice_id", referencedColumnName = "lattice_id")
-    @ManyToOne
-    private Lattice latticeId;
     @JoinColumn(name = "model_line_id", referencedColumnName = "model_line_id")
     @ManyToOne
     private ModelLine modelLineId;
+    @JoinColumn(name = "model_code_id", referencedColumnName = "model_code_id")
+    @ManyToOne
+    private ModelCode modelCodeId;
+    @JoinColumn(name = "machine_mode_id", referencedColumnName = "machine_mode_id")
+    @ManyToOne
+    private MachineMode machineModeId;
+    @JoinColumn(name = "lattice_id", referencedColumnName = "lattice_id")
+    @ManyToOne
+    private Lattice latticeId;
+    @JoinColumn(name = "model_geometry_id", referencedColumnName = "model_geometry_id")
+    @ManyToOne
+    private ModelGeometry modelGeometryId;
     @OneToMany(mappedBy = "modelId")
     private Collection<BeamParameter> beamParameterCollection;
     @OneToMany(mappedBy = "modelId")
@@ -240,12 +251,28 @@ public class Model implements Serializable {
         this.finalBeamEnergy = finalBeamEnergy;
     }
 
+    public ModelLine getModelLineId() {
+        return modelLineId;
+    }
+
+    public void setModelLineId(ModelLine modelLineId) {
+        this.modelLineId = modelLineId;
+    }
+
     public ModelCode getModelCodeId() {
         return modelCodeId;
     }
 
     public void setModelCodeId(ModelCode modelCodeId) {
         this.modelCodeId = modelCodeId;
+    }
+
+    public MachineMode getMachineModeId() {
+        return machineModeId;
+    }
+
+    public void setMachineModeId(MachineMode machineModeId) {
+        this.machineModeId = machineModeId;
     }
 
     public Lattice getLatticeId() {
@@ -256,12 +283,12 @@ public class Model implements Serializable {
         this.latticeId = latticeId;
     }
 
-    public ModelLine getModelLineId() {
-        return modelLineId;
+    public ModelGeometry getModelGeometryId() {
+        return modelGeometryId;
     }
 
-    public void setModelLineId(ModelLine modelLineId) {
-        this.modelLineId = modelLineId;
+    public void setModelGeometryId(ModelGeometry modelGeometryId) {
+        this.modelGeometryId = modelGeometryId;
     }
 
     @XmlTransient
