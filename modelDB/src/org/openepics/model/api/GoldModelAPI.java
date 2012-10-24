@@ -94,8 +94,7 @@ public class GoldModelAPI {
         Date date = new Date();
         List<GoldModel> gList = em.createQuery("SELECT g FROM GoldModel g WHERE"
                 + " g.modelId.latticeId.machineModeId.machineModeName=:modeName"
-                + " AND g.modelId.latticeId.modelLineId.modelLineName=:lineName"
-                + " AND g.goldStatusInd=:gind").setParameter("modeName", gm.getModelId().getLatticeId().getMachineModeId().getMachineModeName())
+                + " AND g.goldStatusInd=:gind")
                 .setParameter("gind", GoldModel.PRESENT).getResultList();
         GoldModel gm_old = gList.get(0);
         

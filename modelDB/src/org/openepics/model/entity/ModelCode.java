@@ -16,12 +16,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author paul
+ * @author chu
  */
 @Entity
 @Table(name = "model_code")
@@ -38,8 +39,10 @@ public class ModelCode implements Serializable {
     @Basic(optional = false)
     @Column(name = "model_code_id")
     private Integer modelCodeId;
+    @Size(max = 45)
     @Column(name = "code_name")
     private String codeName;
+    @Size(max = 45)
     @Column(name = "algorithm")
     private String algorithm;
     @OneToMany(mappedBy = "modelCodeId")

@@ -16,11 +16,12 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author paul
+ * @author chu
  */
 @Entity
 @Table(name = "beam_parameter")
@@ -91,6 +92,7 @@ public class BeamParameter implements Serializable {
     private Double etaY;
     @Column(name = "etap_y")
     private Double etapY;
+    @Size(max = 2047)
     @Column(name = "transfer_matrix")
     private String transferMatrix;
     @Column(name = "co_x")
@@ -101,6 +103,7 @@ public class BeamParameter implements Serializable {
     private Integer indexSliceChk;
     @Column(name = "energy")
     private Double energy;
+    @Size(max = 45)
     @Column(name = "particle_species")
     private String particleSpecies;
     @Column(name = "particle_mass")

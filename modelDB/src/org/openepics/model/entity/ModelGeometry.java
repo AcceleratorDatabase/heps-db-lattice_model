@@ -16,12 +16,13 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author paul
+ * @author chu
  */
 @Entity
 @Table(name = "model_geometry")
@@ -38,12 +39,14 @@ public class ModelGeometry implements Serializable {
     @Basic(optional = false)
     @Column(name = "model_geometry_id")
     private Integer modelGeometryId;
+    @Size(max = 45)
     @Column(name = "model_geometry_name")
     private String modelGeometryName;
+    @Size(max = 255)
     @Column(name = "model_geometry_description")
     private String modelGeometryDescription;
     @OneToMany(mappedBy = "modelGeometryId")
-    private Collection<Lattice> latticeCollection;
+    private Collection<Model> modelCollection;
 
     public ModelGeometry() {
     }
@@ -77,12 +80,12 @@ public class ModelGeometry implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Lattice> getLatticeCollection() {
-        return latticeCollection;
+    public Collection<Model> getModelCollection() {
+        return modelCollection;
     }
 
-    public void setLatticeCollection(Collection<Lattice> latticeCollection) {
-        this.latticeCollection = latticeCollection;
+    public void setModelCollection(Collection<Model> modelCollection) {
+        this.modelCollection = modelCollection;
     }
 
     @Override

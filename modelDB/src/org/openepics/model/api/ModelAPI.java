@@ -139,9 +139,9 @@ public class ModelAPI {
                 MachineMode mm = new MachineMode();
                 mm.setMachineModeName(machine_mode);
                 em.persist(mm);
-                l.setMachineModeId(mm);
+                m.setMachineModeId(mm);
             } else {
-                l.setMachineModeId(mmList.get(0));
+                m.setMachineModeId(mmList.get(0));
             } 
             em.persist(l);
             m.setLatticeId(l);

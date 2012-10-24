@@ -4,6 +4,10 @@
  */
 package org.openepics.model.api;
 
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,6 +16,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import org.openepics.model.entity.BeamlineSequence;
+import org.openepics.model.entity.BlsequenceLattice;
 import org.openepics.model.entity.Element;
 
 /**
@@ -20,14 +25,15 @@ import org.openepics.model.entity.Element;
  * @author lv
  */
 public class BeamlineSequenceAPI {
+
     @PersistenceUnit
     static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     static EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
-    
     /**
      * Get all accelerator sequences.
+     *
      * @return all sequences
      */
     public static List<BeamlineSequence> getAllSequences() {
@@ -35,25 +41,44 @@ public class BeamlineSequenceAPI {
         q = em.createNamedQuery("BeamlineSequence.findAll");
         List<BeamlineSequence> seqList = q.getResultList();
 
-        return seqList;        
+        return seqList;
     }
-    
+
     /**
      * get all elements within the specified sequence
-     * 
+     *
      * @param seq sequence name
      * @return elements within the specified sequence
      */
     public static List<Element> getAllElementsForSequence(String seq) {
         Query q;
-        q = em.createQuery("SELECT e FROM Element e JOIN e.sequenceId s "
-                + "WHERE s.sequenceName = :sequenceName").setParameter("sequenceName", seq);
-        List<Element> eList = q.getResultList();
+        // q = em.createQuery("SELECT e FROM Element e JOIN e.sequenceId s "
+        //         + "WHERE s.sequenceName = :sequenceName").setParameter("sequenceName", seq);
+        q = em.createQuery("SELECT blsl FROM BlsequenceLattice blsl WHERE blsl.beamlineSequenceId.sequenceName=:sequenceName").setParameter("sequenceName", seq);
+        List<BlsequenceLattice> blslList = q.getResultList();
+        ArrayList<Element> eList = new ArrayList<>();
+        Iterator it = blslList.iterator();
+        while (it.hasNext()) {
+            BlsequenceLattice blsl = (BlsequenceLattice) it.next();
+            Collection eCol = (Collection) blsl.getLatticeId().getElementCollection();
+            //System.out.println(eCol.size());
+            Iterator it2 = eCol.iterator();
+            while (it2.hasNext()) {
+                Element e = (Element) it2.next();
+                //System.out.println(e.getElementId());
+                eList.add(e);
+            }
+
+        }
         return eList;
+
+        //  List<Element> eList = q.getResultList();
+        // return eList;
     }
-    
+
     /**
      * Get the Sequence with the specified sequence name
+     *
      * @param seqName sequence name
      * @return the sequence with the specified sequence name
      */
@@ -61,15 +86,16 @@ public class BeamlineSequenceAPI {
         Query q;
         q = em.createNamedQuery("BeamlineSequence.findBySequenceName").setParameter("sequenceName", seqName);
         List<BeamlineSequence> seqList = q.getResultList();
-        if(seqList.isEmpty()) return null;
-        else{
+        if (seqList.isEmpty()) {
+            return null;
+        } else {
             return seqList.get(0);
         }
     }
-    
+
     /**
      * get the first element in the specified sequence
-     * 
+     *
      * @param seq sequence name
      * @return the first element name in the specified sequence
      */
@@ -90,38 +116,42 @@ public class BeamlineSequenceAPI {
             }
         }
     }
-    
+
     /**
      * get all elements of the specified type and within the specified sequence
+     *
      * @param seq sequence name
      * @param type element type
-     * @return all elements of the specified type and within the specified sequence
+     * @return all elements of the specified type and within the specified
+     * sequence
      */
     public static List<Element> getAllElementsOfTypeForSequence(String seq, String type) {
         Query q;
-        q=em.createQuery("SELECT e FROM Element e WHERE "
+        q = em.createQuery("SELECT e FROM Element e WHERE "
                 + "e.sequenceId.sequenceName=:seqName "
                 + "AND e.elementTypeId.elementType= :type")
                 .setParameter("seqName", seq).setParameter("type", type);
-        List<Element> eList=q.getResultList();
+        List<Element> eList = q.getResultList();
         return eList;
     }
-    
+
     /**
      * get element count for the specified sequence
+     *
      * @param seq sequence name
      * @return element count for the specified sequence
      */
     public static int getElementCountForSequence(String seq) {
-       Query q;
-       q=em.createQuery("SELECT e FROM Element e WHERE e.sequenceId.sequenceName=:seqName")
-               .setParameter("seqName", seq);
-       List<Element> eList=q.getResultList();
-       return eList.size();
+        Query q;
+        q = em.createQuery("SELECT e FROM Element e WHERE e.sequenceId.sequenceName=:seqName")
+                .setParameter("seqName", seq);
+        List<Element> eList = q.getResultList();
+        return eList.size();
     }
-    
+
     /**
      * Set a new beamline sequence
+     *
      * @param seq_name sequence name
      * @param first_elem_name first element name
      * @param last_elem_name last element name
@@ -129,7 +159,7 @@ public class BeamlineSequenceAPI {
      * @param seq_length sequence length
      * @param seq_desc description for this sequence
      */
-    public static void setBeamlineSequence(String seq_name, String first_elem_name, 
+    public static void setBeamlineSequence(String seq_name, String first_elem_name,
             String last_elem_name, String previous_seq, double seq_length, String seq_desc) {
         BeamlineSequence bs = new BeamlineSequence();
         bs.setSequenceName(seq_name);
@@ -142,5 +172,4 @@ public class BeamlineSequenceAPI {
         em.persist(bs);
         em.getTransaction().commit();
     }
-        
 }

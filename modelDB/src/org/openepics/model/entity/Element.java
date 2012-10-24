@@ -21,12 +21,13 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author paul
+ * @author chu
  */
 @Entity
 @Table(name = "element")
@@ -54,6 +55,7 @@ public class Element implements Serializable {
     @Basic(optional = false)
     @Column(name = "element_id")
     private Integer elementId;
+    @Size(max = 45)
     @Column(name = "element_name")
     private String elementName;
     @Column(name = "element_order")
@@ -61,6 +63,7 @@ public class Element implements Serializable {
     @Column(name = "insert_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date insertDate;
+    @Size(max = 45)
     @Column(name = "created_by")
     private String createdBy;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -94,6 +97,8 @@ public class Element implements Serializable {
     private Collection<BeamParameter> beamParameterCollection;
     @OneToMany(mappedBy = "elementId")
     private Collection<ElementProp> elementPropCollection;
+    @OneToMany(mappedBy = "cavityId")
+    private Collection<RfGap> rfGapCollection;
 
     public Element() {
     }
@@ -107,7 +112,7 @@ public class Element implements Serializable {
     }
 
     public void setElementId(Integer elementId) {
-         this.elementId = elementId;
+        this.elementId = elementId;
     }
 
     public String getElementName() {
@@ -155,7 +160,7 @@ public class Element implements Serializable {
     }
 
     public void setLen(Double len) {
-       this.len = len;
+        this.len = len;
     }
 
     public Double getDx() {
@@ -255,6 +260,15 @@ public class Element implements Serializable {
 
     public void setElementPropCollection(Collection<ElementProp> elementPropCollection) {
         this.elementPropCollection = elementPropCollection;
+    }
+
+    @XmlTransient
+    public Collection<RfGap> getRfGapCollection() {
+        return rfGapCollection;
+    }
+
+    public void setRfGapCollection(Collection<RfGap> rfGapCollection) {
+        this.rfGapCollection = rfGapCollection;
     }
 
     @Override

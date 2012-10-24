@@ -13,20 +13,19 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author paul
+ * @author chu
  */
 @Entity
 @Table(name = "lattice")
@@ -34,7 +33,6 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Lattice.findAll", query = "SELECT l FROM Lattice l"),
     @NamedQuery(name = "Lattice.findByLatticeId", query = "SELECT l FROM Lattice l WHERE l.latticeId = :latticeId"),
-    @NamedQuery(name = "Lattice.findByModelLineId", query = "SELECT l FROM Lattice l WHERE l.modelLineId = :modelLineId"),
     @NamedQuery(name = "Lattice.findByLatticeName", query = "SELECT l FROM Lattice l WHERE l.latticeName = :latticeName"),
     @NamedQuery(name = "Lattice.findByLatticeDescription", query = "SELECT l FROM Lattice l WHERE l.latticeDescription = :latticeDescription"),
     @NamedQuery(name = "Lattice.findByCreatedBy", query = "SELECT l FROM Lattice l WHERE l.createdBy = :createdBy"),
@@ -48,17 +46,19 @@ public class Lattice implements Serializable {
     @Basic(optional = false)
     @Column(name = "lattice_id")
     private Integer latticeId;
-    @Column(name = "model_line_id")
-    private Integer modelLineId;
+    @Size(max = 255)
     @Column(name = "lattice_name")
     private String latticeName;
+    @Size(max = 255)
     @Column(name = "lattice_description")
     private String latticeDescription;
+    @Size(max = 45)
     @Column(name = "created_by")
     private String createdBy;
     @Column(name = "create_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
+    @Size(max = 45)
     @Column(name = "updated_by")
     private String updatedBy;
     @Column(name = "update_date")
@@ -68,12 +68,6 @@ public class Lattice implements Serializable {
     private Collection<Element> elementCollection;
     @OneToMany(mappedBy = "latticeId")
     private Collection<Model> modelCollection;
-    @JoinColumn(name = "model_geometry_id", referencedColumnName = "model_geometry_id")
-    @ManyToOne
-    private ModelGeometry modelGeometryId;
-    @JoinColumn(name = "machine_mode_id", referencedColumnName = "machine_mode_id")
-    @ManyToOne
-    private MachineMode machineModeId;
     @OneToMany(mappedBy = "latticeId")
     private Collection<BlsequenceLattice> blsequenceLatticeCollection;
     @OneToMany(mappedBy = "latticeId")
@@ -92,14 +86,6 @@ public class Lattice implements Serializable {
 
     public void setLatticeId(Integer latticeId) {
         this.latticeId = latticeId;
-    }
-
-    public Integer getModelLineId() {
-        return modelLineId;
-    }
-
-    public void setModelLineId(Integer modelLineId) {
-        this.modelLineId = modelLineId;
     }
 
     public String getLatticeName() {
@@ -166,22 +152,6 @@ public class Lattice implements Serializable {
 
     public void setModelCollection(Collection<Model> modelCollection) {
         this.modelCollection = modelCollection;
-    }
-
-    public ModelGeometry getModelGeometryId() {
-        return modelGeometryId;
-    }
-
-    public void setModelGeometryId(ModelGeometry modelGeometryId) {
-        this.modelGeometryId = modelGeometryId;
-    }
-
-    public MachineMode getMachineModeId() {
-        return machineModeId;
-    }
-
-    public void setMachineModeId(MachineMode machineModeId) {
-        this.machineModeId = machineModeId;
     }
 
     @XmlTransient
