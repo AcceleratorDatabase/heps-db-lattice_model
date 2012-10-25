@@ -19,7 +19,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -46,28 +45,24 @@ public class Lattice implements Serializable {
     @Basic(optional = false)
     @Column(name = "lattice_id")
     private Integer latticeId;
-    @Size(max = 255)
     @Column(name = "lattice_name")
     private String latticeName;
-    @Size(max = 255)
     @Column(name = "lattice_description")
     private String latticeDescription;
-    @Size(max = 45)
     @Column(name = "created_by")
     private String createdBy;
     @Column(name = "create_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
-    @Size(max = 45)
     @Column(name = "updated_by")
     private String updatedBy;
     @Column(name = "update_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date updateDate;
     @OneToMany(mappedBy = "latticeId")
-    private Collection<Element> elementCollection;
-    @OneToMany(mappedBy = "latticeId")
     private Collection<Model> modelCollection;
+    @OneToMany(mappedBy = "latticeId")
+    private Collection<ElementProp> elementPropCollection;
     @OneToMany(mappedBy = "latticeId")
     private Collection<BlsequenceLattice> blsequenceLatticeCollection;
     @OneToMany(mappedBy = "latticeId")
@@ -137,21 +132,21 @@ public class Lattice implements Serializable {
     }
 
     @XmlTransient
-    public Collection<Element> getElementCollection() {
-        return elementCollection;
-    }
-
-    public void setElementCollection(Collection<Element> elementCollection) {
-        this.elementCollection = elementCollection;
-    }
-
-    @XmlTransient
     public Collection<Model> getModelCollection() {
         return modelCollection;
     }
 
     public void setModelCollection(Collection<Model> modelCollection) {
         this.modelCollection = modelCollection;
+    }
+
+    @XmlTransient
+    public Collection<ElementProp> getElementPropCollection() {
+        return elementPropCollection;
+    }
+
+    public void setElementPropCollection(Collection<ElementProp> elementPropCollection) {
+        this.elementPropCollection = elementPropCollection;
     }
 
     @XmlTransient

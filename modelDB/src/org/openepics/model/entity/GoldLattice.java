@@ -19,7 +19,6 @@ import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -45,13 +44,11 @@ public class GoldLattice implements Serializable {
     @Basic(optional = false)
     @Column(name = "gold_id")
     private Integer goldId;
-    @Size(max = 45)
     @Column(name = "machine_mode_id")
     private String machineModeId;
     @Column(name = "create_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
-    @Size(max = 45)
     @Column(name = "updated_by")
     private String updatedBy;
     @Column(name = "update_date")
@@ -59,17 +56,16 @@ public class GoldLattice implements Serializable {
     private Date updateDate;
     @Column(name = "gold_status_ind")
     private Integer goldStatusInd;
-    @Size(max = 45)
     @Column(name = "created_by")
     private String createdBy;
     @JoinColumn(name = "lattice_id", referencedColumnName = "lattice_id")
     @ManyToOne
     private Lattice latticeId;
-
+    
     public static int PRESENT = 0;
     
     public static int PREVIOUS = 1;
-    
+
     public GoldLattice() {
     }
 
