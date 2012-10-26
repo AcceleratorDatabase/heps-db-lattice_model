@@ -21,7 +21,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -55,7 +54,6 @@ public class Element implements Serializable {
     @Basic(optional = false)
     @Column(name = "element_id")
     private Integer elementId;
-    @Size(max = 45)
     @Column(name = "element_name")
     private String elementName;
     @Column(name = "element_order")
@@ -63,7 +61,6 @@ public class Element implements Serializable {
     @Column(name = "insert_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date insertDate;
-    @Size(max = 45)
     @Column(name = "created_by")
     private String createdBy;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
@@ -85,9 +82,9 @@ public class Element implements Serializable {
     private Double roll;
     @Column(name = "pos")
     private Double pos;
-    @JoinColumn(name = "lattice_id", referencedColumnName = "lattice_id")
+    @JoinColumn(name = "beamline_sequence_id", referencedColumnName = "beamline_sequence_id")
     @ManyToOne
-    private Lattice latticeId;
+    private BeamlineSequence beamlineSequenceId;
     @JoinColumn(name = "element_type_id", referencedColumnName = "element_type_id")
     @ManyToOne
     private ElementType elementTypeId;
@@ -219,12 +216,12 @@ public class Element implements Serializable {
         this.pos = pos;
     }
 
-    public Lattice getLatticeId() {
-        return latticeId;
+    public BeamlineSequence getBeamlineSequenceId() {
+        return beamlineSequenceId;
     }
 
-    public void setLatticeId(Lattice latticeId) {
-        this.latticeId = latticeId;
+    public void setBeamlineSequenceId(BeamlineSequence beamlineSequenceId) {
+        this.beamlineSequenceId = beamlineSequenceId;
     }
 
     public ElementType getElementTypeId() {

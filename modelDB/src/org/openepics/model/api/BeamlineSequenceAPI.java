@@ -16,7 +16,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import org.openepics.model.entity.BeamlineSequence;
-import org.openepics.model.entity.BlsequenceLattice;
+import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 
 /**
@@ -54,13 +54,13 @@ public class BeamlineSequenceAPI {
         Query q;
         // q = em.createQuery("SELECT e FROM Element e JOIN e.sequenceId s "
         //         + "WHERE s.sequenceName = :sequenceName").setParameter("sequenceName", seq);
-        q = em.createQuery("SELECT blsl FROM BlsequenceLattice blsl WHERE blsl.beamlineSequenceId.sequenceName=:sequenceName").setParameter("sequenceName", seq);
-        List<BlsequenceLattice> blslList = q.getResultList();
+        q = em.createQuery("SELECT blsl FROM BeamlineSequence blsl WHERE blsl.beamlineSequenceId.sequenceName=:sequenceName").setParameter("sequenceName", seq);
+        List<BeamlineSequence> blslList = q.getResultList();
         ArrayList<Element> eList = new ArrayList<>();
         Iterator it = blslList.iterator();
         while (it.hasNext()) {
-            BlsequenceLattice blsl = (BlsequenceLattice) it.next();
-            Collection eCol = (Collection) blsl.getLatticeId().getElementCollection();
+            BeamlineSequence bls = (BeamlineSequence) it.next();
+            Collection eCol = (Collection) bls.getElementCollection();
             //System.out.println(eCol.size());
             Iterator it2 = eCol.iterator();
             while (it2.hasNext()) {

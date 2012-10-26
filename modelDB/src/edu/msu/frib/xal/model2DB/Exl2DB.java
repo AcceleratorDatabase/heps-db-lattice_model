@@ -66,7 +66,7 @@ public class Exl2DB {
             //如果数据库中已经存在就不在插入，如果不存在再执行以下操作
             if (ElementAPI.getElementByName(map.get("element_name").toString()) == null) {
                 Element e = new Element();
-                e.setLatticeId(lattice);
+//                e.setLatticeId(lattice);
                 Iterator it1 = map.entrySet().iterator();
                 while (it1.hasNext()) {
                     Map.Entry entry = (Map.Entry) it1.next();
@@ -94,7 +94,7 @@ public class Exl2DB {
                                         Map.Entry seqEny = (Map.Entry) seqIt.next();
                                         if (seqEny.getKey().toString().equals(entry.getValue().toString())) {
                                             isExist = true;
-                                            e.setSequenceId((BeamlineSequence) seqEny.getValue());
+                                            e.setBeamlineSequenceId((BeamlineSequence) seqEny.getValue());
                                         }
                                     }
 
@@ -104,14 +104,14 @@ public class Exl2DB {
                                 if (!isExist) {
                                     BeamlineSequence bls = new BeamlineSequence();
                                     bls.setSequenceName(entry.getValue().toString());
-                                    e.setSequenceId(bls);
+                                    e.setBeamlineSequenceId(bls);
                                     em.persist(bls);
                                     sequences.put(entry.getValue().toString(), bls);
                                 }//表里不存在，需要新建一个
                             } /////////////////数据库中不存在
                             //数据库中存在
                             else {
-                                e.setSequenceId(blsDB);
+                                e.setBeamlineSequenceId(blsDB);
                             }
                         } //填elementType里,与上面判断相同
                         else if ("type".equals(key)) {

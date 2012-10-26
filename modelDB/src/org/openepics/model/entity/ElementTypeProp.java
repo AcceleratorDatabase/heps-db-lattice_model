@@ -18,7 +18,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -44,19 +43,14 @@ public class ElementTypeProp implements Serializable {
     @Basic(optional = false)
     @Column(name = "element_type_prop_id")
     private Integer elementTypePropId;
-    @Size(max = 45)
     @Column(name = "element_type_prop_name")
     private String elementTypePropName;
-    @Size(max = 255)
     @Column(name = "element_type_prop_description")
     private String elementTypePropDescription;
-    @Size(max = 255)
     @Column(name = "element_type_prop_default")
     private String elementTypePropDefault;
-    @Size(max = 45)
     @Column(name = "element_type_prop_unit")
     private String elementTypePropUnit;
-    @Size(max = 45)
     @Column(name = "element_type_prop_datatype")
     private String elementTypePropDatatype;
     @JoinColumn(name = "element_type_id", referencedColumnName = "element_type_id")

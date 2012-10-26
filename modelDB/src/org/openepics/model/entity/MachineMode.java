@@ -16,7 +16,6 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -39,10 +38,8 @@ public class MachineMode implements Serializable {
     @Basic(optional = false)
     @Column(name = "machine_mode_id")
     private Integer machineModeId;
-    @Size(max = 45)
     @Column(name = "machine_mode_name")
     private String machineModeName;
-    @Size(max = 255)
     @Column(name = "machine_mode_description")
     private String machineModeDescription;
     @OneToMany(mappedBy = "machineModeId")

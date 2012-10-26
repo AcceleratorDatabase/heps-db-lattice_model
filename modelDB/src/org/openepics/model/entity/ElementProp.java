@@ -16,7 +16,6 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -34,7 +33,8 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ElementProp.findByElementPropDouble", query = "SELECT e FROM ElementProp e WHERE e.elementPropDouble = :elementPropDouble"),
     @NamedQuery(name = "ElementProp.findByElementPropIndex", query = "SELECT e FROM ElementProp e WHERE e.elementPropIndex = :elementPropIndex"),
     @NamedQuery(name = "ElementProp.findByPropCategory", query = "SELECT e FROM ElementProp e WHERE e.propCategory = :propCategory"),
-    @NamedQuery(name = "ElementProp.findByElementPropName", query = "SELECT e FROM ElementProp e WHERE e.elementPropName = :elementPropName")})
+    @NamedQuery(name = "ElementProp.findByElementPropName", query = "SELECT e FROM ElementProp e WHERE e.elementPropName = :elementPropName"),
+    @NamedQuery(name = "ElementProp.findByElementPropDatatype", query = "SELECT e FROM ElementProp e WHERE e.elementPropDatatype = :elementPropDatatype")})
 public class ElementProp implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,7 +42,6 @@ public class ElementProp implements Serializable {
     @Basic(optional = false)
     @Column(name = "element_prop_id")
     private Integer elementPropId;
-    @Size(max = 255)
     @Column(name = "element_prop_string")
     private String elementPropString;
     @Column(name = "element_prop_int")
@@ -52,21 +51,21 @@ public class ElementProp implements Serializable {
     private Double elementPropDouble;
     @Column(name = "element_prop_index")
     private Integer elementPropIndex;
-    @Size(max = 45)
     @Column(name = "prop_category")
     private String propCategory;
-    @Size(max = 45)
     @Column(name = "element_prop_name")
     private String elementPropName;
+    @Column(name = "element_prop_datatype")
+    private String elementPropDatatype;
+    @JoinColumn(name = "lattice_id", referencedColumnName = "lattice_id")
+    @ManyToOne
+    private Lattice latticeId;
     @JoinColumn(name = "element_type_prop_id", referencedColumnName = "element_type_prop_id")
     @ManyToOne
     private ElementTypeProp elementTypePropId;
     @JoinColumn(name = "element_id", referencedColumnName = "element_id")
     @ManyToOne
     private Element elementId;
-    @JoinColumn(name = "model_id", referencedColumnName = "model_id")
-    @ManyToOne
-    private Model modelId;
 
     public ElementProp() {
     }
@@ -131,6 +130,22 @@ public class ElementProp implements Serializable {
         this.elementPropName = elementPropName;
     }
 
+    public String getElementPropDatatype() {
+        return elementPropDatatype;
+    }
+
+    public void setElementPropDatatype(String elementPropDatatype) {
+        this.elementPropDatatype = elementPropDatatype;
+    }
+
+    public Lattice getLatticeId() {
+        return latticeId;
+    }
+
+    public void setLatticeId(Lattice latticeId) {
+        this.latticeId = latticeId;
+    }
+
     public ElementTypeProp getElementTypePropId() {
         return elementTypePropId;
     }
@@ -145,14 +160,6 @@ public class ElementProp implements Serializable {
 
     public void setElementId(Element elementId) {
         this.elementId = elementId;
-    }
-
-    public Model getModelId() {
-        return modelId;
-    }
-
-    public void setModelId(Model modelId) {
-        this.modelId = modelId;
     }
 
     @Override

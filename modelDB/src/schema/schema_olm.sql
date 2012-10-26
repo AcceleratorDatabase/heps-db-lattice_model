@@ -2,13 +2,13 @@ SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
-CREATE SCHEMA IF NOT EXISTS `model` DEFAULT CHARACTER SET utf8 ;
-USE `model` ;
+CREATE SCHEMA IF NOT EXISTS `discs_model` DEFAULT CHARACTER SET utf8 ;
+USE `discs_model` ;
 
 -- -----------------------------------------------------
--- Table `model`.`element_type`
+-- Table `discs_model`.`element_type`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`element_type` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type` (
   `element_type_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `element_type` VARCHAR(45) NULL DEFAULT NULL ,
   `element_type_description` VARCHAR(255) NULL DEFAULT NULL ,
@@ -19,28 +19,27 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`lattice`
+-- Table `discs_model`.`beamline_sequence`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`lattice` (
-  `lattice_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `lattice_name` VARCHAR(255) NULL DEFAULT NULL ,
-  `lattice_description` VARCHAR(255) NULL DEFAULT NULL ,
-  `created_by` VARCHAR(45) NULL DEFAULT NULL ,
-  `create_date` DATETIME NULL DEFAULT NULL ,
-  `updated_by` VARCHAR(45) NULL DEFAULT NULL ,
-  `update_date` DATETIME NULL DEFAULT NULL ,
-  PRIMARY KEY (`lattice_id`) )
+CREATE  TABLE IF NOT EXISTS `discs_model`.`beamline_sequence` (
+  `beamline_sequence_id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `sequence_name` VARCHAR(45) NULL DEFAULT NULL ,
+  `first_element_name` VARCHAR(45) NULL DEFAULT NULL ,
+  `last_element_name` VARCHAR(45) NULL DEFAULT NULL ,
+  `predecessor_sequence` VARCHAR(255) NULL DEFAULT NULL ,
+  `sequence_length` DOUBLE NULL DEFAULT NULL ,
+  `sequence_description` VARCHAR(255) NULL DEFAULT NULL ,
+  PRIMARY KEY (`beamline_sequence_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 10
 DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`element`
+-- Table `discs_model`.`element`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`element` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`element` (
   `element_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `lattice_id` INT(11) NULL DEFAULT NULL ,
   `element_type_id` INT(11) NULL DEFAULT NULL ,
   `element_name` VARCHAR(45) NULL DEFAULT NULL ,
   `element_order` INT(11) NULL DEFAULT NULL ,
@@ -55,17 +54,18 @@ CREATE  TABLE IF NOT EXISTS `model`.`element` (
   `yaw` DOUBLE NULL DEFAULT '0' ,
   `roll` DOUBLE NULL DEFAULT '0' ,
   `pos` DOUBLE NULL DEFAULT '0' ,
+  `beamline_sequence_id` INT(11) NULL DEFAULT NULL ,
   PRIMARY KEY (`element_id`) ,
-  INDEX `FK_lattice_element_idx` (`lattice_id` ASC) ,
   INDEX `FK_element_type_idx` (`element_type_id` ASC) ,
+  INDEX `FK_beamline_sequence_id` (`beamline_sequence_id` ASC) ,
   CONSTRAINT `FK_element_type`
     FOREIGN KEY (`element_type_id` )
-    REFERENCES `model`.`element_type` (`element_type_id` )
+    REFERENCES `discs_model`.`element_type` (`element_type_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `FK_lattice_element`
-    FOREIGN KEY (`lattice_id` )
-    REFERENCES `model`.`lattice` (`lattice_id` )
+  CONSTRAINT `FK_beamline_sequence_id`
+    FOREIGN KEY (`beamline_sequence_id` )
+    REFERENCES `discs_model`.`beamline_sequence` (`beamline_sequence_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -74,9 +74,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`model_geometry`
+-- Table `discs_model`.`model_geometry`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`model_geometry` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`model_geometry` (
   `model_geometry_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `model_geometry_name` VARCHAR(45) NULL DEFAULT NULL ,
   `model_geometry_description` VARCHAR(255) NULL DEFAULT NULL ,
@@ -86,9 +86,25 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`machine_mode`
+-- Table `discs_model`.`lattice`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`machine_mode` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`lattice` (
+  `lattice_id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `lattice_name` VARCHAR(255) NULL DEFAULT NULL ,
+  `lattice_description` VARCHAR(255) NULL DEFAULT NULL ,
+  `created_by` VARCHAR(45) NULL DEFAULT NULL ,
+  `create_date` DATETIME NULL DEFAULT NULL ,
+  `updated_by` VARCHAR(45) NULL DEFAULT NULL ,
+  `update_date` DATETIME NULL DEFAULT NULL ,
+  PRIMARY KEY (`lattice_id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `discs_model`.`machine_mode`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `discs_model`.`machine_mode` (
   `machine_mode_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `machine_mode_name` VARCHAR(45) NULL DEFAULT NULL ,
   `machine_mode_description` VARCHAR(255) NULL DEFAULT NULL ,
@@ -99,9 +115,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`model_code`
+-- Table `discs_model`.`model_code`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`model_code` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`model_code` (
   `model_code_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `code_name` VARCHAR(45) NULL DEFAULT NULL ,
   `algorithm` VARCHAR(45) NULL DEFAULT NULL ,
@@ -112,9 +128,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`model_line`
+-- Table `discs_model`.`model_line`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`model_line` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`model_line` (
   `model_line_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `model_line_name` VARCHAR(45) NULL DEFAULT NULL ,
   `model_line_description` VARCHAR(255) NULL DEFAULT NULL ,
@@ -129,9 +145,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`model`
+-- Table `discs_model`.`model`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`model` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`model` (
   `model_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `lattice_id` INT(11) NULL DEFAULT NULL ,
   `model_code_id` INT(11) NULL DEFAULT NULL ,
@@ -162,27 +178,27 @@ CREATE  TABLE IF NOT EXISTS `model`.`model` (
   INDEX `FK_model_code_id` (`model_code_id` ASC) ,
   CONSTRAINT `FK_model_geometry_id`
     FOREIGN KEY (`model_geometry_id` )
-    REFERENCES `model`.`model_geometry` (`model_geometry_id` )
+    REFERENCES `discs_model`.`model_geometry` (`model_geometry_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `FK_lattice`
     FOREIGN KEY (`lattice_id` )
-    REFERENCES `model`.`lattice` (`lattice_id` )
+    REFERENCES `discs_model`.`lattice` (`lattice_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `FK_machine_model_id`
     FOREIGN KEY (`machine_mode_id` )
-    REFERENCES `model`.`machine_mode` (`machine_mode_id` )
+    REFERENCES `discs_model`.`machine_mode` (`machine_mode_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `FK_model_code_id`
     FOREIGN KEY (`model_code_id` )
-    REFERENCES `model`.`model_code` (`model_code_id` )
+    REFERENCES `discs_model`.`model_code` (`model_code_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `FK_model_line_id`
     FOREIGN KEY (`model_line_id` )
-    REFERENCES `model`.`model_line` (`model_line_id` )
+    REFERENCES `discs_model`.`model_line` (`model_line_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -190,9 +206,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`beam_parameter`
+-- Table `discs_model`.`beam_parameter`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`beam_parameter` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`beam_parameter` (
   `twiss_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `element_id` INT(11) NULL DEFAULT NULL ,
   `model_id` INT(11) NULL DEFAULT NULL ,
@@ -236,12 +252,12 @@ CREATE  TABLE IF NOT EXISTS `model`.`beam_parameter` (
   INDEX `FK_model` (`model_id` ASC) ,
   CONSTRAINT `FK_element`
     FOREIGN KEY (`element_id` )
-    REFERENCES `model`.`element` (`element_id` )
+    REFERENCES `discs_model`.`element` (`element_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `FK_model`
     FOREIGN KEY (`model_id` )
-    REFERENCES `model`.`model` (`model_id` )
+    REFERENCES `discs_model`.`model` (`model_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -249,41 +265,24 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`beamline_sequence`
+-- Table `discs_model`.`blsequence_lattice`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`beamline_sequence` (
-  `beamline_sequence_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `sequence_name` VARCHAR(45) NULL DEFAULT NULL ,
-  `first_element_name` VARCHAR(45) NULL DEFAULT NULL ,
-  `last_element_name` VARCHAR(45) NULL DEFAULT NULL ,
-  `predecessor_sequence` VARCHAR(255) NULL DEFAULT NULL ,
-  `sequence_length` DOUBLE NULL DEFAULT NULL ,
-  `sequence_description` VARCHAR(255) NULL DEFAULT NULL ,
-  PRIMARY KEY (`beamline_sequence_id`) )
-ENGINE = InnoDB
-AUTO_INCREMENT = 10
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `model`.`blsequence_lattice`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`blsequence_lattice` (
-  `blsequence_lattice_id` INT(11) NOT NULL ,
+CREATE  TABLE IF NOT EXISTS `discs_model`.`blsequence_lattice` (
+  `blsequence_lattice_id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `beamline_order` INT(11) NULL DEFAULT NULL ,
   `beamline_sequence_id` INT(11) NULL DEFAULT NULL ,
   `lattice_id` INT(11) NULL DEFAULT NULL ,
-  `beamline_order` INT(11) NULL DEFAULT NULL ,
   PRIMARY KEY (`blsequence_lattice_id`) ,
-  INDEX `FK_lattice_id` (`lattice_id` ASC) ,
-  INDEX `FK_beamline_sequence_id` (`beamline_sequence_id` ASC) ,
-  CONSTRAINT `FK_beamline_sequence_id`
+  INDEX `FK_blseq_lattice_id` (`lattice_id` ASC) ,
+  INDEX `FK_blseq_beamlineSeq_id` (`beamline_sequence_id` ASC) ,
+  CONSTRAINT `FK_blseq_beamlineSeq_id`
     FOREIGN KEY (`beamline_sequence_id` )
-    REFERENCES `model`.`beamline_sequence` (`beamline_sequence_id` )
+    REFERENCES `discs_model`.`beamline_sequence` (`beamline_sequence_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
-  CONSTRAINT `FK_lattice_id`
+  CONSTRAINT `FK_blseq_lattice_id`
     FOREIGN KEY (`lattice_id` )
-    REFERENCES `model`.`lattice` (`lattice_id` )
+    REFERENCES `discs_model`.`lattice` (`lattice_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -291,9 +290,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`element_install_device`
+-- Table `discs_model`.`element_install_device`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`element_install_device` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`element_install_device` (
   `element__install_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `element_id` INT(11) NULL DEFAULT NULL ,
   `install_id` INT(11) NULL DEFAULT NULL ,
@@ -303,7 +302,7 @@ CREATE  TABLE IF NOT EXISTS `model`.`element_install_device` (
   INDEX `FK_element_id_idx` (`element_id` ASC) ,
   CONSTRAINT `FK_element_install`
     FOREIGN KEY (`element_id` )
-    REFERENCES `model`.`element` (`element_id` )
+    REFERENCES `discs_model`.`element` (`element_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -311,9 +310,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`element_type_prop`
+-- Table `discs_model`.`element_type_prop`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`element_type_prop` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type_prop` (
   `element_type_prop_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `element_type_id` INT(11) NULL DEFAULT NULL ,
   `element_type_prop_name` VARCHAR(45) NULL DEFAULT NULL ,
@@ -325,7 +324,7 @@ CREATE  TABLE IF NOT EXISTS `model`.`element_type_prop` (
   INDEX `FK_element_type_idx` (`element_type_id` ASC) ,
   CONSTRAINT `FK_element_type_id`
     FOREIGN KEY (`element_type_id` )
-    REFERENCES `model`.`element_type` (`element_type_id` )
+    REFERENCES `discs_model`.`element_type` (`element_type_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -334,9 +333,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`element_prop`
+-- Table `discs_model`.`element_prop`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`element_prop` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`element_prop` (
   `element_prop_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `element_id` INT(11) NULL DEFAULT NULL ,
   `element_type_prop_id` INT(11) NULL DEFAULT NULL ,
@@ -346,24 +345,25 @@ CREATE  TABLE IF NOT EXISTS `model`.`element_prop` (
   `element_prop_index` INT(11) NULL DEFAULT NULL ,
   `prop_category` VARCHAR(45) NULL DEFAULT NULL ,
   `element_prop_name` VARCHAR(45) NULL DEFAULT NULL ,
-  `model_id` INT(11) NULL DEFAULT NULL ,
+  `element_prop_datatype` VARCHAR(45) NULL DEFAULT NULL ,
+  `lattice_id` INT(11) NULL DEFAULT NULL ,
   PRIMARY KEY (`element_prop_id`) ,
   INDEX `FK_element_id_idx` (`element_id` ASC) ,
   INDEX `FK_element_prop_type` (`element_type_prop_id` ASC) ,
-  INDEX `FK_model_id` (`model_id` ASC) ,
-  CONSTRAINT `FK_model_id`
-    FOREIGN KEY (`model_id` )
-    REFERENCES `model`.`model` (`model_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
+  INDEX `FK_lattice_id` (`lattice_id` ASC) ,
   CONSTRAINT `FK_element_id`
     FOREIGN KEY (`element_id` )
-    REFERENCES `model`.`element` (`element_id` )
+    REFERENCES `discs_model`.`element` (`element_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `FK_element_prop_type`
     FOREIGN KEY (`element_type_prop_id` )
-    REFERENCES `model`.`element_type_prop` (`element_type_prop_id` )
+    REFERENCES `discs_model`.`element_type_prop` (`element_type_prop_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK_lattice_id`
+    FOREIGN KEY (`lattice_id` )
+    REFERENCES `discs_model`.`lattice` (`lattice_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -372,9 +372,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`gold_lattice`
+-- Table `discs_model`.`gold_lattice`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`gold_lattice` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`gold_lattice` (
   `gold_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `lattice_id` INT(11) NULL DEFAULT NULL ,
   `machine_mode_id` VARCHAR(45) NULL DEFAULT NULL ,
@@ -387,7 +387,7 @@ CREATE  TABLE IF NOT EXISTS `model`.`gold_lattice` (
   INDEX `FK_gold_lattice_id_idx` (`lattice_id` ASC) ,
   CONSTRAINT `FK_gold_lattice_id`
     FOREIGN KEY (`lattice_id` )
-    REFERENCES `model`.`lattice` (`lattice_id` )
+    REFERENCES `discs_model`.`lattice` (`lattice_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -395,9 +395,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`gold_model`
+-- Table `discs_model`.`gold_model`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`gold_model` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`gold_model` (
   `gold_model_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `model_id` INT(11) NULL DEFAULT NULL ,
   `created_by` VARCHAR(45) NULL DEFAULT NULL ,
@@ -409,7 +409,7 @@ CREATE  TABLE IF NOT EXISTS `model`.`gold_model` (
   INDEX `FK_gold_model` (`model_id` ASC) ,
   CONSTRAINT `FK_gold_model`
     FOREIGN KEY (`model_id` )
-    REFERENCES `model`.`model` (`model_id` )
+    REFERENCES `discs_model`.`model` (`model_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -417,9 +417,9 @@ DEFAULT CHARACTER SET = utf8;
 
 
 -- -----------------------------------------------------
--- Table `model`.`rf_gap`
+-- Table `discs_model`.`rf_gap`
 -- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `model`.`rf_gap` (
+CREATE  TABLE IF NOT EXISTS `discs_model`.`rf_gap` (
   `rf_gap_id` INT(11) NOT NULL ,
   `cavity_id` INT(11) NULL DEFAULT NULL ,
   `pos` DOUBLE NULL DEFAULT NULL ,
@@ -433,7 +433,7 @@ CREATE  TABLE IF NOT EXISTS `model`.`rf_gap` (
   INDEX `FK_cavity_id` (`cavity_id` ASC) ,
   CONSTRAINT `FK_cavity_id`
     FOREIGN KEY (`cavity_id` )
-    REFERENCES `model`.`element` (`element_id` )
+    REFERENCES `discs_model`.`element` (`element_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB

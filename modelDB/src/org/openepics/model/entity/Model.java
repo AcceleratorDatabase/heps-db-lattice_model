@@ -21,7 +21,6 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
 
@@ -57,19 +56,15 @@ public class Model implements Serializable {
     @Basic(optional = false)
     @Column(name = "model_id")
     private Integer modelId;
-    @Size(max = 255)
     @Column(name = "model_name")
     private String modelName;
-    @Size(max = 255)
     @Column(name = "model_desc")
     private String modelDesc;
-    @Size(max = 45)
     @Column(name = "created_by")
     private String createdBy;
     @Column(name = "create_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
-    @Size(max = 45)
     @Column(name = "updated_by")
     private String updatedBy;
     @Column(name = "update_date")
@@ -111,8 +106,6 @@ public class Model implements Serializable {
     private ModelGeometry modelGeometryId;
     @OneToMany(mappedBy = "modelId")
     private Collection<BeamParameter> beamParameterCollection;
-    @OneToMany(mappedBy = "modelId")
-    private Collection<ElementProp> elementPropCollection;
     @OneToMany(mappedBy = "modelId")
     private Collection<GoldModel> goldModelCollection;
 
@@ -298,15 +291,6 @@ public class Model implements Serializable {
 
     public void setBeamParameterCollection(Collection<BeamParameter> beamParameterCollection) {
         this.beamParameterCollection = beamParameterCollection;
-    }
-
-    @XmlTransient
-    public Collection<ElementProp> getElementPropCollection() {
-        return elementPropCollection;
-    }
-
-    public void setElementPropCollection(Collection<ElementProp> elementPropCollection) {
-        this.elementPropCollection = elementPropCollection;
     }
 
     @XmlTransient
