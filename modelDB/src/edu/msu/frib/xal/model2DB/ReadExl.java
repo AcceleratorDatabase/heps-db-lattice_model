@@ -36,7 +36,7 @@ public class ReadExl {
      */
     public static ArrayList readExcel(String file) {
         ArrayList<HashMap> contents = new ArrayList<>();
-        ArrayList rowListSet = new ArrayList();   //存储多个arraylist，其中每个arrayList是一行的内容
+        ArrayList rowListSet = new ArrayList();  
         int rowNum = 0;
         int colNum = 0;
         FileInputStream inp = null;
@@ -53,18 +53,18 @@ public class ReadExl {
         }
 
         for (Iterator<Row> rit = sheet.rowIterator(); rit.hasNext();) {
-            // 迭代行   
-            ArrayList rowList = new ArrayList();   //存储一行的内容
+            
+            ArrayList rowList = new ArrayList();  
             Row row = (Row) rit.next();
             for (int c = 0; c < colNum; c++) {
                 Object o = "";
                 try {
                     Cell cell = row.getCell(c);
-                    //  如果该行没有值，就赋给它空值""
+                    
                     if (!"".equals(cell) && cell != null) {
                         switch (cell.getCellType()) {
                             case Cell.CELL_TYPE_STRING:
-                                o = cell.getStringCellValue().replaceAll(" +", "_");  //将空格转换成下划线
+                                o = cell.getStringCellValue().replaceAll(" +", "_");  
                                 break;
                             case Cell.CELL_TYPE_NUMERIC:
                                 o = cell.getNumericCellValue();
@@ -100,9 +100,9 @@ public class ReadExl {
         }
 
         ArrayList xalLabels = new ArrayList();
-        ArrayList xalList = (ArrayList) rowListSet.get(1); //第二行是xal_label
-        ArrayList phyList = (ArrayList) rowListSet.get(0);//第一行是物理人员需要的label
-        //如果第二行没有，就使用第一行的label，并转换成小写
+        ArrayList xalList = (ArrayList) rowListSet.get(1); 
+        ArrayList phyList = (ArrayList) rowListSet.get(0);
+        
         for (int t = 0; t < colNum; t++) {
             if ("".equals(xalList.get(t))) {
                 xalLabels.add(phyList.get(t).toString().toLowerCase());
@@ -110,12 +110,12 @@ public class ReadExl {
                 xalLabels.add(xalList.get(t));
             }
         }
-       //第三行是单位，所以真正的值是从第四行开始
+      
         for (int i = 3; i < rowNum; i++) {
             ArrayList rowList2 = (ArrayList) rowListSet.get(i);
             HashMap map = new HashMap();
             for (int j = 0; j < colNum; j++) {
-                //map的key是xal_label，value是对应的取值
+               
                 map.put(xalLabels.get(j), rowList2.get(j));
             }
             contents.add(map);
