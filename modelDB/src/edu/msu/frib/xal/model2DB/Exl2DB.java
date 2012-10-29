@@ -38,32 +38,32 @@ public class Exl2DB {
     static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     static EntityManager em = emf.createEntityManager();
     @PersistenceContext
-    //这些label的值不写到数据库中
+   
     public static String[] WNDS = {"xal_label", "id", "system", "subsystem", "energy", "suml",
         "align_x", "align_y", "align_z", "align_pitch", "align_yaw", "align_roll",
         "magnet_x_coor", "magnet_y_coor", "magnet_z_coor", "magnet_x_angle", "magnet_y_angle", "magnet_z_angle"};
-    //这些label写到element表中,其中"sequence_id"填到beamlineSequence里，"type"填到elementType里
+    
     public static String[] ToElement = {"element_name", "sequence_id", "pos", "s", "len", "type"};
-    //这些是magnet类型，但是在名称上没有体现，所以要进行判断
+    
     public static String[] MagCat = {"integrated_field_bl", "integrated_field_gradient_gl", "field_gradient_g"};
-    //这些要特殊处理，x y分别代表两个方向的孔径，如果是圆形的话则只有aperture_x，椭圆的话才有两个值
+  
     public static String[] Aperture = {"aperture_x", "x_size", "y_size"};
 
     @SuppressWarnings("empty-statement")
     public static void write2DB(String path) {
         Lattice lattice = new Lattice();
 
-        //存放已经读取到的BeamlineSequence，key是name，value是BeamlineSequence的class
+    
         HashMap sequences = new HashMap();
-        //存放已经读取到的ElementType，key是name，value是ElementType的class
+       
         HashMap elts = new HashMap();
 
         ArrayList contents = ReadExl.readExcel(path);
         Iterator it = contents.iterator();
         em.getTransaction().begin();
         while (it.hasNext()) {
-            HashMap map = (HashMap) it.next();    //取出每个element的具体内容
-            //如果数据库中已经存在就不在插入，如果不存在再执行以下操作
+            HashMap map = (HashMap) it.next();    
+          
             if (ElementAPI.getElementByName(map.get("element_name").toString()) == null) {
                 Element e = new Element();
 //                e.setLatticeId(lattice);
@@ -75,18 +75,16 @@ public class Exl2DB {
                     boolean isWNDS = Tool.strContain(key, WNDS);
                     boolean is2element = Tool.strContain(key, ToElement);
 
-                    if (isWNDS) {  //什么都不做，不需要填到数据库中
-                    } else if (is2element) {   //需要填到element表中
+                    if (isWNDS) {  
+                    } else if (is2element) {   
                         
-                    /*填到beamlineSequence里，首先判断数据库中是否已经存在，如果存在，就直接set;
-                         如果不存在，再判断sequences里是否存在，如果存在，就说明已经读过，不需要再读了
-                         如果sequences不存在，再新建一个，并加到sequences里,sequences的key就是sequences_name*/
+                   
                         if ("sequence_id".equals(key)) {
                             BeamlineSequence blsDB = BeamlineSequenceAPI.getSequenceByName(entry.getValue().toString());
-                            //数据库中不存在
+                           
                             if (blsDB == null) {
-                                boolean isExist = false;        //表里是否存在
-                                //判断表里是否已经读到了
+                                boolean isExist = false;        
+                                
                                 if (!sequences.isEmpty()) {
                                     Iterator seqIt = sequences.entrySet().iterator();
 
@@ -98,28 +96,28 @@ public class Exl2DB {
                                         }
                                     }
 
-                                }//判断表里是否已经读到了
+                                }
 
-                                //表里不存在，需要新建一个
+                               
                                 if (!isExist) {
                                     BeamlineSequence bls = new BeamlineSequence();
                                     bls.setSequenceName(entry.getValue().toString());
                                     e.setBeamlineSequenceId(bls);
                                     em.persist(bls);
                                     sequences.put(entry.getValue().toString(), bls);
-                                }//表里不存在，需要新建一个
-                            } /////////////////数据库中不存在
-                            //数据库中存在
+                                }
+                            } 
+                           
                             else {
                                 e.setBeamlineSequenceId(blsDB);
                             }
-                        } //填elementType里,与上面判断相同
+                        } 
                         else if ("type".equals(key)) {
                             ElementType eltDB = ElementTypeAPI.getElementTypeByType(entry.getValue().toString());
-                            //数据库中不存在
+                           
                             if (eltDB == null) {
-                                boolean isExist1 = false;        //表里是否存在
-                                //判断表里是否已经读到了
+                                boolean isExist1 = false;        
+                                
                                 if (!elts.isEmpty()) {
                                     Iterator eltIt = elts.entrySet().iterator();
 
@@ -130,30 +128,30 @@ public class Exl2DB {
                                             e.setElementTypeId((ElementType) eltEny.getValue());
                                         }
                                     }
-                                }//判断表里是否已经读到了
+                                }
 
-                                //表里不存在，需要新建一个
+                               
                                 if (!isExist1) {
                                     ElementType elt = new ElementType();
                                     elt.setElementType(entry.getValue().toString());
                                     e.setElementTypeId(elt);
                                     em.persist(elt);
                                     elts.put(entry.getValue().toString(), elt);
-                                }//表里不存在，需要新建一个
-                            } /////////////////数据库中不存在
+                                }
+                            } 
                            
-                            //数据库中存在
+                            
                             else {
                                 e.setElementTypeId(eltDB);
                             }
-                        } //填到element中
+                        }
                         else {
-                            //利用反射机制，调用Element对应的set方法，这些都是element的属性值
+                            
                             String fieldName;
                             String setter;
-                            int unlPos = key.indexOf("_");    //判断下划线的位置
+                            int unlPos = key.indexOf("_");   
                             if (unlPos > -1) {
-                                //将element_name变成setElementName的形式，将len变成setLen
+                                
                                 setter = "set" + key.substring(0, 1).toUpperCase() + key.substring(1, unlPos)
                                         + key.substring(unlPos + 1).substring(0, 1).toUpperCase()
                                         + key.substring(unlPos + 2);
@@ -200,12 +198,11 @@ public class Exl2DB {
                             }
                         }
                     } else {
-                        //这些需要填到element_prop表中
-                        boolean ifPerst = true;    //针对aperture的特殊情况，防止把不需要的ep持久化
+                        
+                        boolean ifPerst = true;    
                         ElementProp ep = new ElementProp();
                         int unlPos1 = key.indexOf("_");
-                        //如果含有下划线，就将下划线前的填到category里，后的填到name里；否则直接填到name里
-                        //如果是上面magCat里面的，不按规则
+                       
                         if (Tool.strContain(key, MagCat)) {
                             ep = ElementPropAPI.setElementProperty(e, "magnet", key, entry.getValue());
                         } else if (Tool.strContain(key, Aperture)) {

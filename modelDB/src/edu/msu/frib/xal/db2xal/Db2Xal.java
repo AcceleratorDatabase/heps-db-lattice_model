@@ -33,8 +33,17 @@ public class Db2Xal {
     static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     EntityManager em = emf.createEntityManager();
 
+    // define the accelerator name
+    String accName = "frib";
+    
     @PersistenceContext
     public void write2ModelParam() {
+        // write the header
+        
+        // find the first element for each sequence
+        
+        // loop over the first element collection for beam_parameters
+        
     }
 
     /**
@@ -71,8 +80,8 @@ public class Db2Xal {
         sb.append(date.toString());
         sb.append("\" system=\"");
         // TODO figure out the accelerator system name from DB
-        sb.append("accelerator\" ");
-        sb.append("ver=\"1.0.0\">\n");
+        sb.append(accName);
+        sb.append("\" ver=\"1.0.0\">\n");
 
         // TODO set up combo sequences
 
@@ -236,6 +245,9 @@ public class Db2Xal {
      */
     public static void main(String[] args) {
         Db2Xal x = new Db2Xal();
+        
+        // TODO get the accelerator name to override the default one (accName)
+        
 //        x.write2IMPL();
 //        x.write2ModelParam();
         x.write2XDXF();
