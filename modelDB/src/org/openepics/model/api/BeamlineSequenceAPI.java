@@ -52,9 +52,9 @@ public class BeamlineSequenceAPI {
      */
     public static List<Element> getAllElementsForSequence(String seq) {
         Query q;
-        // q = em.createQuery("SELECT e FROM Element e JOIN e.sequenceId s "
-        //         + "WHERE s.sequenceName = :sequenceName").setParameter("sequenceName", seq);
-        q = em.createQuery("SELECT blsl FROM BeamlineSequence blsl WHERE blsl.beamlineSequenceId.sequenceName=:sequenceName").setParameter("sequenceName", seq);
+         q = em.createQuery("SELECT e FROM Element e JOIN e.sequenceId s "
+                 + "WHERE s.sequenceName = :sequenceName").setParameter("sequenceName", seq);
+      /*  q = em.createQuery("SELECT blsl FROM BeamlineSequence blsl WHERE blsl.beamlineSequenceId.sequenceName=:sequenceName").setParameter("sequenceName", seq);
         List<BeamlineSequence> blslList = q.getResultList();
         ArrayList<Element> eList = new ArrayList<>();
         Iterator it = blslList.iterator();
@@ -69,11 +69,11 @@ public class BeamlineSequenceAPI {
                 eList.add(e);
             }
 
-        }
-        return eList;
+        }*/
+       // return eList;
 
-        //  List<Element> eList = q.getResultList();
-        // return eList;
+          List<Element> eList = q.getResultList();
+         return eList;
     }
 
     /**
