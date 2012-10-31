@@ -50,8 +50,8 @@ public class RfGap implements Serializable {
     private Integer endCellind;
     @Column(name = "gapOffset")
     private Double gapOffset;
-    @Column(name = "length")
-    private Double length;
+    @Column(name = "len")
+    private Double len;
     @Column(name = "phaseFactor")
     private Double phaseFactor;
     @JoinColumn(name = "cavity_id", referencedColumnName = "element_id")
@@ -114,11 +114,11 @@ public class RfGap implements Serializable {
     }
 
     public Double getLength() {
-        return length;
+        return len;
     }
 
     public void setLength(Double length) {
-        this.length = length;
+        this.len = length;
     }
 
     public Double getPhaseFactor() {
