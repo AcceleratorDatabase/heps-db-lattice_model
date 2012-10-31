@@ -4,11 +4,17 @@
  */
 package edu.msu.frib.xal.db2xal;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -32,18 +38,14 @@ public class Db2Xal {
     @PersistenceUnit
     static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     EntityManager em = emf.createEntityManager();
-
     // define the accelerator name
     String accName = "frib";
-    
+
     @PersistenceContext
     public void write2ModelParam() {
         // write the header
-        
         // find the first element for each sequence
-        
         // loop over the first element collection for beam_parameters
-        
     }
 
     /**
@@ -70,6 +72,22 @@ public class Db2Xal {
         sb.append("</deviceMapping>\n");
 
         System.out.println(sb);
+        
+        // write to file
+        BufferedWriter writer = null;
+        try {
+            File file = new File("frib.impl");
+            writer = new BufferedWriter(new FileWriter(file));
+//            writer.write(sb.toString());
+        } catch (IOException ex) {
+            Logger.getLogger(Db2Xal.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                writer.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Db2Xal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     public void write2XDXF() {
@@ -79,16 +97,13 @@ public class Db2Xal {
         Date date = new Date();
         sb.append(date.toString());
         sb.append("\" system=\"");
-        // TODO figure out the accelerator system name from DB
+        //TODO figure out the accelerator system name from DB
         sb.append(accName);
         sb.append("\" ver=\"1.0.0\">\n");
-
-        // TODO set up combo sequences
-
+        //TODO set up combo sequences
         // get all sequences
         List<BeamlineSequence> blsList = BeamlineSequenceAPI.getAllSequences();
         Iterator<BeamlineSequence> blsIt = blsList.iterator();
-
         // loop through each sequence
         while (blsIt.hasNext()) {
             BeamlineSequence bls = blsIt.next();
@@ -142,19 +157,19 @@ public class Db2Xal {
 
                 if (!epList.isEmpty()) {
                     // insert node attributes
-                    
+
                     // set apertures
-                    Map attMap1 = ElementPropAPI.getApertureAttributesForElement(e.getElementName());
-                    if (!attMap1.isEmpty()) {
+                    Map aperAttMap = ElementPropAPI.getApertureAttributesForElement(e.getElementName());
+                    if (!aperAttMap.isEmpty()) {
                         sb.append("            <aperture ");
 
-                        Set keySet1 = attMap1.keySet();
+                        Set keySet1 = aperAttMap.keySet();
                         Iterator<String> keyIt1 = keySet1.iterator();
                         while (keyIt1.hasNext()) {
                             String key1 = keyIt1.next();
                             sb.append(key1);
                             sb.append("=\"");
-                            sb.append(attMap1.get(key1));
+                            sb.append(aperAttMap.get(key1));
                             sb.append("\" ");
                         }
 
@@ -162,18 +177,18 @@ public class Db2Xal {
                     }
 
                     // set magnet attributes
-                    Map attMap2 = ElementPropAPI.getMagnetAttributesForElement(e.getElementName());
-                    if (!attMap2.isEmpty()) {
+                    Map magAttMap = ElementPropAPI.getMagnetAttributesForElement(e.getElementName());
+                    if (!magAttMap.isEmpty()) {
 
                         sb.append("            <magnet ");
 
-                        Set keySet2 = attMap2.keySet();
+                        Set keySet2 = magAttMap.keySet();
                         Iterator<String> keyIt2 = keySet2.iterator();
                         while (keyIt2.hasNext()) {
                             String key2 = keyIt2.next();
                             sb.append(key2);
                             sb.append("=\"");
-                            sb.append(attMap2.get(key2));
+                            sb.append(magAttMap.get(key2));
                             sb.append("\" ");
                         }
 
@@ -181,18 +196,18 @@ public class Db2Xal {
                     }
 
                     // set bpm attributes 
-                    Map attMap3 = ElementPropAPI.getBpmAttributesForElement(e.getElementName());
-                    if (!attMap3.isEmpty()) {
+                    Map bpmAttMap = ElementPropAPI.getBpmAttributesForElement(e.getElementName());
+                    if (!bpmAttMap.isEmpty()) {
 
                         sb.append("            <bpm ");
 
-                        Set keySet3 = attMap3.keySet();
+                        Set keySet3 = bpmAttMap.keySet();
                         Iterator<String> keyIt3 = keySet3.iterator();
                         while (keyIt3.hasNext()) {
                             String key3 = keyIt3.next();
                             sb.append(key3);
                             sb.append("=\"");
-                            sb.append(attMap3.get(key3));
+                            sb.append(bpmAttMap.get(key3));
                             sb.append("\" ");
                         }
 
@@ -200,44 +215,79 @@ public class Db2Xal {
                     }
 
                     // set rfgap attributes
-                    Map attMap4 = ElementPropAPI.getRfgapAttributesForElement(e.getElementName());
-                    if (!attMap4.isEmpty()) {
+                    Map rfAttMap = ElementPropAPI.getRfgapAttributesForElement(e.getElementName());
+                    if (!rfAttMap.isEmpty()) {
 
                         sb.append("            <rfgap ");
 
-                        Set keySet4 = attMap4.keySet();
+                        Set keySet4 = rfAttMap.keySet();
                         Iterator<String> keyIt4 = keySet4.iterator();
                         while (keyIt4.hasNext()) {
                             String key4 = keyIt4.next();
                             sb.append(key4);
                             sb.append("=\"");
-                            sb.append(attMap4.get(key4));
+                            sb.append(rfAttMap.get(key4));
                             sb.append("\" ");
                         }
 
                         sb.append("/>\n");
                     }
-
-
-
                 }
                 sb.append("         </attributes>\n");
+                
+                // if the node is not a marker, add EPICS channels 
+                if (!e.getElementTypeId().getElementType().equals("MARK")) {
+                    sb.append("         <channelsuite>\n");
+                    // for magnets
+                    if (!ElementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty()) {
+                        sb.append("            <channel handle=\"fieldRB\" signal=\"");
+                        sb.append(e.getElementName());
+                        sb.append(":B\" settable=\"false\"/>\n");
+                        sb.append("            <channel handle=\"fieldSet\" signal=\"");
+                        sb.append(e.getElementName());
+                        sb.append(":B_Set\" settable=\"true\"/>\n");                        
+                    }
+                    // for BPMs
+                    if (!ElementPropAPI.getBpmAttributesForElement(e.getElementName()).isEmpty()) {
+                        sb.append("            <channel handle=\"xAvg\" signal=\"");
+                        sb.append(e.getElementName());
+                        sb.append(":xAvg\" settable=\"false\"/>\n");
+                        sb.append("            <channel handle=\"yAvg\" signal=\"");
+                        sb.append(e.getElementName());
+                        sb.append(":yAvg\" settable=\"false\"/>\n");                         
+                    }
+                    
+                    sb.append("         </channelsuite>\n");
+                }
+                
                 sb.append("      </node>\n");
             }
 
             // close the sequence
             sb.append("   </sequence>\n");
         }
-
         // TODO for power supplies
         sb.append("   <powersupplies>\n");
-
         sb.append("   </powersupplies>\n");
-
         // close
         sb.append("</xdxf>");
-
         System.out.println(sb);
+
+        // write to file
+        BufferedWriter writer = null;
+        try {
+            File file = new File("frib.xdxf");
+            writer = new BufferedWriter(new FileWriter(file));
+//            writer.write(sb.toString());
+        } catch (IOException ex) {
+            Logger.getLogger(Db2Xal.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                writer.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Db2Xal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     /**
@@ -245,9 +295,9 @@ public class Db2Xal {
      */
     public static void main(String[] args) {
         Db2Xal x = new Db2Xal();
-        
+
         // TODO get the accelerator name to override the default one (accName)
-        
+
 //        x.write2IMPL();
 //        x.write2ModelParam();
         x.write2XDXF();
