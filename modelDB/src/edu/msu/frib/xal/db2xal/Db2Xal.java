@@ -24,10 +24,12 @@ import org.openepics.model.api.BeamlineSequenceAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ElementPropAPI;
 import org.openepics.model.api.ModelDB;
+import org.openepics.model.api.RfGapAPI;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
 import org.openepics.model.entity.ElementTypeProp;
+import org.openepics.model.entity.RfGap;
 
 /**
  *
@@ -144,7 +146,14 @@ public class Db2Xal {
             Iterator<Element> eIt = eList.iterator();
             while (eIt.hasNext()) {
                 Element e = eIt.next();
-                sb.append("      <node id=\"");
+                // everything other than RF cavities treated as node
+                if (!e.getElementTypeId().getElementType().equals("CAV")) {
+                    sb.append("      <node id=\"");
+                } 
+                // RF cavities treated as sequence
+                else {
+                    sb.append("      <sequence id=\"");
+                }
                 sb.append(e.getElementName());
                 sb.append("\" type=\"");
                 sb.append(e.getElementTypeId().getElementType());
@@ -234,8 +243,8 @@ public class Db2Xal {
                         sb.append("/>\n");
                     }
 
-                    // set rfgap attributes
-                    Map rfAttMap = ElementPropAPI.getRfgapAttributesForElement(e.getElementName());
+                    // set rfcavity attributes
+                    Map rfAttMap = ElementPropAPI.getRfcavityAttributesForElement(e.getElementName());
                     if (!rfAttMap.isEmpty()) {
 
                         sb.append("            <rfgap ");
@@ -278,9 +287,49 @@ public class Db2Xal {
                     }
                     
                     sb.append("         </channelsuite>\n");
+                    
+                    // now we need to check if this is an RF cavity and fill in all the RF gaps within this cavity
+                    if (e.getElementTypeId().getElementType().equals("CAV")) {
+                        List<RfGap> gaps = RfGapAPI.getAllRfgapsForCavity(e.getElementName());
+                        Iterator<RfGap> gapIt = gaps.iterator();
+                        while (gapIt.hasNext()) {
+                            RfGap rg = gapIt.next();
+                            sb.append("         <node type=\"RG\" id=\"");
+                            sb.append(rg.getGapName());
+                            sb.append("\" pos=\"");
+                            sb.append(rg.getPos());
+                            sb.append("\">\n");
+                            
+                            sb.append("           <attributes>\n");
+                            sb.append("             <rfgap length=\"");
+                            sb.append(rg.getLen());
+                            sb.append("\" phaseFactor=\"");
+                            sb.append(rg.getPhaseFactor());
+                            sb.append("\" ampFactor=\"");
+                            sb.append(rg.getAmpFactor());
+                            sb.append("\" TTF=\"");
+                            sb.append(rg.getTtf());
+                            sb.append("\" endCell=\"");
+                            sb.append(rg.getEndCellind());
+                            sb.append("\" gapOffset=\"");
+                            sb.append(rg.getGapOffset());
+                            sb.append("\"/>\n");
+                            
+                            sb.append("           </attributes>\n");
+                            
+                            sb.append("         </node>\n");
+                        }
+                    }
                 }
                 
-                sb.append("      </node>\n");
+                // close the <node>
+                if (!e.getElementTypeId().getElementType().equals("CAV")) {
+                    sb.append("      </node>\n");
+                } 
+                // close the RF cavity <sequence>
+                else {
+                    sb.append("      </sequence>\n");
+                }
             }
 
             // close the sequence

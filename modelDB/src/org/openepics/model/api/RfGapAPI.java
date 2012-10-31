@@ -23,7 +23,7 @@ public class RfGapAPI {
     static EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
-    public static List getAllRfgapsForCavity(String cav) {
+    public static List<RfGap> getAllRfgapsForCavity(String cav) {
         
         Query q;
         q = em.createQuery("SELECT g from RfGap rg WHERE rg.cavityId.elementName = :elementname ")
