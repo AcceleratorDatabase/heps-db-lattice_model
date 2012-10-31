@@ -31,7 +31,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "RfGap.findByAmpFactor", query = "SELECT r FROM RfGap r WHERE r.ampFactor = :ampFactor"),
     @NamedQuery(name = "RfGap.findByEndCellind", query = "SELECT r FROM RfGap r WHERE r.endCellind = :endCellind"),
     @NamedQuery(name = "RfGap.findByGapOffset", query = "SELECT r FROM RfGap r WHERE r.gapOffset = :gapOffset"),
-    @NamedQuery(name = "RfGap.findByLength", query = "SELECT r FROM RfGap r WHERE r.length = :length"),
+    @NamedQuery(name = "RfGap.findByLen", query = "SELECT r FROM RfGap r WHERE r.len = :len"),
     @NamedQuery(name = "RfGap.findByPhaseFactor", query = "SELECT r FROM RfGap r WHERE r.phaseFactor = :phaseFactor")})
 public class RfGap implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -113,12 +113,12 @@ public class RfGap implements Serializable {
         this.gapOffset = gapOffset;
     }
 
-    public Double getLength() {
+    public Double getLen() {
         return len;
     }
 
-    public void setLength(Double length) {
-        this.len = length;
+    public void setLen(Double len) {
+        this.len = len;
     }
 
     public Double getPhaseFactor() {
