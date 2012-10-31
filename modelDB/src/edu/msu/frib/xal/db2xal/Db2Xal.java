@@ -44,6 +44,26 @@ public class Db2Xal {
     @PersistenceContext
     public void write2ModelParam() {
         // write the header
+        StringBuilder sb = new StringBuilder("<?xml version = '1.0' encoding = 'UTF-8'?>\n"
+                + "<!DOCTYPE tablegroup [\n"
+                + "  <!ELEMENT tablegroup (table*) >\n"
+                + "  <!ELEMENT table (schema, record*) >\n"
+                + "    <!ATTLIST table name NMTOKEN #REQUIRED >\n"
+                + "    <!ATTLIST table recordClass CDATA #IMPLIED >\n"
+                + "    <!ELEMENT schema (attribute*) >\n"
+                + "    <!ELEMENT attribute EMPTY >\n"
+                + "    <!ATTLIST attribute isPrimaryKey (true|false) #IMPLIED>\n"
+                + "    <!ATTLIST attribute name NMTOKEN #REQUIRED >\n"
+                + "    <!ATTLIST attribute type CDATA #REQUIRED >\n"
+                + "    <!ATTLIST attribute defaultValue CDATA #IMPLIED>\n"
+                + "    <!ELEMENT record EMPTY >\n"
+                + "    <!ATTLIST record name NMTOKEN #REQUIRED >\n"
+                + "    <!ATTLIST record mass CDATA #IMPLIED >\n"
+                + "    <!ATTLIST record charge CDATA #IMPLIED >\n"
+                + "    <!ATTLIST record species CDATA #IMPLIED >\n"
+                + "    <!ATTLIST record KE CDATA #IMPLIED >\n"
+                + "]>\n");
+        
         // find the first element for each sequence
         // loop over the first element collection for beam_parameters
     }
