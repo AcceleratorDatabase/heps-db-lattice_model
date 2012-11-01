@@ -142,6 +142,7 @@ public class Db2Xal {
 
             // loop through each node
             // need to treat RF specially
+            
             List<Element> eList = BeamlineSequenceAPI.getAllElementsForSequence(bls.getSequenceName());
             Iterator<Element> eIt = eList.iterator();
             while (eIt.hasNext()) {

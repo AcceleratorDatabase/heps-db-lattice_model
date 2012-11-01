@@ -26,7 +26,7 @@ public class RfGapAPI {
     public static List<RfGap> getAllRfgapsForCavity(String cav) {
         
         Query q;
-        q = em.createQuery("SELECT g from RfGap rg WHERE rg.cavityId.elementName = :elementname ")
+        q = em.createQuery("SELECT rg from RfGap rg WHERE rg.cavityId.elementName = :elementname ")
                 .setParameter("elementname", cav);
         List<RfGap> gaps = q.getResultList();
                 
