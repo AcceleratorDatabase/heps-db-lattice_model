@@ -427,8 +427,9 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`rf_gap` (
   `ampFactor` DOUBLE NULL DEFAULT NULL ,
   `endCell_ind` INT(11) NULL DEFAULT NULL ,
   `gapOffset` DOUBLE NULL DEFAULT NULL ,
-  `length` DOUBLE NULL DEFAULT NULL ,
+  `len` DOUBLE NULL DEFAULT NULL ,
   `phaseFactor` DOUBLE NULL DEFAULT NULL ,
+  `gap_name` VARCHAR(45) NULL ,
   PRIMARY KEY (`rf_gap_id`) ,
   INDEX `FK_cavity_id` (`cavity_id` ASC) ,
   CONSTRAINT `FK_cavity_id`

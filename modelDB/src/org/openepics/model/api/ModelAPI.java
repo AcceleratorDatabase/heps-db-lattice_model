@@ -50,8 +50,8 @@ public class ModelAPI {
      */
     public static List<Model> getAllModelsForMachineMode(String mode) {
         Query q;
-        q = em.createQuery("SELECT m FROM Model m JOIN m.latticeId l "
-                + "JOIN l.machineModeId mm WHERE mm.machineModeName = :modeName").setParameter("modeName", mode);
+        q = em.createQuery("SELECT m FROM Model m "
+                + "JOIN m.machineModeId mm WHERE mm.machineModeName = :modeName").setParameter("modeName", mode);
         List<Model> mList = q.getResultList();
         
         return mList;               

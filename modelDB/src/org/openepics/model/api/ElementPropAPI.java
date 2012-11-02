@@ -148,13 +148,13 @@ public class ElementPropAPI {
      * @param elm element name
      * @return rfgap attributes for the specified element
      */
-    public static Map getRfgapAttributesForElement(String elm) {
+    public static Map getRfcavityAttributesForElement(String elm) {
         HashMap<String, Object> atts = new HashMap<>();
         
         Query q;
         q = em.createQuery("SELECT ep from ElementProp ep "
                 + "WHERE ep.elementId.elementName = :elementname "
-                + "AND ep.propCategory = \"rfgap\"")
+                + "AND ep.propCategory = \"rfcavity\"")
                 .setParameter("elementname", elm);
         List<ElementProp> attrList = q.getResultList();
         
