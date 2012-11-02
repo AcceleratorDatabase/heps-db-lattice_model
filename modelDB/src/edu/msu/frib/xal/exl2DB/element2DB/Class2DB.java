@@ -62,7 +62,7 @@ public class Class2DB {
             Map<String, Integer> ele_types = new HashMap();
 
             int ele_name_col=new ReadEleExl(this.filePath).getEleNameCol();
-            System.out.println(ele_name_col);
+           
             ArrayList dataClsList = d2c.getClsData();
             Iterator it = dataClsList.iterator();
             
@@ -73,7 +73,7 @@ public class Class2DB {
                 String ele_name=cellP.getValue().toString();
                 
                 Element e=ElementAPI.getElementByName(ele_name);
-                System.out.println(e);
+                
                 if (e!=null) {
                     element_id = e.getElementId();
 
@@ -209,7 +209,6 @@ public class Class2DB {
                         + "insert_date=" + "\"" + tt + "\""
                         + " where element_id=" + element_id;
                 state.executeUpdate(sql9);
-
 
 
 
