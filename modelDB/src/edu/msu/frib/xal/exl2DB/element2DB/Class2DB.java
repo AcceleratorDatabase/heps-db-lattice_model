@@ -71,7 +71,7 @@ public class Class2DB {
                 int element_id;
                 CellProperty cellP=(CellProperty) rowClsList.get(ele_name_col);
                 String ele_name=cellP.getValue().toString();
-                System.out.println("*******");
+                
                 Element e=ElementAPI.getElementByName(ele_name);
                 System.out.println(e);
                 if (e!=null) {
