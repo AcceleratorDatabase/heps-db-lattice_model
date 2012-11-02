@@ -22,19 +22,19 @@ import org.apache.poi.ss.usermodel.WorkbookFactory;
  * @author chu
  */
 public class ReadEleExl {
-
+    
     public String filePath;
     FileInputStream inp;
     Workbook wb;
     Sheet sheet;
-
+    
     public ReadEleExl() {
     }
-
+    
     public ReadEleExl(String file) {
         filePath = file;
     }
-
+    
     public int getColNum() {
         if (inp == null) {
             try {
@@ -52,8 +52,7 @@ public class ReadEleExl {
         }
         return sheet.getRow(0).getLastCellNum();
     }
-
- 
+    
     public int getXALLabelNum() {
         if (inp == null) {
             try {
@@ -64,7 +63,7 @@ public class ReadEleExl {
                 e.printStackTrace();
             }
         }
-       
+        
         for (int i = 0; i < 10; i++) {
             Row row = sheet.getRow(i);
             Cell cell = row.getCell(0);
@@ -82,8 +81,7 @@ public class ReadEleExl {
         }
         return -1;
     }
-
-   
+    
     public int getDBLabelNum() {
         if (inp == null) {
             try {
@@ -112,8 +110,7 @@ public class ReadEleExl {
         }
         return -1;
     }
-
-   
+    
     public int getUnitLabelNum() {
         if (inp == null) {
             try {
@@ -124,7 +121,7 @@ public class ReadEleExl {
                 e.printStackTrace();
             }
         }
-       
+        
         for (int i = 0; i < 10; i++) {
             Row row = sheet.getRow(i);
             Cell cell = row.getCell(0);
@@ -142,8 +139,7 @@ public class ReadEleExl {
         }
         return -1;
     }
-
-   
+    
     public int getEleColNum() {
         if (inp == null) {
             try {
@@ -154,7 +150,7 @@ public class ReadEleExl {
                 e.printStackTrace();
             }
         }
-      
+        
         Row row = sheet.getRow(this.getXALLabelNum() - 1);
         for (int i = 0; i < 10; i++) {
             Cell cell = row.getCell(i);
@@ -163,7 +159,7 @@ public class ReadEleExl {
                 if ("element".equals(value.toLowerCase())) {
                     return i;
                 }
-
+                
             }
         }
         try {
@@ -173,7 +169,17 @@ public class ReadEleExl {
         }
         return -1;
     }
-
+    
+    public int getEleNameCol(){
+        ArrayList DBLabels=this.getDBLabels();
+        for(int i=0;i<DBLabels.size();i++){
+            if("element/element_name".equals(DBLabels.get(i).toString())){
+               return i;
+            }
+        }
+        return -1;
+    }
+    
     public ArrayList getXALLabels() {
         ArrayList<String> xalLabels = new ArrayList();
         if (inp == null) {
@@ -188,22 +194,25 @@ public class ReadEleExl {
         int startColNum = this.getEleColNum();
         int totalColNum = this.getColNum();
         int rowNum = this.getXALLabelNum();
-
+        
         for (int i = startColNum; i < totalColNum; i++) {
             Cell cell = sheet.getRow(rowNum).getCell(i);
-
-            if (Cell.CELL_TYPE_STRING == cell.getCellType()) {
-                String label = cell.getStringCellValue();
-                if (!label.isEmpty()) {
-                    xalLabels.add(label.replaceAll(" +", "_"));
-                    // System.out.println("************" + label);      
-                } else {
-                    String label1 = sheet.getRow(rowNum - 1).getCell(i).getStringCellValue().toLowerCase();
-                    xalLabels.add(label1.replaceAll(" +", "_"));
-                    // System.out.println("+++++++++++++++++" + label1);
+            if (cell != null) {
+                if (Cell.CELL_TYPE_STRING == cell.getCellType()) {
+                    String label = cell.getStringCellValue();
+                    if (!label.isEmpty()) {
+                        xalLabels.add(label.replaceAll(" +", "_"));
+                           
+                    } else {
+                        String label1 = sheet.getRow(rowNum - 1).getCell(i).getStringCellValue().toLowerCase();
+                        xalLabels.add(label1.replaceAll(" +", "_"));
+                       
+                    }
                 }
+            } else {
+                xalLabels.add("");
             }
-
+            
         }
         try {
             inp.close();
@@ -212,7 +221,7 @@ public class ReadEleExl {
         }
         return xalLabels;
     }
-
+    
     public ArrayList getDBLabels() {
         ArrayList<String> DBLabels = new ArrayList();
         if (inp == null) {
@@ -227,15 +236,19 @@ public class ReadEleExl {
         int startColNum = this.getEleColNum();
         int totalColNum = this.getColNum();
         int rowNum = this.getDBLabelNum();
-
+        
         for (int i = startColNum; i < totalColNum; i++) {
+           
             Cell cell = sheet.getRow(rowNum).getCell(i);
-
-            if (Cell.CELL_TYPE_STRING == cell.getCellType()) {
-                String label = cell.getStringCellValue();
-                DBLabels.add(label);
+            if (cell != null) {
+                if (Cell.CELL_TYPE_STRING == cell.getCellType()) {
+                    String label = cell.getStringCellValue();
+                    DBLabels.add(label);
+                }
+            } else {
+                DBLabels.add("");
             }
-
+            
         }
         try {
             inp.close();
@@ -244,7 +257,7 @@ public class ReadEleExl {
         }
         return DBLabels;
     }
-
+    
     public ArrayList getDataList() {
         ArrayList dataList = new ArrayList();
         if (inp == null) {
@@ -261,14 +274,14 @@ public class ReadEleExl {
         int startRowNum = this.getUnitLabelNum() + 1;
         for (Iterator<Row> rit = sheet.rowIterator(); rit.hasNext();) {
             Row row = (Row) rit.next();
-
+            
             if (row.getRowNum() >= startRowNum) {
                 ArrayList oneRow = new ArrayList();
                 for (int i = startColNum; i < totalColNum; i++) {
                     Object o = "";
                     try {
                         Cell cell = row.getCell(i);
-
+                        
                         if (!"".equals(cell) && cell != null) {
                             switch (cell.getCellType()) {
                                 case Cell.CELL_TYPE_STRING:
@@ -301,7 +314,7 @@ public class ReadEleExl {
                 }
                 dataList.add(oneRow);
             }
-
+            
         }
         try {
             inp.close();

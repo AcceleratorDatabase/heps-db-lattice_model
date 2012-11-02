@@ -65,7 +65,7 @@ public class Db2Xal {
                 + "    <!ATTLIST record species CDATA #IMPLIED >\n"
                 + "    <!ATTLIST record KE CDATA #IMPLIED >\n"
                 + "]>\n");
-        
+
         // find the first element for each sequence
         // loop over the first element collection for beam_parameters
     }
@@ -94,7 +94,7 @@ public class Db2Xal {
         sb.append("</deviceMapping>\n");
 
         System.out.println(sb);
-        
+
         // write to file
         BufferedWriter writer = null;
         try {
@@ -142,194 +142,195 @@ public class Db2Xal {
 
             // loop through each node
             // need to treat RF specially
-            
+
             List<Element> eList = BeamlineSequenceAPI.getAllElementsForSequence(bls.getSequenceName());
             Iterator<Element> eIt = eList.iterator();
             while (eIt.hasNext()) {
+
                 Element e = eIt.next();
-                // everything other than RF cavities treated as node
-                if (!e.getElementTypeId().getElementType().equals("CAV")) {
-                    sb.append("      <node id=\"");
-                } 
-                // RF cavities treated as sequence
-                else {
-                    sb.append("      <sequence id=\"");
-                }
-                sb.append(e.getElementName());
-                sb.append("\" type=\"");
-                sb.append(e.getElementTypeId().getElementType());
-                sb.append("\" pos=\"");
-                sb.append(e.getPos());
-                sb.append("\" len=\"");
-                sb.append(e.getLen());
-                sb.append("\" s=\"");
-                sb.append(e.getS());
-                sb.append("\">\n");
-                // check if there is any attribute for the element
-                List<ElementProp> epList = ElementAPI.getAllPropertiesForElement(e.getElementName());
-                sb.append("         <attributes>\n");
+                if (e.getElementTypeId() != null) {
+                    // everything other than RF cavities treated as node
+                    if (!e.getElementTypeId().getElementType().equals("CAV")) {
+                        sb.append("      <node id=\"");
+                    } // RF cavities treated as sequence
+                    else {
+                        sb.append("      <sequence id=\"");
+                    }
+                    sb.append(e.getElementName());
+                    sb.append("\" type=\"");
+                    sb.append(e.getElementTypeId().getElementType());
+                    sb.append("\" pos=\"");
+                    sb.append(e.getPos());
+                    sb.append("\" len=\"");
+                    sb.append(e.getLen());
+                    sb.append("\" s=\"");
+                    sb.append(e.getS());
+                    sb.append("\">\n");
+                    // check if there is any attribute for the element
+                    List<ElementProp> epList = ElementAPI.getAllPropertiesForElement(e.getElementName());
+                    sb.append("         <attributes>\n");
 
-                // set alignment data from element
-                sb.append("            <align ");
-                sb.append("yaw=\"");
-                sb.append(e.getYaw());
-                sb.append("\" roll=\"");
-                sb.append(e.getRoll());
-                sb.append("\" pitch=\"");
-                sb.append(e.getPitch());
-                sb.append("\" z=\"");
-                sb.append(e.getDz());
-                sb.append("\" y=\"");
-                sb.append(e.getDy());
-                sb.append("\" x=\"");
-                sb.append(e.getDx());
-                sb.append("\"/>\n");
+                    // set alignment data from element
+                    sb.append("            <align ");
+                    sb.append("yaw=\"");
+                    sb.append(e.getYaw());
+                    sb.append("\" roll=\"");
+                    sb.append(e.getRoll());
+                    sb.append("\" pitch=\"");
+                    sb.append(e.getPitch());
+                    sb.append("\" z=\"");
+                    sb.append(e.getDz());
+                    sb.append("\" y=\"");
+                    sb.append(e.getDy());
+                    sb.append("\" x=\"");
+                    sb.append(e.getDx());
+                    sb.append("\"/>\n");
 
-                if (!epList.isEmpty()) {
-                    // insert node attributes
+                    if (!epList.isEmpty()) {
+                        // insert node attributes
 
-                    // set apertures
-                    Map aperAttMap = ElementPropAPI.getApertureAttributesForElement(e.getElementName());
-                    if (!aperAttMap.isEmpty()) {
-                        sb.append("            <aperture ");
+                        // set apertures
+                        Map aperAttMap = ElementPropAPI.getApertureAttributesForElement(e.getElementName());
+                        if (!aperAttMap.isEmpty()) {
+                            sb.append("            <aperture ");
 
-                        Set keySet1 = aperAttMap.keySet();
-                        Iterator<String> keyIt1 = keySet1.iterator();
-                        while (keyIt1.hasNext()) {
-                            String key1 = keyIt1.next();
-                            sb.append(key1);
-                            sb.append("=\"");
-                            sb.append(aperAttMap.get(key1));
-                            sb.append("\" ");
+                            Set keySet1 = aperAttMap.keySet();
+                            Iterator<String> keyIt1 = keySet1.iterator();
+                            while (keyIt1.hasNext()) {
+                                String key1 = keyIt1.next();
+                                sb.append(key1);
+                                sb.append("=\"");
+                                sb.append(aperAttMap.get(key1));
+                                sb.append("\" ");
+                            }
+
+                            sb.append("/>\n");
                         }
 
-                        sb.append("/>\n");
-                    }
+                        // set magnet attributes
+                        Map magAttMap = ElementPropAPI.getMagnetAttributesForElement(e.getElementName());
+                        if (!magAttMap.isEmpty()) {
 
-                    // set magnet attributes
-                    Map magAttMap = ElementPropAPI.getMagnetAttributesForElement(e.getElementName());
-                    if (!magAttMap.isEmpty()) {
+                            sb.append("            <magnet ");
 
-                        sb.append("            <magnet ");
+                            Set keySet2 = magAttMap.keySet();
+                            Iterator<String> keyIt2 = keySet2.iterator();
+                            while (keyIt2.hasNext()) {
+                                String key2 = keyIt2.next();
+                                sb.append(key2);
+                                sb.append("=\"");
+                                sb.append(magAttMap.get(key2));
+                                sb.append("\" ");
+                            }
 
-                        Set keySet2 = magAttMap.keySet();
-                        Iterator<String> keyIt2 = keySet2.iterator();
-                        while (keyIt2.hasNext()) {
-                            String key2 = keyIt2.next();
-                            sb.append(key2);
-                            sb.append("=\"");
-                            sb.append(magAttMap.get(key2));
-                            sb.append("\" ");
+                            sb.append("/>\n");
                         }
 
-                        sb.append("/>\n");
-                    }
+                        // set bpm attributes 
+                        Map bpmAttMap = ElementPropAPI.getBpmAttributesForElement(e.getElementName());
+                        if (!bpmAttMap.isEmpty()) {
 
-                    // set bpm attributes 
-                    Map bpmAttMap = ElementPropAPI.getBpmAttributesForElement(e.getElementName());
-                    if (!bpmAttMap.isEmpty()) {
+                            sb.append("            <bpm ");
 
-                        sb.append("            <bpm ");
+                            Set keySet3 = bpmAttMap.keySet();
+                            Iterator<String> keyIt3 = keySet3.iterator();
+                            while (keyIt3.hasNext()) {
+                                String key3 = keyIt3.next();
+                                sb.append(key3);
+                                sb.append("=\"");
+                                sb.append(bpmAttMap.get(key3));
+                                sb.append("\" ");
+                            }
 
-                        Set keySet3 = bpmAttMap.keySet();
-                        Iterator<String> keyIt3 = keySet3.iterator();
-                        while (keyIt3.hasNext()) {
-                            String key3 = keyIt3.next();
-                            sb.append(key3);
-                            sb.append("=\"");
-                            sb.append(bpmAttMap.get(key3));
-                            sb.append("\" ");
+                            sb.append("/>\n");
                         }
 
-                        sb.append("/>\n");
-                    }
+                        // set rfcavity attributes
+                        Map rfAttMap = ElementPropAPI.getRfcavityAttributesForElement(e.getElementName());
+                        if (!rfAttMap.isEmpty()) {
 
-                    // set rfcavity attributes
-                    Map rfAttMap = ElementPropAPI.getRfcavityAttributesForElement(e.getElementName());
-                    if (!rfAttMap.isEmpty()) {
+                            sb.append("            <rfgap ");
 
-                        sb.append("            <rfgap ");
+                            Set keySet4 = rfAttMap.keySet();
+                            Iterator<String> keyIt4 = keySet4.iterator();
+                            while (keyIt4.hasNext()) {
+                                String key4 = keyIt4.next();
+                                sb.append(key4);
+                                sb.append("=\"");
+                                sb.append(rfAttMap.get(key4));
+                                sb.append("\" ");
+                            }
 
-                        Set keySet4 = rfAttMap.keySet();
-                        Iterator<String> keyIt4 = keySet4.iterator();
-                        while (keyIt4.hasNext()) {
-                            String key4 = keyIt4.next();
-                            sb.append(key4);
-                            sb.append("=\"");
-                            sb.append(rfAttMap.get(key4));
-                            sb.append("\" ");
-                        }
-
-                        sb.append("/>\n");
-                    }
-                }
-                sb.append("         </attributes>\n");
-                
-                // if the node is not a marker, add EPICS channels 
-                if (!e.getElementTypeId().getElementType().equals("MARK")) {
-                    sb.append("         <channelsuite>\n");
-                    // for magnets
-                    if (!ElementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty()) {
-                        sb.append("            <channel handle=\"fieldRB\" signal=\"");
-                        sb.append(e.getElementName());
-                        sb.append(":B\" settable=\"false\"/>\n");
-                        sb.append("            <channel handle=\"fieldSet\" signal=\"");
-                        sb.append(e.getElementName());
-                        sb.append(":B_Set\" settable=\"true\"/>\n");                        
-                    }
-                    // for BPMs
-                    if (!ElementPropAPI.getBpmAttributesForElement(e.getElementName()).isEmpty()) {
-                        sb.append("            <channel handle=\"xAvg\" signal=\"");
-                        sb.append(e.getElementName());
-                        sb.append(":xAvg\" settable=\"false\"/>\n");
-                        sb.append("            <channel handle=\"yAvg\" signal=\"");
-                        sb.append(e.getElementName());
-                        sb.append(":yAvg\" settable=\"false\"/>\n");                         
-                    }
-                    
-                    sb.append("         </channelsuite>\n");
-                    
-                    // now we need to check if this is an RF cavity and fill in all the RF gaps within this cavity
-                    if (e.getElementTypeId().getElementType().equals("CAV")) {
-                        List<RfGap> gaps = RfGapAPI.getAllRfgapsForCavity(e.getElementName());
-                        Iterator<RfGap> gapIt = gaps.iterator();
-                        while (gapIt.hasNext()) {
-                            RfGap rg = gapIt.next();
-                            sb.append("         <node type=\"RG\" id=\"");
-                            sb.append(rg.getGapName());
-                            sb.append("\" pos=\"");
-                            sb.append(rg.getPos());
-                            sb.append("\">\n");
-                            
-                            sb.append("           <attributes>\n");
-                            sb.append("             <rfgap length=\"");
-                            sb.append(rg.getLen());
-                            sb.append("\" phaseFactor=\"");
-                            sb.append(rg.getPhaseFactor());
-                            sb.append("\" ampFactor=\"");
-                            sb.append(rg.getAmpFactor());
-                            sb.append("\" TTF=\"");
-                            sb.append(rg.getTtf());
-                            sb.append("\" endCell=\"");
-                            sb.append(rg.getEndCellind());
-                            sb.append("\" gapOffset=\"");
-                            sb.append(rg.getGapOffset());
-                            sb.append("\"/>\n");
-                            
-                            sb.append("           </attributes>\n");
-                            
-                            sb.append("         </node>\n");
+                            sb.append("/>\n");
                         }
                     }
-                }
-                
-                // close the <node>
-                if (!e.getElementTypeId().getElementType().equals("CAV")) {
-                    sb.append("      </node>\n");
-                } 
-                // close the RF cavity <sequence>
-                else {
-                    sb.append("      </sequence>\n");
+                    sb.append("         </attributes>\n");
+
+                    // if the node is not a marker, add EPICS channels 
+                    if (!e.getElementTypeId().getElementType().equals("MARK")) {
+                        sb.append("         <channelsuite>\n");
+                        // for magnets
+                        if (!ElementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty()) {
+                            sb.append("            <channel handle=\"fieldRB\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":B\" settable=\"false\"/>\n");
+                            sb.append("            <channel handle=\"fieldSet\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":B_Set\" settable=\"true\"/>\n");
+                        }
+                        // for BPMs
+                        if (!ElementPropAPI.getBpmAttributesForElement(e.getElementName()).isEmpty()) {
+                            sb.append("            <channel handle=\"xAvg\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":xAvg\" settable=\"false\"/>\n");
+                            sb.append("            <channel handle=\"yAvg\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":yAvg\" settable=\"false\"/>\n");
+                        }
+
+                        sb.append("         </channelsuite>\n");
+
+                        // now we need to check if this is an RF cavity and fill in all the RF gaps within this cavity
+                        if (e.getElementTypeId().getElementType().equals("CAV")) {
+                            List<RfGap> gaps = RfGapAPI.getAllRfgapsForCavity(e.getElementName());
+                            Iterator<RfGap> gapIt = gaps.iterator();
+                            while (gapIt.hasNext()) {
+                                RfGap rg = gapIt.next();
+                                sb.append("         <node type=\"RG\" id=\"");
+                                sb.append(rg.getGapName());
+                                sb.append("\" pos=\"");
+                                sb.append(rg.getPos());
+                                sb.append("\">\n");
+
+                                sb.append("           <attributes>\n");
+                                sb.append("             <rfgap length=\"");
+                                sb.append(rg.getLen());
+                                sb.append("\" phaseFactor=\"");
+                                sb.append(rg.getPhaseFactor());
+                                sb.append("\" ampFactor=\"");
+                                sb.append(rg.getAmpFactor());
+                                sb.append("\" TTF=\"");
+                                sb.append(rg.getTtf());
+                                sb.append("\" endCell=\"");
+                                sb.append(rg.getEndCellind());
+                                sb.append("\" gapOffset=\"");
+                                sb.append(rg.getGapOffset());
+                                sb.append("\"/>\n");
+
+                                sb.append("           </attributes>\n");
+
+                                sb.append("         </node>\n");
+                            }
+                        }
+                    }
+
+                    // close the <node>
+                    if (!e.getElementTypeId().getElementType().equals("CAV")) {
+                        sb.append("      </node>\n");
+                    } // close the RF cavity <sequence>
+                    else {
+                        sb.append("      </sequence>\n");
+                    }
                 }
             }
 

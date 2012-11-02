@@ -16,8 +16,10 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import org.openepics.model.api.BeamlineSequenceAPI;
+import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ElementTypeAPI;
 import org.openepics.model.entity.BeamlineSequence;
+import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementType;
 
 /**
@@ -47,20 +49,43 @@ public class Class2DB {
             conn.setAutoCommit(false);
 
             Data2Class d2c = new Data2Class(this.filePath);
-            ArrayList dataClsList = d2c.getClsData();
-            Iterator it = dataClsList.iterator();
+
+            String sqll = "insert into lattice(lattice_name,  created_by, create_date)  values("
+                    + "\"" + "frib" + "\"" + "," + "\"" + System.getProperty("user.name") + "\""
+                    + "," + "\"" + new Timestamp(new Date().getTime()) + "\"" + ")";
+            state.executeUpdate(sqll, Statement.RETURN_GENERATED_KEYS);
+            rs = state.getGeneratedKeys();
+            rs.next();
+            int lattice_id = rs.getInt(1);
 
             Map<String, Integer> blseqs = new HashMap();
             Map<String, Integer> ele_types = new HashMap();
 
+            int ele_name_col=new ReadEleExl(this.filePath).getEleNameCol();
+            System.out.println(ele_name_col);
+            ArrayList dataClsList = d2c.getClsData();
+            Iterator it = dataClsList.iterator();
+            
             while (it.hasNext()) {
-                String sql = "insert into element values()";
-                state.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
-                rs = state.getGeneratedKeys();
-                rs.next();
-                int element_id = rs.getInt(1);
-                //System.out.println("++++++++"+id.getInt(1));
                 ArrayList rowClsList = (ArrayList) it.next();
+                int element_id;
+                CellProperty cellP=(CellProperty) rowClsList.get(ele_name_col);
+                String ele_name=cellP.getValue().toString();
+                System.out.println("*******");
+                Element e=ElementAPI.getElementByName(ele_name);
+                System.out.println(e);
+                if (e!=null) {
+                    element_id = e.getElementId();
+
+                } else {
+
+                    String sql = "insert into element values()";
+                    state.executeUpdate(sql, Statement.RETURN_GENERATED_KEYS);
+                    rs = state.getGeneratedKeys();
+                    rs.next();
+                    element_id = rs.getInt(1);
+                }
+
                 Iterator it1 = rowClsList.iterator();
                 while (it1.hasNext()) {
                     CellProperty cellProp = (CellProperty) it1.next();
@@ -77,20 +102,23 @@ public class Class2DB {
                             valueSql = "\"" + value + "\"";
                         }
                         String sql1 = "insert into element_prop(element_id,prop_category,element_prop_name,"
-                                + cellProp.getType() + ") values(" + element_id + "," + categorySql
-                                + "," + "\"" + cellProp.getName() + "\"" + "," + valueSql + ")";
-                       // System.out.println(sql1);
+                                + cellProp.getType() + "," + "lattice_id" + ") values(" + element_id + "," + categorySql
+                                + "," + "\"" + cellProp.getName() + "\"" + "," + valueSql + "," + lattice_id + ")";
+
                         state.executeUpdate(sql1);
                     } else if ("element".equals(tableName)) {
-                        String valueSql1 = null;
-                        Object value1 = cellProp.getValue();
-                        if (!("".equals(value1) || (value1 == null))) {
-                            valueSql1 = "\"" + value1 + "\"";
+                        if (e==null) {
+
+                            String valueSql1 = null;
+                            Object value1 = cellProp.getValue();
+                            if (!("".equals(value1) || (value1 == null))) {
+                                valueSql1 = "\"" + value1 + "\"";
+                            }
+                            String sql2 = "update element set " + cellProp.getName()
+                                    + "=" + valueSql1 + " where element_id=" + element_id;
+
+                            state.executeUpdate(sql2);
                         }
-                        String sql2 = "update element set " + cellProp.getName()
-                                + "=" + valueSql1 + " where element_id=" + element_id;
-                       // System.out.println(sql2);
-                        state.executeUpdate(sql2);
                     } else if ("beamline_sequence".equals(tableName)) {
                         String sequence_name = cellProp.getValue().toString();
                         BeamlineSequence bls = BeamlineSequenceAPI.getSequenceByName(sequence_name);
@@ -100,7 +128,7 @@ public class Class2DB {
                                 Iterator seqIt = blseqs.entrySet().iterator();
                                 while (seqIt.hasNext()) {
                                     Map.Entry entry = (Map.Entry) seqIt.next();
-                                  
+
                                     if (entry.getKey().toString().equals(sequence_name)) {
                                         isRead = true;
                                     }
@@ -140,7 +168,7 @@ public class Class2DB {
                                     Iterator etIt = ele_types.entrySet().iterator();
                                     while (etIt.hasNext()) {
                                         Map.Entry entry = (Map.Entry) etIt.next();
-                                       
+
                                         if (entry.getKey().toString().equals(element_type_value)) {
                                             isRead = true;
                                         }
@@ -162,7 +190,7 @@ public class Class2DB {
                                     String sql14 = "update element set element_type_id="
                                             + element_type_id + " where element_id=" + element_id;
                                     state.executeUpdate(sql14);
-                                    
+
                                     ele_types.put(element_type_value, element_type_id);
                                 }
 
@@ -181,8 +209,8 @@ public class Class2DB {
                         + "insert_date=" + "\"" + tt + "\""
                         + " where element_id=" + element_id;
                 state.executeUpdate(sql9);
-                // System.out.println(sql9);
-               
+
+
 
 
             }
@@ -190,8 +218,10 @@ public class Class2DB {
         } catch (SQLException e) {
             e.printStackTrace();
         } finally {
-            DBTools.closeResultSet(rs);
-            // DBTools.closeResultSet(rs2);
+            if (rs != null) {
+                DBTools.closeResultSet(rs);
+            }
+
             DBTools.closeStatement(state);
             DBTools.closeConnection(conn);
         }
