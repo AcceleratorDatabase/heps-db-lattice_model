@@ -12,6 +12,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
+import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
 
@@ -48,7 +49,9 @@ public class ElementAPI {
         Query q;
         q = em.createNamedQuery("Element.findByElementName").setParameter("elementName", name);
         List<Element> eList = q.getResultList();
-        if(eList.isEmpty()) return null;
+        if(eList.isEmpty()) {
+            return null;
+        }
         else{
             return eList.get(0);
         }
@@ -56,7 +59,9 @@ public class ElementAPI {
 
     
     /**
-     * 
+     * Insert a new element into database
+     * @param name 
+     * @param order
      * @param s
      * @param len
      * @param dx
@@ -66,9 +71,12 @@ public class ElementAPI {
      * @param yaw
      * @param roll
      * @param pos 
+     * @param sequence_name 
      */
-    public void setElement(double s, double len, double dx, double dy, double dz, double pitch, double yaw, double roll, double pos) {
-        // TODO save an individual element's model data
+    public void setElement(String name, int order, double s, 
+            double len, double dx, double dy, double dz, double pitch, double yaw, double roll, 
+            double pos, String sequence_name) {
+        
         Element e = new Element();
         Date date = new Date();
         e.setInsertDate(date);
@@ -80,8 +88,10 @@ public class ElementAPI {
         e.setYaw(yaw);
         e.setRoll(roll);
         e.setPos(pos);
-//        e.setBeamParameterCollection(null);
-        
+
+        // find out the beamline sequence id
+        BeamlineSequence bls = BeamlineSequenceAPI.getSequenceByName(sequence_name);
+        e.setBeamlineSequenceId(bls);
     }   
     
      /**
