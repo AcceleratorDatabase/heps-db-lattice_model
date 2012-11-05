@@ -60,18 +60,18 @@ public class ElementAPI {
     
     /**
      * Insert a new element into database
-     * @param name 
-     * @param order
-     * @param s
-     * @param len
-     * @param dx
-     * @param dy
-     * @param dz
-     * @param pitch
-     * @param yaw
-     * @param roll
-     * @param pos 
-     * @param sequence_name 
+     * @param name element name
+     * @param order element order within the entire accelerator
+     * @param s global accumulated path length  
+     * @param len element length
+     * @param dx horizontal coordinate error
+     * @param dy vertical coordinate error
+     * @param dz longitudinal coordinate error
+     * @param pitch pitch error
+     * @param yaw yaw error
+     * @param roll roll error
+     * @param pos distance from start of the sequence
+     * @param sequence_name the sequence name the element resided in
      */
     public void setElement(String name, int order, double s, 
             double len, double dx, double dy, double dz, double pitch, double yaw, double roll, 
@@ -97,17 +97,16 @@ public class ElementAPI {
     }   
     
      /**
-     * set element install error for the specified element
+     * set/update element install error for the specified element
      * @param e element 
-     * @param dx
-     * @param dy
-     * @param dz
-     * @param pitch
-     * @param yaw
-     * @param roll
+     * @param dx horizontal coordinate error
+     * @param dy vertical coordinate error
+     * @param dz longitudinal coordinate error
+     * @param pitch pitch error
+     * @param yaw yaw error
+     * @param roll roll error
     */
     public static  void setEleInsErr(Element e, double dx, double dy, double dz, double pitch, double yaw, double roll) {
-        // TODO save an individual element's model data
         
         Date date = new Date();
         e.setInsertDate(date);
