@@ -76,22 +76,24 @@ public class ElementAPI {
     public void setElement(String name, int order, double s, 
             double len, double dx, double dy, double dz, double pitch, double yaw, double roll, 
             double pos, String sequence_name) {
-        
-        Element e = new Element();
-        Date date = new Date();
-        e.setInsertDate(date);
-        e.setCreatedBy(System.getProperty("user.name"));
-        e.setDx(dx);
-        e.setDy(dy);
-        e.setDz(dz);
-        e.setPitch(pitch);
-        e.setYaw(yaw);
-        e.setRoll(roll);
-        e.setPos(pos);
+        // first, check if this element has already in the DB
+        if (ElementAPI.getElementByName(name) == null) {
+            Element e = new Element();
+            Date date = new Date();
+            e.setInsertDate(date);
+            e.setCreatedBy(System.getProperty("user.name"));
+            e.setDx(dx);
+            e.setDy(dy);
+            e.setDz(dz);
+            e.setPitch(pitch);
+            e.setYaw(yaw);
+            e.setRoll(roll);
+            e.setPos(pos);
 
-        // find out the beamline sequence id
-        BeamlineSequence bls = BeamlineSequenceAPI.getSequenceByName(sequence_name);
-        e.setBeamlineSequenceId(bls);
+            // find out the beamline sequence id
+            BeamlineSequence bls = BeamlineSequenceAPI.getSequenceByName(sequence_name);
+            e.setBeamlineSequenceId(bls);
+        }
     }   
     
      /**
