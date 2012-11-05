@@ -38,8 +38,8 @@ import org.openepics.model.entity.RfGap;
 public class Db2Xal {
 
     @PersistenceUnit
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
-    EntityManager em = emf.createEntityManager();
+//    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
+//    EntityManager em = emf.createEntityManager();
     // define the accelerator name
     String accName = "frib";
 
