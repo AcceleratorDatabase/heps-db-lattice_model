@@ -349,7 +349,7 @@ public class Db2Xal {
         try {
             File file = new File("frib.xdxf");
             writer = new BufferedWriter(new FileWriter(file));
-//            writer.write(sb.toString());
+            writer.write(sb.toString());
         } catch (IOException ex) {
             Logger.getLogger(Db2Xal.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
