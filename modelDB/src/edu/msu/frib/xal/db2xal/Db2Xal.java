@@ -245,24 +245,24 @@ public class Db2Xal {
                             sb.append("/>\n");
                         }
 
-                        // set rfcavity attributes
-                        Map rfAttMap = ElementPropAPI.getRfcavityAttributesForElement(e.getElementName());
-                        if (!rfAttMap.isEmpty()) {
-
-                            sb.append("            <rfgap ");
-
-                            Set keySet4 = rfAttMap.keySet();
-                            Iterator<String> keyIt4 = keySet4.iterator();
-                            while (keyIt4.hasNext()) {
-                                String key4 = keyIt4.next();
-                                sb.append(key4);
-                                sb.append("=\"");
-                                sb.append(rfAttMap.get(key4));
-                                sb.append("\" ");
-                            }
-
-                            sb.append("/>\n");
-                        }
+//                        // set rfcavity attributes
+//                        Map rfAttMap = ElementPropAPI.getRfcavityAttributesForElement(e.getElementName());
+//                        if (!rfAttMap.isEmpty()) {
+//
+//                            sb.append("            <rfgap ");
+//
+//                            Set keySet4 = rfAttMap.keySet();
+//                            Iterator<String> keyIt4 = keySet4.iterator();
+//                            while (keyIt4.hasNext()) {
+//                                String key4 = keyIt4.next();
+//                                sb.append(key4);
+//                                sb.append("=\"");
+//                                sb.append(rfAttMap.get(key4));
+//                                sb.append("\" ");
+//                            }
+//
+//                            sb.append("/>\n");
+//                        }
                     }
                     sb.append("         </attributes>\n");
 
