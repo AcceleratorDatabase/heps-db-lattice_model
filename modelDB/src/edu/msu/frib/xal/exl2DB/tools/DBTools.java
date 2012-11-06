@@ -2,6 +2,7 @@ package edu.msu.frib.xal.exl2DB.tools;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -47,6 +48,13 @@ public class DBTools {
         }
     }
    
+    public static void closePreparedStatement(PreparedStatement state) {
+        try {
+            state.close();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public static void closeResultSet(ResultSet rs) {
         try {

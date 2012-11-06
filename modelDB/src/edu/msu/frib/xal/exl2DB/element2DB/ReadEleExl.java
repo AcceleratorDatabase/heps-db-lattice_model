@@ -69,7 +69,7 @@ public class ReadEleExl {
             Cell cell = row.getCell(0);
             if (Cell.CELL_TYPE_BLANK != cell.getCellType()) {
                 String value = cell.getStringCellValue();
-                if (value.toLowerCase().contains("xal") && ("XAL label".toLowerCase().contains("label"))) {
+                if (value.toLowerCase().contains("xal") && (value.toLowerCase().contains("label"))) {
                     return i;
                 }
             }
@@ -98,7 +98,7 @@ public class ReadEleExl {
             Cell cell = row.getCell(0);
             if (Cell.CELL_TYPE_BLANK != cell.getCellType()) {
                 String value = cell.getStringCellValue();
-                if (value.toLowerCase().contains("db") && ("XAL label".toLowerCase().contains("label"))) {
+                if (value.toLowerCase().contains("db") && (value.toLowerCase().contains("label"))) {
                     return i;
                 }
             }
