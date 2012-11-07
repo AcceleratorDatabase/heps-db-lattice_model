@@ -14,7 +14,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type` (
   `element_type_description` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`element_type_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 43
+AUTO_INCREMENT = 90
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -31,7 +31,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beamline_sequence` (
   `sequence_description` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`beamline_sequence_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 10
+AUTO_INCREMENT = 24
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -69,7 +69,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 10
+AUTO_INCREMENT = 1299
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -98,6 +98,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`lattice` (
   `update_date` DATETIME NULL DEFAULT NULL ,
   PRIMARY KEY (`lattice_id`) )
 ENGINE = InnoDB
+AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -367,7 +368,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_prop` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 5
+AUTO_INCREMENT = 39963
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -420,8 +421,9 @@ DEFAULT CHARACTER SET = utf8;
 -- Table `discs_model`.`rf_gap`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `discs_model`.`rf_gap` (
-  `rf_gap_id` INT(11) NOT NULL ,
+  `rf_gap_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `cavity_id` INT(11) NULL DEFAULT NULL ,
+  `gap_name` VARCHAR(45) NULL DEFAULT NULL ,
   `pos` DOUBLE NULL DEFAULT NULL ,
   `TTF` DOUBLE NULL DEFAULT NULL ,
   `ampFactor` DOUBLE NULL DEFAULT NULL ,
@@ -429,7 +431,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`rf_gap` (
   `gapOffset` DOUBLE NULL DEFAULT NULL ,
   `len` DOUBLE NULL DEFAULT NULL ,
   `phaseFactor` DOUBLE NULL DEFAULT NULL ,
-  `gap_name` VARCHAR(45) NULL ,
   PRIMARY KEY (`rf_gap_id`) ,
   INDEX `FK_cavity_id` (`cavity_id` ASC) ,
   CONSTRAINT `FK_cavity_id`
@@ -438,6 +439,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`rf_gap` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 333
 DEFAULT CHARACTER SET = utf8;
 
 
