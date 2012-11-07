@@ -20,7 +20,7 @@ import org.openepics.model.entity.BeamlineSequence;
  * @author lv
  * @author chu
  */
-public class Map2DB {
+public class SeqMap2DB {
 
     @PersistenceUnit
     static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
@@ -28,10 +28,10 @@ public class Map2DB {
     @PersistenceContext
     public String filePath;
 
-    public Map2DB() {
+    public SeqMap2DB() {
     }
 
-    public Map2DB(String path) {
+    public SeqMap2DB(String path) {
         filePath = path;
     }
 
