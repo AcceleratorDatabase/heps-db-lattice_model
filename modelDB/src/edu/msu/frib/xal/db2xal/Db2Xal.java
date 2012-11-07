@@ -100,7 +100,7 @@ public class Db2Xal {
         try {
             File file = new File("frib.impl");
             writer = new BufferedWriter(new FileWriter(file));
-//            writer.write(sb.toString());
+            writer.write(sb.toString());
         } catch (IOException ex) {
             Logger.getLogger(Db2Xal.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
@@ -381,7 +381,7 @@ public class Db2Xal {
 
         // TODO get the accelerator name to override the default one (accName)
 
-//        x.write2IMPL();
+        x.write2IMPL();
 //        x.write2ModelParam();
         x.write2XDXF();
     }
