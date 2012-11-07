@@ -29,6 +29,30 @@ public class ElementPropAPI {
     @PersistenceContext
     
     /**
+     * get the physics name for the element
+     * 
+     * @param elm element name
+     * @return physics name for the element
+     */
+    public static String getPidForElement(String elm) {
+        String pid = "";
+        
+        Query q;
+        q = em.createQuery("SELECT ep from ElementProp ep "
+                + "WHERE ep.elementId.elementName = :elementname "
+                + "AND ep.elementPropName = \"pid\"")
+                .setParameter("elementname", elm);
+        List<ElementProp> attrList = q.getResultList();
+        Iterator<ElementProp> it = attrList.iterator();
+        while (it.hasNext()) {
+            ElementProp ep = it.next();
+            pid = ep.getElementPropString();
+        }
+        
+        return pid;
+    }
+    
+    /**
      * get magnet attributes for the specified element
      * 
      * @param elm element name

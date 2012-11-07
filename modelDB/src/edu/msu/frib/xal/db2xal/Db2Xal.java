@@ -149,6 +149,8 @@ public class Db2Xal {
 
                 Element e = eIt.next();
                 if (e.getElementTypeId() != null) {
+                    // get all properties for this element
+                    List<ElementProp> epList = ElementAPI.getAllPropertiesForElement(e.getElementName());
                     // everything other than RF cavities treated as node
                     if (!e.getElementTypeId().getElementType().equals("CAV")) {
                         sb.append("      <node id=\"");
@@ -157,6 +159,17 @@ public class Db2Xal {
                         sb.append("      <sequence id=\"");
                     }
                     sb.append(e.getElementName());
+                    // get physics name, if there is any
+                    try {
+                        if (!ElementPropAPI.getPidForElement(e.getElementName()).equals("")
+                                && !ElementPropAPI.getPidForElement(e.getElementName()).isEmpty()) {
+                            sb.append("\" pid=\"");
+                            sb.append(ElementPropAPI.getPidForElement(e.getElementName()));
+                        }
+                    } catch (NullPointerException ne) {
+                        // do nothing if there is no pid
+                    }
+                    
                     sb.append("\" type=\"");
                     sb.append(e.getElementTypeId().getElementType());
                     sb.append("\" pos=\"");
@@ -167,7 +180,6 @@ public class Db2Xal {
                     sb.append(e.getS());
                     sb.append("\">\n");
                     // check if there is any attribute for the element
-                    List<ElementProp> epList = ElementAPI.getAllPropertiesForElement(e.getElementName());
                     sb.append("         <attributes>\n");
 
                     // set alignment data from element
@@ -245,24 +257,24 @@ public class Db2Xal {
                             sb.append("/>\n");
                         }
 
-//                        // set rfcavity attributes
-//                        Map rfAttMap = ElementPropAPI.getRfcavityAttributesForElement(e.getElementName());
-//                        if (!rfAttMap.isEmpty()) {
-//
-//                            sb.append("            <rfgap ");
-//
-//                            Set keySet4 = rfAttMap.keySet();
-//                            Iterator<String> keyIt4 = keySet4.iterator();
-//                            while (keyIt4.hasNext()) {
-//                                String key4 = keyIt4.next();
-//                                sb.append(key4);
-//                                sb.append("=\"");
-//                                sb.append(rfAttMap.get(key4));
-//                                sb.append("\" ");
-//                            }
-//
-//                            sb.append("/>\n");
-//                        }
+                        // set rfcavity attributes
+                        Map rfAttMap = ElementPropAPI.getRfcavityAttributesForElement(e.getElementName());
+                        if (!rfAttMap.isEmpty()) {
+
+                            sb.append("            <rfcavity ");
+
+                            Set keySet4 = rfAttMap.keySet();
+                            Iterator<String> keyIt4 = keySet4.iterator();
+                            while (keyIt4.hasNext()) {
+                                String key4 = keyIt4.next();
+                                sb.append(key4);
+                                sb.append("=\"");
+                                sb.append(rfAttMap.get(key4));
+                                sb.append("\" ");
+                            }
+
+                            sb.append("/>\n");
+                        }
                     }
                     sb.append("         </attributes>\n");
 
