@@ -26,46 +26,56 @@ public class SeqMap2DB {
     static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     static EntityManager em = emf.createEntityManager();
     @PersistenceContext
-    public String filePath;
+    private String filePath;
+
+    public String getFilePath() {
+        return filePath;
+    }
+
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
+    }
 
     public SeqMap2DB() {
     }
 
-    public SeqMap2DB(String path) {
-        filePath = path;
-    }
-
     public void insertDB() {
-        ArrayList mapList = new Data2Map(this.filePath).getMapData();
-        Iterator it = mapList.iterator();
-        while (it.hasNext()) {
-            Map dataMap = (Map) it.next();
-            String sequence_name = (String) dataMap.get("sequence_name");
-            String first_ele_name = dataMap.get("first_element_name").toString();
-            String last_ele_name = dataMap.get("last_element_name").toString();
-            String pre_seq1 = dataMap.get("predecessor_sequence").toString();
-            String pre_seq=pre_seq1;
-            if("".equals(pre_seq1)||pre_seq==null||"null".equals(pre_seq)){
-                pre_seq=null;
+        if (this.filePath == null || "".equals(this.filePath)) {
+            System.out.println("Warning: Please assign the specific path of the spreadsheet!");
+        } else {
+            Data2Map data2Map = new Data2Map();
+            data2Map.setFilePath(this.getFilePath());
+            ArrayList mapList = data2Map.getMapData();
+            Iterator it = mapList.iterator();
+            while (it.hasNext()) {
+                Map dataMap = (Map) it.next();
+                String sequence_name = (String) dataMap.get("sequence_name");
+                String first_ele_name = dataMap.get("first_element_name").toString();
+                String last_ele_name = dataMap.get("last_element_name").toString();
+                String pre_seq1 = dataMap.get("predecessor_sequence").toString();
+                String pre_seq = pre_seq1;
+                if ("".equals(pre_seq1) || pre_seq == null || "null".equals(pre_seq)) {
+                    pre_seq = null;
+                }
+                Double seq_length = Double.parseDouble(dataMap.get("sequence_length").toString());
+                String seq_des = dataMap.get("sequence_description").toString();
+                BeamlineSequence bs = BeamlineSequenceAPI.getSequenceByName(sequence_name);
+                if (bs == null) {
+                    BeamlineSequenceAPI.setBeamlineSequence(sequence_name, first_ele_name,
+                            last_ele_name, pre_seq, seq_length, seq_des);
+                } else {
+                    em.getTransaction().begin();
+                    bs = em.find(BeamlineSequence.class, bs.getBeamlineSequenceId());
+                    bs.setFirstElementName(first_ele_name);
+                    bs.setLastElementName(last_ele_name);
+                    bs.setPredecessorSequence(pre_seq);
+                    bs.setSequenceLength(seq_length);
+                    bs.setSequenceDescription(seq_des);
+                    em.getTransaction().commit();
+                }
             }
-            Double seq_length = Double.parseDouble(dataMap.get("sequence_length").toString());
-            String seq_des = dataMap.get("sequence_description").toString();
-            BeamlineSequence bs = BeamlineSequenceAPI.getSequenceByName(sequence_name);
-            if (bs == null) {
-                BeamlineSequenceAPI.setBeamlineSequence(sequence_name, first_ele_name,
-                        last_ele_name, pre_seq, seq_length, seq_des);
-            } else {
-                em.getTransaction().begin();
-                bs=em.find(BeamlineSequence.class, bs.getBeamlineSequenceId());
-                bs.setFirstElementName(first_ele_name);
-                bs.setLastElementName(last_ele_name);
-                bs.setPredecessorSequence(pre_seq);
-                bs.setSequenceLength(seq_length);
-                bs.setSequenceDescription(seq_des);
-                em.getTransaction().commit();
-            }
+            em.close();
+            emf.close();
         }
-        em.close();
-        emf.close();
     }
 }

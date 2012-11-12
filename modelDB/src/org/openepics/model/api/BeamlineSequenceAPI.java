@@ -18,6 +18,8 @@ import javax.persistence.Query;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
+import org.openepics.model.entity.ElementProp;
+import org.openepics.model.entity.RfGap;
 
 /**
  *
@@ -52,28 +54,28 @@ public class BeamlineSequenceAPI {
      */
     public static List<Element> getAllElementsForSequence(String seq) {
         Query q;
-         q = em.createQuery("SELECT e FROM Element e JOIN e.beamlineSequenceId b "
-                 + "WHERE b.sequenceName = :sequenceName").setParameter("sequenceName", seq);
-      /*  q = em.createQuery("SELECT blsl FROM BeamlineSequence blsl WHERE blsl.beamlineSequenceId.sequenceName=:sequenceName").setParameter("sequenceName", seq);
-        List<BeamlineSequence> blslList = q.getResultList();
-        ArrayList<Element> eList = new ArrayList<>();
-        Iterator it = blslList.iterator();
-        while (it.hasNext()) {
-            BeamlineSequence bls = (BeamlineSequence) it.next();
-            Collection eCol = (Collection) bls.getElementCollection();
-            //System.out.println(eCol.size());
-            Iterator it2 = eCol.iterator();
-            while (it2.hasNext()) {
-                Element e = (Element) it2.next();
-                //System.out.println(e.getElementId());
-                eList.add(e);
-            }
+        q = em.createQuery("SELECT e FROM Element e JOIN e.beamlineSequenceId b "
+                + "WHERE b.sequenceName = :sequenceName").setParameter("sequenceName", seq);
+        /*  q = em.createQuery("SELECT blsl FROM BeamlineSequence blsl WHERE blsl.beamlineSequenceId.sequenceName=:sequenceName").setParameter("sequenceName", seq);
+         List<BeamlineSequence> blslList = q.getResultList();
+         ArrayList<Element> eList = new ArrayList<>();
+         Iterator it = blslList.iterator();
+         while (it.hasNext()) {
+         BeamlineSequence bls = (BeamlineSequence) it.next();
+         Collection eCol = (Collection) bls.getElementCollection();
+         //System.out.println(eCol.size());
+         Iterator it2 = eCol.iterator();
+         while (it2.hasNext()) {
+         Element e = (Element) it2.next();
+         //System.out.println(e.getElementId());
+         eList.add(e);
+         }
 
-        }*/
-       // return eList;
+         }*/
+        // return eList;
 
-          List<Element> eList = q.getResultList();
-         return eList;
+        List<Element> eList = q.getResultList();
+        return eList;
     }
 
     /**
@@ -172,4 +174,95 @@ public class BeamlineSequenceAPI {
         em.persist(bs);
         em.getTransaction().commit();
     }
+
+    /**
+     * delete the BeamlineSequence by the given sequence name 
+     * delete the Elements belonging to the sequence 
+     * delete the ElementProps belonging to the Elements 
+     * delete the RfGaps belonging to the Elements
+     */
+    public static void deleteBySequence(String seqName) {
+        em.getTransaction().begin();
+        BeamlineSequence bls = BeamlineSequenceAPI.getSequenceByName(seqName);
+        if (bls != null) {
+            List<Element> eList = BeamlineSequenceAPI.getAllElementsForSequence(seqName);
+            Iterator it = eList.iterator();
+            while (it.hasNext()) {
+                Element e = (Element) it.next();
+
+                List<ElementProp> epList = ElementAPI.getAllPropertiesForElement(e.getElementName());
+                Iterator it1 = epList.iterator();
+                while (it1.hasNext()) {
+                    ElementProp ep = (ElementProp) it1.next();
+                    em.remove(em.merge(ep));
+                }
+
+                List<RfGap> rfList = RfGapAPI.getAllRfgapsForCavity(e.getElementName());
+                Iterator it2 = rfList.iterator();
+                while (it2.hasNext()) {
+                    RfGap rf = (RfGap) it2.next();
+                    em.remove(em.merge(rf));
+                }
+                em.remove(em.merge(e));
+            }
+            em.remove(em.merge(bls));
+            em.getTransaction().commit();
+        } else {
+            System.out.println("The BeamlineSequence " + seqName + " doesn't exist!");
+        }
+        em.close();
+        emf.close();
+    }
+
+    public static void deleteAll() {
+        List sequences = BeamlineSequenceAPI.getAllSequences();
+
+        Iterator it = sequences.iterator();
+        em.getTransaction().begin();
+        while (it.hasNext()) {
+
+            BeamlineSequence bls = (BeamlineSequence) it.next();
+            List<Element> eList = BeamlineSequenceAPI.getAllElementsForSequence(bls.getSequenceName());
+            Iterator it3 = eList.iterator();
+            while (it3.hasNext()) {
+                Element e = (Element) it3.next();
+
+                List<ElementProp> epList = ElementAPI.getAllPropertiesForElement(e.getElementName());
+                Iterator it1 = epList.iterator();
+                while (it1.hasNext()) {
+                    ElementProp ep = (ElementProp) it1.next();
+                    em.remove(em.merge(ep));
+                }
+
+                List<RfGap> rfList = RfGapAPI.getAllRfgapsForCavity(e.getElementName());
+                Iterator it2 = rfList.iterator();
+                while (it2.hasNext()) {
+                    RfGap rf = (RfGap) it2.next();
+                    em.remove(em.merge(rf));
+                }
+                em.remove(em.merge(e));
+            }
+            em.remove(em.merge(bls));
+
+        }
+        em.getTransaction().commit();
+        em.close();
+        emf.close();
+    }
+    
+    public static void updateBeamlineSequence(String old_seq_name, String new_seq_name,
+            String first_elem_name, String last_elem_name, String previous_seq, double seq_length, String seq_desc){
+        em.getTransaction().begin();
+        BeamlineSequence bs=BeamlineSequenceAPI.getSequenceByName(old_seq_name);
+        bs.setSequenceName(new_seq_name);
+        bs.setFirstElementName(first_elem_name);
+        bs.setLastElementName(last_elem_name);
+        bs.setPredecessorSequence(previous_seq);
+        bs.setSequenceLength(seq_length);
+        bs.setSequenceDescription(seq_desc);
+        em.merge(bs);
+        em.getTransaction().commit();
+        em.close();
+        emf.close();
+    } 
 }
