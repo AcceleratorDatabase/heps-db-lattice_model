@@ -18,6 +18,7 @@ import org.openepics.model.entity.Lattice;
 /**
  *
  * @author chu
+ * @author lv
  */
 public class LatticeAPI {
      @PersistenceUnit

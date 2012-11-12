@@ -21,6 +21,7 @@ import org.openepics.model.entity.RfGap;
 /**
  *
  * @author chu
+ * @author lv
  */
 public class ElementAPI {
 
