@@ -91,6 +91,19 @@ public class ModelAPI {
     }
     
     /**
+     * get the default (Gold) model for the default line
+     * 
+     * @return the default model
+     */
+    public static Model getDefaultModel() {
+        Model m = null;
+        
+        // TODO fill in the code
+        
+        return m;
+    }
+    
+    /**
      * Set a new model information
      * 
      * @param model_line model line name
