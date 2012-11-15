@@ -4,10 +4,6 @@
  */
 package org.openepics.model.api;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -15,7 +11,6 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
-import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 
