@@ -15,33 +15,45 @@ import java.util.Map;
  * @author chu
  */
 public class Data2Map {
-    public String filePath;
-   
-    public  Data2Map() { 
+
+    private String filePath;
+
+    public String getFilePath() {
+        return filePath;
     }
 
-    public Data2Map(String file) {
-        filePath = file;
+    public void setFilePath(String filePath) {
+        this.filePath = filePath;
     }
-    
-    public ArrayList getMapData(){
-        ArrayList mapList=new ArrayList();
-        ArrayList dataList=new ReadSeqExl(this.filePath).getDataList();
-        ArrayList labelRow=(ArrayList) dataList.get(0);
-        int colNum=labelRow.size();
-        int i=0;
-        Iterator it=dataList.iterator();
-        while(it.hasNext()){
-            ArrayList dataRow=(ArrayList) it.next();
-            if(i>0){
-                Map dataMap=new HashMap();
-                for(int j=0;j<colNum;j++){
-                   dataMap.put(labelRow.get(j), dataRow.get(j));
+
+    public Data2Map() {
+    }
+
+    public ArrayList getMapData() {
+        if (this.filePath == null || "".equals(this.filePath)) {
+            System.out.println("Warning: Please assign the specific path of the spreadsheet!");
+            return null;
+        } else {
+            ArrayList mapList = new ArrayList();
+            ReadSeqExl read = new ReadSeqExl();
+            read.setFilePath(this.getFilePath());
+            ArrayList dataList = read.getDataList();
+            ArrayList labelRow = (ArrayList) dataList.get(0);
+            int colNum = labelRow.size();
+            int i = 0;
+            Iterator it = dataList.iterator();
+            while (it.hasNext()) {
+                ArrayList dataRow = (ArrayList) it.next();
+                if (i > 0) {
+                    Map dataMap = new HashMap();
+                    for (int j = 0; j < colNum; j++) {
+                        dataMap.put(labelRow.get(j), dataRow.get(j));
+                    }
+                    mapList.add(dataMap);
                 }
-                mapList.add(dataMap);
+                i++;
             }
-            i++;
+            return mapList;
         }
-        return mapList;
     }
 }
