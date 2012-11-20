@@ -6,19 +6,6 @@ CREATE SCHEMA IF NOT EXISTS `discs_model` DEFAULT CHARACTER SET utf8 ;
 USE `discs_model` ;
 
 -- -----------------------------------------------------
--- Table `discs_model`.`element_type`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type` (
-  `element_type_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `element_type` VARCHAR(45) NULL DEFAULT NULL ,
-  `element_type_description` VARCHAR(255) NULL DEFAULT NULL ,
-  PRIMARY KEY (`element_type_id`) )
-ENGINE = InnoDB
-AUTO_INCREMENT = 90
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
 -- Table `discs_model`.`beamline_sequence`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `discs_model`.`beamline_sequence` (
@@ -31,7 +18,20 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beamline_sequence` (
   `sequence_description` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`beamline_sequence_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 24
+AUTO_INCREMENT = 17
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `discs_model`.`element_type`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type` (
+  `element_type_id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `element_type` VARCHAR(45) NULL DEFAULT NULL ,
+  `element_type_description` VARCHAR(255) NULL DEFAULT NULL ,
+  PRIMARY KEY (`element_type_id`) )
+ENGINE = InnoDB
+AUTO_INCREMENT = 78
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -58,30 +58,18 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element` (
   PRIMARY KEY (`element_id`) ,
   INDEX `FK_element_type_idx` (`element_type_id` ASC) ,
   INDEX `FK_beamline_sequence_id` (`beamline_sequence_id` ASC) ,
-  CONSTRAINT `FK_element_type`
-    FOREIGN KEY (`element_type_id` )
-    REFERENCES `discs_model`.`element_type` (`element_type_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `FK_beamline_sequence_id`
     FOREIGN KEY (`beamline_sequence_id` )
     REFERENCES `discs_model`.`beamline_sequence` (`beamline_sequence_id` )
     ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK_element_type`
+    FOREIGN KEY (`element_type_id` )
+    REFERENCES `discs_model`.`element_type` (`element_type_id` )
+    ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 1299
-DEFAULT CHARACTER SET = utf8;
-
-
--- -----------------------------------------------------
--- Table `discs_model`.`model_geometry`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `discs_model`.`model_geometry` (
-  `model_geometry_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `model_geometry_name` VARCHAR(45) NULL DEFAULT NULL ,
-  `model_geometry_description` VARCHAR(255) NULL DEFAULT NULL ,
-  PRIMARY KEY (`model_geometry_id`) )
-ENGINE = InnoDB
+AUTO_INCREMENT = 1298
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -98,7 +86,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`lattice` (
   `update_date` DATETIME NULL DEFAULT NULL ,
   PRIMARY KEY (`lattice_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -111,7 +99,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`machine_mode` (
   `machine_mode_description` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`machine_mode_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -124,7 +111,18 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`model_code` (
   `algorithm` VARCHAR(45) NULL DEFAULT NULL ,
   PRIMARY KEY (`model_code_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `discs_model`.`model_geometry`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `discs_model`.`model_geometry` (
+  `model_geometry_id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `model_geometry_name` VARCHAR(45) NULL DEFAULT NULL ,
+  `model_geometry_description` VARCHAR(255) NULL DEFAULT NULL ,
+  PRIMARY KEY (`model_geometry_id`) )
+ENGINE = InnoDB
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -141,7 +139,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`model_line` (
   `end_marker` VARCHAR(45) NULL DEFAULT NULL ,
   PRIMARY KEY (`model_line_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -177,11 +174,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`model` (
   INDEX `FK_model_geometry_id` (`model_geometry_id` ASC) ,
   INDEX `FK_machine_model_id` (`machine_mode_id` ASC) ,
   INDEX `FK_model_code_id` (`model_code_id` ASC) ,
-  CONSTRAINT `FK_model_geometry_id`
-    FOREIGN KEY (`model_geometry_id` )
-    REFERENCES `discs_model`.`model_geometry` (`model_geometry_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `FK_lattice`
     FOREIGN KEY (`lattice_id` )
     REFERENCES `discs_model`.`lattice` (`lattice_id` )
@@ -195,6 +187,11 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`model` (
   CONSTRAINT `FK_model_code_id`
     FOREIGN KEY (`model_code_id` )
     REFERENCES `discs_model`.`model_code` (`model_code_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `FK_model_geometry_id`
+    FOREIGN KEY (`model_geometry_id` )
+    REFERENCES `discs_model`.`model_geometry` (`model_geometry_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION,
   CONSTRAINT `FK_model_line_id`
@@ -213,39 +210,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beam_parameter` (
   `twiss_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `element_id` INT(11) NULL DEFAULT NULL ,
   `model_id` INT(11) NULL DEFAULT NULL ,
-  `pos` DOUBLE NULL DEFAULT NULL ,
-  `alpha_x` DOUBLE NULL DEFAULT NULL ,
-  `beta_x` DOUBLE NULL DEFAULT NULL ,
-  `nu_x` DOUBLE NULL DEFAULT NULL ,
-  `eta_x` DOUBLE NULL DEFAULT NULL ,
-  `etap_x` DOUBLE NULL DEFAULT NULL ,
-  `alpha_y` DOUBLE NULL DEFAULT NULL ,
-  `beta_y` DOUBLE NULL DEFAULT NULL ,
-  `nu_y` DOUBLE NULL DEFAULT NULL ,
-  `eta_y` DOUBLE NULL DEFAULT NULL ,
-  `etap_y` DOUBLE NULL DEFAULT NULL ,
-  `transfer_matrix` VARCHAR(2047) NULL DEFAULT NULL ,
-  `co_x` DOUBLE NULL DEFAULT NULL ,
-  `co_y` DOUBLE NULL DEFAULT NULL ,
-  `index_slice_chk` INT(11) NULL DEFAULT NULL ,
-  `energy` DOUBLE NULL DEFAULT NULL ,
-  `particle_species` VARCHAR(45) NULL DEFAULT NULL ,
-  `particle_mass` DOUBLE NULL DEFAULT NULL ,
-  `particle_charge` INT(11) NULL DEFAULT NULL ,
-  `beam_charge_density` DOUBLE NULL DEFAULT NULL ,
-  `beam_current` DOUBLE NULL DEFAULT '0' ,
-  `x` DOUBLE NULL DEFAULT NULL ,
-  `xp` DOUBLE NULL DEFAULT NULL ,
-  `y` DOUBLE NULL DEFAULT NULL ,
-  `yp` DOUBLE NULL DEFAULT NULL ,
-  `z` DOUBLE NULL DEFAULT NULL ,
-  `zp` DOUBLE NULL DEFAULT NULL ,
-  `emit_x` DOUBLE NULL DEFAULT NULL ,
-  `emit_y` DOUBLE NULL DEFAULT NULL ,
-  `emit_z` DOUBLE NULL DEFAULT NULL ,
-  `psi_x` DOUBLE NULL DEFAULT NULL ,
-  `psi_y` DOUBLE NULL DEFAULT NULL ,
-  `nu_s` DOUBLE NULL DEFAULT NULL ,
   PRIMARY KEY (`twiss_id`) ,
   INDEX `FK_element_id_idx` (`element_id` ASC) ,
   INDEX `FK_twiss_model_id_idx` (`model_id` ASC) ,
@@ -259,6 +223,31 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beam_parameter` (
   CONSTRAINT `FK_model`
     FOREIGN KEY (`model_id` )
     REFERENCES `discs_model`.`model` (`model_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
+
+-- -----------------------------------------------------
+-- Table `discs_model`.`beam_parameter_prop`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `discs_model`.`beam_parameter_prop` (
+  `beam_parameter_prop_id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `beam_parameter_id` INT(11) NULL DEFAULT NULL ,
+  `property_name` VARCHAR(45) NULL DEFAULT NULL ,
+  `property_datatype` VARCHAR(45) NULL DEFAULT NULL ,
+  `description` VARCHAR(45) NULL DEFAULT NULL ,
+  `beam_parameter_int` INT(11) NULL DEFAULT NULL ,
+  `beam_parameter_double` DOUBLE NULL DEFAULT NULL ,
+  `beam_parameter_string` VARCHAR(45) NULL DEFAULT NULL ,
+  `trnsfer_matrix` VARCHAR(2047) NULL DEFAULT NULL ,
+  PRIMARY KEY (`beam_parameter_prop_id`) ,
+  INDEX `FK_beam_parameter` (`beam_parameter_id` ASC) ,
+  INDEX `FK_beam_parameter_id` (`beam_parameter_id` ASC) ,
+  CONSTRAINT `FK_beam_parameter_id`
+    FOREIGN KEY (`beam_parameter_id` )
+    REFERENCES `discs_model`.`beam_parameter` (`twiss_id` )
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
@@ -329,7 +318,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type_prop` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 43
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -368,7 +356,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_prop` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 39963
+AUTO_INCREMENT = 39933
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -423,7 +411,6 @@ DEFAULT CHARACTER SET = utf8;
 CREATE  TABLE IF NOT EXISTS `discs_model`.`rf_gap` (
   `rf_gap_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `cavity_id` INT(11) NULL DEFAULT NULL ,
-  `gap_name` VARCHAR(45) NULL DEFAULT NULL ,
   `pos` DOUBLE NULL DEFAULT NULL ,
   `TTF` DOUBLE NULL DEFAULT NULL ,
   `ampFactor` DOUBLE NULL DEFAULT NULL ,
@@ -431,6 +418,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`rf_gap` (
   `gapOffset` DOUBLE NULL DEFAULT NULL ,
   `len` DOUBLE NULL DEFAULT NULL ,
   `phaseFactor` DOUBLE NULL DEFAULT NULL ,
+  `gap_name` VARCHAR(45) NULL DEFAULT NULL ,
   PRIMARY KEY (`rf_gap_id`) ,
   INDEX `FK_cavity_id` (`cavity_id` ASC) ,
   CONSTRAINT `FK_cavity_id`
