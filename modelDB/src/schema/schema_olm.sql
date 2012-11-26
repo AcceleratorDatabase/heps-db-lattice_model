@@ -18,7 +18,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beamline_sequence` (
   `sequence_description` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`beamline_sequence_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 17
+AUTO_INCREMENT = 24
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -31,7 +31,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type` (
   `element_type_description` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`element_type_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 78
+AUTO_INCREMENT = 90
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -69,7 +69,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 1298
+AUTO_INCREMENT = 1299
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -86,7 +86,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`lattice` (
   `update_date` DATETIME NULL DEFAULT NULL ,
   PRIMARY KEY (`lattice_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -111,6 +111,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`model_code` (
   `algorithm` VARCHAR(45) NULL DEFAULT NULL ,
   PRIMARY KEY (`model_code_id`) )
 ENGINE = InnoDB
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -139,6 +140,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`model_line` (
   `end_marker` VARCHAR(45) NULL DEFAULT NULL ,
   PRIMARY KEY (`model_line_id`) )
 ENGINE = InnoDB
+AUTO_INCREMENT = 2
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -236,6 +238,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beam_parameter_prop` (
   `beam_parameter_prop_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `beam_parameter_id` INT(11) NULL DEFAULT NULL ,
   `property_name` VARCHAR(45) NULL DEFAULT NULL ,
+  `prop_category` VARCHAR(45) NULL DEFAULT NULL ,
   `property_datatype` VARCHAR(45) NULL DEFAULT NULL ,
   `description` VARCHAR(45) NULL DEFAULT NULL ,
   `beam_parameter_int` INT(11) NULL DEFAULT NULL ,
@@ -318,6 +321,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type_prop` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 37
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -356,7 +360,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_prop` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 39933
+AUTO_INCREMENT = 39963
 DEFAULT CHARACTER SET = utf8;
 
 
