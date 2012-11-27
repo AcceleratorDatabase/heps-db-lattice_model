@@ -11,6 +11,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -65,6 +67,9 @@ public class BeamParameterProp implements Serializable {
     @Size(max = 2047)
     @Column(name = "trnsfer_matrix")
     private String trnsferMatrix;
+    @JoinColumn(name = "beam_parameter_id", referencedColumnName = "twiss_id")
+    @ManyToOne
+    private BeamParameter beamParameterId;
 
     public BeamParameterProp() {
     }
@@ -143,6 +148,14 @@ public class BeamParameterProp implements Serializable {
 
     public void setTrnsferMatrix(String trnsferMatrix) {
         this.trnsferMatrix = trnsferMatrix;
+    }
+
+    public BeamParameter getBeamParameterId() {
+        return beamParameterId;
+    }
+
+    public void setBeamParameterId(BeamParameter beamParameterId) {
+        this.beamParameterId = beamParameterId;
     }
 
     @Override

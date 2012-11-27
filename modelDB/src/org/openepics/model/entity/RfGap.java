@@ -29,14 +29,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "RfGap.findAll", query = "SELECT r FROM RfGap r"),
     @NamedQuery(name = "RfGap.findByRfGapId", query = "SELECT r FROM RfGap r WHERE r.rfGapId = :rfGapId"),
-    @NamedQuery(name = "RfGap.findByGapName", query = "SELECT r FROM RfGap r WHERE r.gapName = :gapName"),
     @NamedQuery(name = "RfGap.findByPos", query = "SELECT r FROM RfGap r WHERE r.pos = :pos"),
     @NamedQuery(name = "RfGap.findByTtf", query = "SELECT r FROM RfGap r WHERE r.ttf = :ttf"),
     @NamedQuery(name = "RfGap.findByAmpFactor", query = "SELECT r FROM RfGap r WHERE r.ampFactor = :ampFactor"),
     @NamedQuery(name = "RfGap.findByEndCellind", query = "SELECT r FROM RfGap r WHERE r.endCellind = :endCellind"),
     @NamedQuery(name = "RfGap.findByGapOffset", query = "SELECT r FROM RfGap r WHERE r.gapOffset = :gapOffset"),
     @NamedQuery(name = "RfGap.findByLen", query = "SELECT r FROM RfGap r WHERE r.len = :len"),
-    @NamedQuery(name = "RfGap.findByPhaseFactor", query = "SELECT r FROM RfGap r WHERE r.phaseFactor = :phaseFactor")})
+    @NamedQuery(name = "RfGap.findByPhaseFactor", query = "SELECT r FROM RfGap r WHERE r.phaseFactor = :phaseFactor"),
+    @NamedQuery(name = "RfGap.findByGapName", query = "SELECT r FROM RfGap r WHERE r.gapName = :gapName")})
 public class RfGap implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -44,9 +44,6 @@ public class RfGap implements Serializable {
     @Basic(optional = false)
     @Column(name = "rf_gap_id")
     private Integer rfGapId;
-    @Size(max = 45)
-    @Column(name = "gap_name")
-    private String gapName;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "pos")
     private Double pos;
@@ -62,6 +59,9 @@ public class RfGap implements Serializable {
     private Double len;
     @Column(name = "phaseFactor")
     private Double phaseFactor;
+    @Size(max = 45)
+    @Column(name = "gap_name")
+    private String gapName;
     @JoinColumn(name = "cavity_id", referencedColumnName = "element_id")
     @ManyToOne
     private Element cavityId;
@@ -79,14 +79,6 @@ public class RfGap implements Serializable {
 
     public void setRfGapId(Integer rfGapId) {
         this.rfGapId = rfGapId;
-    }
-
-    public String getGapName() {
-        return gapName;
-    }
-
-    public void setGapName(String gapName) {
-        this.gapName = gapName;
     }
 
     public Double getPos() {
@@ -143,6 +135,14 @@ public class RfGap implements Serializable {
 
     public void setPhaseFactor(Double phaseFactor) {
         this.phaseFactor = phaseFactor;
+    }
+
+    public String getGapName() {
+        return gapName;
+    }
+
+    public void setGapName(String gapName) {
+        this.gapName = gapName;
     }
 
     public Element getCavityId() {

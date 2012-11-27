@@ -16,8 +16,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
@@ -38,8 +40,10 @@ public class ModelGeometry implements Serializable {
     @Basic(optional = false)
     @Column(name = "model_geometry_id")
     private Integer modelGeometryId;
+    @Size(max = 45)
     @Column(name = "model_geometry_name")
     private String modelGeometryName;
+    @Size(max = 255)
     @Column(name = "model_geometry_description")
     private String modelGeometryDescription;
     @OneToMany(mappedBy = "modelGeometryId")
@@ -77,6 +81,7 @@ public class ModelGeometry implements Serializable {
     }
 
     @XmlTransient
+    @JsonIgnore
     public Collection<Model> getModelCollection() {
         return modelCollection;
     }

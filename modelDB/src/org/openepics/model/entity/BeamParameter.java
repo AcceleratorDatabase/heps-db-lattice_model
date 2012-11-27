@@ -20,10 +20,11 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
- * @author paul
+ * @author chu
  */
 @Entity
 @Table(name = "beam_parameter")
@@ -79,6 +80,7 @@ public class BeamParameter implements Serializable {
     }
 
     @XmlTransient
+    @JsonIgnore
     public Collection<BeamParameterProp> getBeamParameterPropCollection() {
         return beamParameterPropCollection;
     }

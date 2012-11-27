@@ -21,8 +21,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
@@ -56,15 +58,19 @@ public class Model implements Serializable {
     @Basic(optional = false)
     @Column(name = "model_id")
     private Integer modelId;
+    @Size(max = 255)
     @Column(name = "model_name")
     private String modelName;
+    @Size(max = 255)
     @Column(name = "model_desc")
     private String modelDesc;
+    @Size(max = 45)
     @Column(name = "created_by")
     private String createdBy;
     @Column(name = "create_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
+    @Size(max = 45)
     @Column(name = "updated_by")
     private String updatedBy;
     @Column(name = "update_date")
@@ -92,6 +98,9 @@ public class Model implements Serializable {
     @JoinColumn(name = "model_line_id", referencedColumnName = "model_line_id")
     @ManyToOne
     private ModelLine modelLineId;
+    @JoinColumn(name = "model_geometry_id", referencedColumnName = "model_geometry_id")
+    @ManyToOne
+    private ModelGeometry modelGeometryId;
     @JoinColumn(name = "model_code_id", referencedColumnName = "model_code_id")
     @ManyToOne
     private ModelCode modelCodeId;
@@ -101,9 +110,6 @@ public class Model implements Serializable {
     @JoinColumn(name = "lattice_id", referencedColumnName = "lattice_id")
     @ManyToOne
     private Lattice latticeId;
-    @JoinColumn(name = "model_geometry_id", referencedColumnName = "model_geometry_id")
-    @ManyToOne
-    private ModelGeometry modelGeometryId;
     @OneToMany(mappedBy = "modelId")
     private Collection<BeamParameter> beamParameterCollection;
     @OneToMany(mappedBy = "modelId")
@@ -252,6 +258,14 @@ public class Model implements Serializable {
         this.modelLineId = modelLineId;
     }
 
+    public ModelGeometry getModelGeometryId() {
+        return modelGeometryId;
+    }
+
+    public void setModelGeometryId(ModelGeometry modelGeometryId) {
+        this.modelGeometryId = modelGeometryId;
+    }
+
     public ModelCode getModelCodeId() {
         return modelCodeId;
     }
@@ -276,15 +290,8 @@ public class Model implements Serializable {
         this.latticeId = latticeId;
     }
 
-    public ModelGeometry getModelGeometryId() {
-        return modelGeometryId;
-    }
-
-    public void setModelGeometryId(ModelGeometry modelGeometryId) {
-        this.modelGeometryId = modelGeometryId;
-    }
-
     @XmlTransient
+    @JsonIgnore
     public Collection<BeamParameter> getBeamParameterCollection() {
         return beamParameterCollection;
     }
@@ -294,6 +301,7 @@ public class Model implements Serializable {
     }
 
     @XmlTransient
+    @JsonIgnore
     public Collection<GoldModel> getGoldModelCollection() {
         return goldModelCollection;
     }
