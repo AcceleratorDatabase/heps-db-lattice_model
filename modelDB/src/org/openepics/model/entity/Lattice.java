@@ -19,8 +19,10 @@ import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
@@ -45,15 +47,19 @@ public class Lattice implements Serializable {
     @Basic(optional = false)
     @Column(name = "lattice_id")
     private Integer latticeId;
+    @Size(max = 255)
     @Column(name = "lattice_name")
     private String latticeName;
+    @Size(max = 255)
     @Column(name = "lattice_description")
     private String latticeDescription;
+    @Size(max = 45)
     @Column(name = "created_by")
     private String createdBy;
     @Column(name = "create_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date createDate;
+    @Size(max = 45)
     @Column(name = "updated_by")
     private String updatedBy;
     @Column(name = "update_date")
@@ -132,6 +138,7 @@ public class Lattice implements Serializable {
     }
 
     @XmlTransient
+    @JsonIgnore
     public Collection<Model> getModelCollection() {
         return modelCollection;
     }
@@ -141,6 +148,7 @@ public class Lattice implements Serializable {
     }
 
     @XmlTransient
+    @JsonIgnore
     public Collection<ElementProp> getElementPropCollection() {
         return elementPropCollection;
     }
@@ -150,6 +158,7 @@ public class Lattice implements Serializable {
     }
 
     @XmlTransient
+    @JsonIgnore
     public Collection<BlsequenceLattice> getBlsequenceLatticeCollection() {
         return blsequenceLatticeCollection;
     }
@@ -159,6 +168,7 @@ public class Lattice implements Serializable {
     }
 
     @XmlTransient
+    @JsonIgnore
     public Collection<GoldLattice> getGoldLatticeCollection() {
         return goldLatticeCollection;
     }

@@ -16,6 +16,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 
 /**
@@ -42,6 +43,7 @@ public class ElementProp implements Serializable {
     @Basic(optional = false)
     @Column(name = "element_prop_id")
     private Integer elementPropId;
+    @Size(max = 255)
     @Column(name = "element_prop_string")
     private String elementPropString;
     @Column(name = "element_prop_int")
@@ -51,10 +53,13 @@ public class ElementProp implements Serializable {
     private Double elementPropDouble;
     @Column(name = "element_prop_index")
     private Integer elementPropIndex;
+    @Size(max = 45)
     @Column(name = "prop_category")
     private String propCategory;
+    @Size(max = 45)
     @Column(name = "element_prop_name")
     private String elementPropName;
+    @Size(max = 45)
     @Column(name = "element_prop_datatype")
     private String elementPropDatatype;
     @JoinColumn(name = "lattice_id", referencedColumnName = "lattice_id")

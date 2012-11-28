@@ -16,8 +16,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
@@ -38,8 +40,10 @@ public class ElementType implements Serializable {
     @Basic(optional = false)
     @Column(name = "element_type_id")
     private Integer elementTypeId;
+    @Size(max = 45)
     @Column(name = "element_type")
     private String elementType;
+    @Size(max = 255)
     @Column(name = "element_type_description")
     private String elementTypeDescription;
     @OneToMany(mappedBy = "elementTypeId")
@@ -79,6 +83,7 @@ public class ElementType implements Serializable {
     }
 
     @XmlTransient
+    @JsonIgnore
     public Collection<Element> getElementCollection() {
         return elementCollection;
     }
@@ -88,6 +93,7 @@ public class ElementType implements Serializable {
     }
 
     @XmlTransient
+    @JsonIgnore
     public Collection<ElementTypeProp> getElementTypePropCollection() {
         return elementTypePropCollection;
     }

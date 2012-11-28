@@ -16,8 +16,10 @@ import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
+import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
@@ -38,8 +40,10 @@ public class ModelCode implements Serializable {
     @Basic(optional = false)
     @Column(name = "model_code_id")
     private Integer modelCodeId;
+    @Size(max = 45)
     @Column(name = "code_name")
     private String codeName;
+    @Size(max = 45)
     @Column(name = "algorithm")
     private String algorithm;
     @OneToMany(mappedBy = "modelCodeId")
@@ -77,6 +81,7 @@ public class ModelCode implements Serializable {
     }
 
     @XmlTransient
+    @JsonIgnore
     public Collection<Model> getModelCollection() {
         return modelCollection;
     }
