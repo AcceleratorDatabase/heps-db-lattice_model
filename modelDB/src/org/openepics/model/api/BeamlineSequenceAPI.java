@@ -206,8 +206,7 @@ public class BeamlineSequenceAPI {
         } else {
             System.out.println("The BeamlineSequence " + seqName + " doesn't exist!");
         }
-        em.close();
-        emf.close();
+       
     }
 
     public static void deleteAll() {
@@ -242,8 +241,7 @@ public class BeamlineSequenceAPI {
 
         }
         em.getTransaction().commit();
-        em.close();
-        emf.close();
+     
     }
     
     public static void updateBeamlineSequence(String old_seq_name, String new_seq_name,
@@ -258,7 +256,6 @@ public class BeamlineSequenceAPI {
         bs.setSequenceDescription(seq_desc);
         em.merge(bs);
         em.getTransaction().commit();
-        em.close();
-        emf.close();
+        
     } 
 }

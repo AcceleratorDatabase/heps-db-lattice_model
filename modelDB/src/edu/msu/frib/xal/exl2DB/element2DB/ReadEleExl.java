@@ -4,6 +4,7 @@
  */
 package edu.msu.frib.xal.exl2DB.element2DB;
 
+import edu.msu.frib.xal.exl2DB.tools.FileTools;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -31,9 +32,6 @@ public class ReadEleExl {
         this.filePath = filePath;
     }
     private String filePath;
-    FileInputStream inp;
-    Workbook wb;
-    Sheet sheet;
 
     public ReadEleExl() {
     }
@@ -43,267 +41,145 @@ public class ReadEleExl {
             System.out.println("Warning: Please assign the specific path of the spreadsheet!");
 
         } else {
-            if (inp == null) {
-                try {
-                    inp = new FileInputStream(this.filePath);
-                    wb = WorkbookFactory.create(inp);
-                    sheet = wb.getSheetAt(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            try {
-                inp.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ReadEleExl.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            FileInputStream inp = FileTools.getFileInputStream(filePath);
+            Workbook wb = FileTools.getWorkbook(inp);
+            Sheet sheet = wb.getSheetAt(0);
+
             return sheet.getRow(0).getLastCellNum();
         }
         return -1;
     }
 
-    public int getXALLabelNum() {
+    public int getLabelRowNum(String label) {
         if (this.filePath == null || "".equals(this.filePath)) {
             System.out.println("Warning: Please assign the specific path of the spreadsheet!");
 
         } else {
-            if (inp == null) {
-                try {
-                    inp = new FileInputStream(this.filePath);
-                    wb = WorkbookFactory.create(inp);
-                    sheet = wb.getSheetAt(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            FileInputStream inp = FileTools.getFileInputStream(filePath);
+            Workbook wb = FileTools.getWorkbook(inp);
+            Sheet sheet = wb.getSheetAt(0);
+            
+            if(label.indexOf(" ")>0){
+                label=label.substring(0, label.indexOf(" "));
             }
-
             for (int i = 0; i < 10; i++) {
                 Row row = sheet.getRow(i);
                 Cell cell = row.getCell(0);
                 if (Cell.CELL_TYPE_BLANK != cell.getCellType()) {
                     String value = cell.getStringCellValue();
-                    if (value.toLowerCase().contains("xal") && (value.toLowerCase().contains("label"))) {
+                    if (value.toLowerCase().contains(label.toLowerCase())) {
                         return i;
                     }
                 }
             }
-            try {
-                inp.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ReadEleExl.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
         }
         return -1;
     }
 
-    public int getDBLabelNum() {
+    /**
+     *
+     * @param label the column label
+     * @param labelType Physical label, XAL label, or DB label
+     * @return
+     */
+    public int getLabelColNum(String label, String labelType) {
         if (this.filePath == null || "".equals(this.filePath)) {
             System.out.println("Warning: Please assign the specific path of the spreadsheet!");
 
         } else {
-            if (inp == null) {
-                try {
-                    inp = new FileInputStream(this.filePath);
-                    wb = WorkbookFactory.create(inp);
-                    sheet = wb.getSheetAt(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+            FileInputStream inp = FileTools.getFileInputStream(filePath);
+            Workbook wb = FileTools.getWorkbook(inp);
+            Sheet sheet = wb.getSheetAt(0);
+            Row row;
+            int rowNum = 0;
+            if(labelType.toLowerCase().contains("physical")){
+                rowNum=this.getLabelRowNum("XAL label")-1;
+            }else if(labelType.toLowerCase().contains("xal")){
+                rowNum=this.getLabelRowNum("XAL label");
+            }else if(labelType.toLowerCase().contains("db")){
+                rowNum=this.getLabelRowNum("DB label");
             }
-
-            for (int i = 0; i < 10; i++) {
-                Row row = sheet.getRow(i);
-                Cell cell = row.getCell(0);
-                if (Cell.CELL_TYPE_BLANK != cell.getCellType()) {
-                    String value = cell.getStringCellValue();
-                    if (value.toLowerCase().contains("db") && (value.toLowerCase().contains("label"))) {
+            row = sheet.getRow(rowNum);
+            int i = 0;
+            Iterator it = row.iterator();
+            while (it.hasNext()) {
+                Cell cell = (Cell) it.next();
+                if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                    String s = cell.getStringCellValue();
+                    if (label.toLowerCase().equals(s.toLowerCase())) {
                         return i;
                     }
                 }
+                i++;
             }
-            try {
-                inp.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ReadEleExl.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
         }
         return -1;
     }
 
-    public int getUnitLabelNum() {
-        if (this.filePath == null || "".equals(this.filePath)) {
-            System.out.println("Warning: Please assign the specific path of the spreadsheet!");
-
-        } else {
-            if (inp == null) {
-                try {
-                    inp = new FileInputStream(this.filePath);
-                    wb = WorkbookFactory.create(inp);
-                    sheet = wb.getSheetAt(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            for (int i = 0; i < 10; i++) {
-                Row row = sheet.getRow(i);
-                Cell cell = row.getCell(0);
-                if (Cell.CELL_TYPE_BLANK != cell.getCellType()) {
-                    String value = cell.getStringCellValue();
-                    if (value.toLowerCase().contains("unit")) {
-                        return i;
-                    }
-                }
-            }
-            try {
-                inp.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ReadEleExl.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
-        return -1;
-    }
-
-    public int getEleColNum() {
-        if (this.filePath == null || "".equals(this.filePath)) {
-            System.out.println("Warning: Please assign the specific path of the spreadsheet!");
-
-        } else {
-            if (inp == null) {
-                try {
-                    inp = new FileInputStream(this.filePath);
-                    wb = WorkbookFactory.create(inp);
-                    sheet = wb.getSheetAt(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-
-            Row row = sheet.getRow(this.getXALLabelNum() - 1);
-            for (int i = 0; i < 10; i++) {
-                Cell cell = row.getCell(i);
-                if (Cell.CELL_TYPE_BLANK != cell.getCellType()) {
-                    String value = cell.getStringCellValue();
-                    if ("element".equals(value.toLowerCase())) {
-                        return i;
-                    }
-
-                }
-            }
-            try {
-                inp.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ReadEleExl.class.getName()).log(Level.SEVERE, null, ex);
-            }
-
-        }
-        return -1;
-    }
-
-    public int getEleNameCol() {
+    public ArrayList getRowLabels(String rowLabel) {
+        ArrayList rowLabels = new ArrayList();
         if (this.filePath == null || "".equals(this.filePath)) {
             System.out.println("Warning: Please assign the specific path of the spreadsheet!");
         } else {
-            ArrayList DBLabels = this.getDBLabels();
-            for (int i = 0; i < DBLabels.size(); i++) {
-                if ("element/element_name".equals(DBLabels.get(i).toString())) {
-                    return i;
-                }
-            }
+            FileInputStream inp = FileTools.getFileInputStream(filePath);
+            Workbook wb = FileTools.getWorkbook(inp);
+            Sheet sheet = wb.getSheetAt(0);
 
-        }
-        return -1;
-    }
-
-    public ArrayList getXALLabels() {
-        if (this.filePath == null || "".equals(this.filePath)) {
-            System.out.println("Warning: Please assign the specific path of the spreadsheet!");
-        } else {
-            ArrayList<String> xalLabels = new ArrayList();
-            if (inp == null) {
-                try {
-                    inp = new FileInputStream(this.filePath);
-                    wb = WorkbookFactory.create(inp);
-                    sheet = wb.getSheetAt(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            int startColNum = this.getEleColNum();
+            int startColNum=this.getLabelColNum("element", "Physical label");
             int totalColNum = this.getColNum();
-            int rowNum = this.getXALLabelNum();
-
+            int rowNum = this.getLabelRowNum(rowLabel);
             for (int i = startColNum; i < totalColNum; i++) {
                 Cell cell = sheet.getRow(rowNum).getCell(i);
                 if (cell != null) {
                     if (Cell.CELL_TYPE_STRING == cell.getCellType()) {
                         String label = cell.getStringCellValue();
                         if (!label.isEmpty()) {
-                            xalLabels.add(label.replaceAll(" +", "_"));
+                            rowLabels.add(label.replaceAll(" +", "_"));
 
                         } else {
                             String label1 = sheet.getRow(rowNum - 1).getCell(i).getStringCellValue().toLowerCase();
-                            xalLabels.add(label1.replaceAll(" +", "_"));
+                            rowLabels.add(label1.replaceAll(" +", "_"));
 
                         }
                     }
                 } else {
-                    xalLabels.add("");
+                    rowLabels.add("");
                 }
 
             }
-            try {
-                inp.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ReadEleExl.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return xalLabels;
         }
-        return null;
+        return rowLabels;
     }
 
-    public ArrayList getDBLabels() {
+    /**
+     *
+     * @param label the column label
+     * @param labelType Physical label, XAL label, or DB label
+     * @return
+     */
+    public ArrayList getColList(String label,String labelType) {
+        ArrayList colList = new ArrayList();
         if (this.filePath == null || "".equals(this.filePath)) {
             System.out.println("Warning: Please assign the specific path of the spreadsheet!");
         } else {
-            ArrayList<String> DBLabels = new ArrayList();
-            if (inp == null) {
-                try {
-                    inp = new FileInputStream(this.filePath);
-                    wb = WorkbookFactory.create(inp);
-                    sheet = wb.getSheetAt(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            int startColNum = this.getEleColNum();
-            int totalColNum = this.getColNum();
-            int rowNum = this.getDBLabelNum();
 
-            for (int i = startColNum; i < totalColNum; i++) {
+            FileInputStream inp = FileTools.getFileInputStream(filePath);
+            Workbook wb = FileTools.getWorkbook(inp);
+            Sheet sheet = wb.getSheetAt(0);
 
-                Cell cell = sheet.getRow(rowNum).getCell(i);
-                if (cell != null) {
-                    if (Cell.CELL_TYPE_STRING == cell.getCellType()) {
-                        String label = cell.getStringCellValue();
-                        DBLabels.add(label);
+            int colNum=this.getLabelColNum(label, labelType);
+            int startRowNum = this.getLabelRowNum("Unit") + 1;
+            for (Iterator<Row> rit = sheet.rowIterator(); rit.hasNext();) {
+                Row row = (Row) rit.next();
+                if (row.getRowNum() >= startRowNum) {
+                    Cell cell = row.getCell(colNum);
+                    if(Cell.CELL_TYPE_STRING==cell.getCellType()){
+                        colList.add(cell.getStringCellValue());
                     }
-                } else {
-                    DBLabels.add("");
                 }
-
             }
-            try {
-                inp.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ReadEleExl.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return DBLabels;
         }
-        return null;
+        return colList;
     }
 
     public ArrayList getDataList() {
@@ -311,18 +187,13 @@ public class ReadEleExl {
             System.out.println("Warning: Please assign the specific path of the spreadsheet!");
         } else {
             ArrayList dataList = new ArrayList();
-            if (inp == null) {
-                try {
-                    inp = new FileInputStream(this.filePath);
-                    wb = WorkbookFactory.create(inp);
-                    sheet = wb.getSheetAt(0);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-            int startColNum = this.getEleColNum();
+            FileInputStream inp = FileTools.getFileInputStream(filePath);
+            Workbook wb = FileTools.getWorkbook(inp);
+            Sheet sheet = wb.getSheetAt(0);
+
+            int startColNum = this.getLabelColNum("element","Physical label");
             int totalColNum = this.getColNum();
-            int startRowNum = this.getUnitLabelNum() + 1;
+            int startRowNum = this.getLabelRowNum("Unit") + 1;
             for (Iterator<Row> rit = sheet.rowIterator(); rit.hasNext();) {
                 Row row = (Row) rit.next();
 
@@ -366,11 +237,6 @@ public class ReadEleExl {
                     dataList.add(oneRow);
                 }
 
-            }
-            try {
-                inp.close();
-            } catch (IOException ex) {
-                Logger.getLogger(ReadEleExl.class.getName()).log(Level.SEVERE, null, ex);
             }
             return dataList;
         }
