@@ -23,12 +23,14 @@ import javax.persistence.PersistenceUnit;
 import org.openepics.model.api.BeamlineSequenceAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ElementPropAPI;
+import org.openepics.model.api.GoldModelAPI;
 import org.openepics.model.api.ModelDB;
 import org.openepics.model.api.RfGapAPI;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
 import org.openepics.model.entity.ElementTypeProp;
+import org.openepics.model.entity.Model;
 import org.openepics.model.entity.RfGap;
 
 /**
@@ -65,9 +67,40 @@ public class Db2Xal {
                 + "    <!ATTLIST record species CDATA #IMPLIED >\n"
                 + "    <!ATTLIST record KE CDATA #IMPLIED >\n"
                 + "]>\n");
+        
+        sb.append("<tablegroup>\n");
 
-        // find the first element for each sequence
+        // find the models for each beamline sequence initial condition
         // loop over the first element collection for beam_parameters
+        List<Model> mList = GoldModelAPI.getAllDefaultInitialConditions();
+        
+        // for "species" table
+        sb.append("  <table name=\"species\">\n");
+        
+        sb.append("  </table>\n");
+        
+        // for "beam" table
+        sb.append("  <table name=\"beam\">\n");
+        
+        sb.append("  </table>\n");
+        
+        // for "adaptivetracker" table
+        sb.append("  <table name=\"adaptivetracker\">\n");
+        
+        sb.append("  </table>\n");
+        
+        // for "twiss" table
+        sb.append("  <table name=\"twiss\">\n");
+        
+        sb.append("  </table>\n");
+        
+        // for "location" table
+        sb.append("  <table name=\"location\">\n");
+        
+        sb.append("  </table>\n");
+        
+        // close the tablegroup
+        sb.append("</tablegroup>");        
     }
 
     /**

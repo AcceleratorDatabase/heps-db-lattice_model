@@ -84,6 +84,27 @@ public class GoldModelAPI {
         }
 
     }
+    
+    /**
+     * get default model initial conditions for all Gold tagged model lines
+     * @return default model initial conditions for all Gold tagged model lines
+     */
+    public static List<Model> getAllDefaultInitialConditions() {
+        List<Model> mList = new ArrayList<>();
+        // TODO fill the code
+        return mList;
+    }
+    
+    /**
+     * 
+     * @param model_line
+     * @return 
+     */
+    public static Model getDefaultInitialConditionForModelLine(String model_line) {
+        Model m = null;
+        
+        return m;
+    }
 
     /**
      * 
