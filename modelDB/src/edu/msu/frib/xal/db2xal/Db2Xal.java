@@ -20,12 +20,15 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
+import javax.persistence.Query;
 import org.openepics.model.api.BeamlineSequenceAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ElementPropAPI;
 import org.openepics.model.api.GoldModelAPI;
 import org.openepics.model.api.ModelDB;
 import org.openepics.model.api.RfGapAPI;
+import org.openepics.model.entity.BeamParameter;
+import org.openepics.model.entity.BeamParameterProp;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
@@ -40,8 +43,8 @@ import org.openepics.model.entity.RfGap;
 public class Db2Xal {
 
     @PersistenceUnit
-//    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
-//    EntityManager em = emf.createEntityManager();
+    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
+    EntityManager em = emf.createEntityManager();
     // define the accelerator name
     String accName = "frib";
 
@@ -71,31 +74,85 @@ public class Db2Xal {
         sb.append("<tablegroup>\n");
 
         // find the models for each beamline sequence initial condition
-        // loop over the first element collection for beam_parameters
-        List<Model> mList = GoldModelAPI.getAllDefaultInitialConditions();
+        List<BeamParameter> bpList = GoldModelAPI.getAllDefaultInitialConditions();
+        System.out.println("There are " + bpList.size() + " beamline sequence initial conditions.");        
         
         // for "species" table
         sb.append("  <table name=\"species\">\n");
-        
+        sb.append("     <schema>\n");
+        sb.append("         <attribute isPrimaryKey=\"true\" name=\"name\" type=\"java.lang.String\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"mass\" type=\"java.lang.Double\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"charge\" type=\"java.lang.Double\"/>\n");
+	sb.append("	</schema>\n");
+        //TODO find all different species but no duplication
+        for (int i=0; i<bpList.size(); i++) {
+            sb.append("     <record name=\"");
+            
+        }
         sb.append("  </table>\n");
         
         // for "beam" table
         sb.append("  <table name=\"beam\">\n");
-        
+        sb.append("     <schema>\n");
+        sb.append("         <attribute isPrimaryKey=\"true\" name=\"name\" type=\"java.lang.String\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"I\" type=\"java.lang.Double\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"Q\" type=\"java.lang.Double\"/>\n");
+	sb.append("	</schema>\n");
+        for (int i=0; i<bpList.size(); i++) {
+            // get beam properties
+            Query q;
+            q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp WHERE bpp.beamParameterId=:twiss_id")
+                    .setParameter("twiss_id", bpList.get(i).getTwissId());
+            List<BeamParameterProp> bppList = q.getResultList();
+            //TODO 
+            
+        }
         sb.append("  </table>\n");
         
         // for "adaptivetracker" table
         sb.append("  <table name=\"adaptivetracker\">\n");
-        
+        sb.append("     <schema>\n");
+	sb.append("         <attribute isPrimaryKey=\"true\" name=\"name\" type=\"java.lang.String\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"errortol\" type=\"java.lang.Double\" defaultValue=\"1.0E-5\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"initstep\" type=\"java.lang.Double\" defaultValue=\"0.1\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"maxstep\" type=\"java.lang.Double\" defaultValue=\"0.\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"norm\" type=\"java.lang.Integer\" defaultValue=\"0\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"order\" type=\"java.lang.Integer\" defaultValue=\"2\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"slack\" type=\"java.lang.Double\" defaultValue=\"0.05\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"maxiter\" type=\"java.lang.Integer\" defaultValue=\"100\"/>\n");
+	sb.append("	</schema>\n");
+	sb.append("	<record name=\"default\"/>\n");        
+        for (int i=0; i<bpList.size(); i++) {
+	    sb.append("     <record name=\"");
+            sb.append(bpList.get(i).getModelId().getModelName());
+            sb.append("\" errortol=\"0.1\" initstep=\"0.1\" maxiter=\"100\"/>\n");
+        }		
         sb.append("  </table>\n");
         
         // for "twiss" table
         sb.append("  <table name=\"twiss\">\n");
+        sb.append("     <schema>\n");
+        sb.append("         <attribute isPrimaryKey=\"true\" name=\"name\" type=\"java.lang.String\"/>\n");
+	sb.append("         <attribute isPrimaryKey=\"true\" name=\"coordinate\" type=\"java.lang.String\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"alpha\" type=\"java.lang.Double\"/>\n");
+	sb.append("         <attribute isPrimaryKey=\"false\" name=\"beta\" type=\"java.lang.Double\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"emittance\" type=\"java.lang.Double\"/>\n");
+	sb.append("	</schema>\n");
+        // TODO
         
         sb.append("  </table>\n");
         
         // for "location" table
         sb.append("  <table name=\"location\">\n");
+        sb.append("     <schema>\n");
+        sb.append("         <attribute isPrimaryKey=\"true\" name=\"name\" type=\"java.lang.String\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"species\" type=\"java.lang.String\" defaultValue=\"PROTON\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"W\" type=\"java.lang.Double\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"start_elem\" type=\"java.lang.String\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"s\" type=\"java.lang.Double\" defaultValue=\"0\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"t\" type=\"java.lang.Double\" defaultValue=\"0\"/>\n");
+	sb.append("	</schema>\n");
+        // TODO
         
         sb.append("  </table>\n");
         
@@ -414,8 +471,8 @@ public class Db2Xal {
 
         // TODO get the accelerator name to override the default one (accName)
 
-        x.write2IMPL();
-//        x.write2ModelParam();
-        x.write2XDXF();
+//        x.write2IMPL();
+        x.write2ModelParam();
+//        x.write2XDXF();
     }
 }
