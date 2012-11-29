@@ -65,10 +65,6 @@ public class GoldLattice implements Serializable {
     @JoinColumn(name = "lattice_id", referencedColumnName = "lattice_id")
     @ManyToOne
     private Lattice latticeId;
-    
-    public static final int PRESENT = 0;
-    
-    public static final int PREVIOUS = 1;
 
     public GoldLattice() {
     }

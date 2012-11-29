@@ -62,10 +62,6 @@ public class GoldModel implements Serializable {
     @ManyToOne
     private Model modelId;
 
-    public static final int PRESENT = 0;
-    
-    public static final int PREVIOUS = 1;
-
     public GoldModel() {
     }
 
