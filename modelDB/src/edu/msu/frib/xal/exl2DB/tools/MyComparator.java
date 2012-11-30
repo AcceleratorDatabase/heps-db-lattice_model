@@ -4,9 +4,7 @@
  */
 package edu.msu.frib.xal.exl2DB.tools;
 
-import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashMap;
 import java.util.Map;
 
 /**
