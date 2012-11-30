@@ -79,8 +79,7 @@ public class Class2DB {
 
                         ArrayList eleNameList = read.getColList("Eng_name", "Physical label");
                         ArrayList sequenceList = read.getColList("Section", "Physical Label");
-                        ArrayList eleTypeList = read.getColList("XAL_KeyWord", "Physical Label");
-                        System.out.println(eleNameList.size());
+                        ArrayList eleTypeList = read.getColList("XAL_KeyWord", "Physical Label");                        
 
                         //key:element_id value:element/s
                         HashMap<Integer, Double> hMap = new HashMap<Integer, Double>();
