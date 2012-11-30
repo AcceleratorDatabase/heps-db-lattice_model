@@ -99,6 +99,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`machine_mode` (
   `machine_mode_description` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`machine_mode_id`) )
 ENGINE = InnoDB
+AUTO_INCREMENT = 4
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -169,6 +170,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`model` (
   `model_line_id` INT(11) NULL DEFAULT NULL ,
   `machine_mode_id` INT(11) NULL DEFAULT NULL ,
   `model_geometry_id` INT(11) NULL DEFAULT NULL ,
+  `initial_condition_ind` INT(1) NULL DEFAULT NULL ,
   PRIMARY KEY (`model_id`) ,
   INDEX `FK_model_code_idx` (`model_code_id` ASC) ,
   INDEX `FK_lattice_idx` (`lattice_id` ASC) ,
@@ -202,6 +204,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`model` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -228,6 +231,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beam_parameter` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -254,6 +258,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beam_parameter_prop` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 33
 DEFAULT CHARACTER SET = utf8;
 
 

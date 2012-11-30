@@ -29,6 +29,9 @@ public class GoldLatticeAPI {
 
     @PersistenceContext
     
+    public static int PREVIOUS = 0;
+    
+    public static int PRESENT = 1;
     /**
      * get all present gold lattices
      * 
@@ -37,7 +40,7 @@ public class GoldLatticeAPI {
     public static List<Lattice> getAllPresentGoldModels() {
         Query q;
         q = em.createNamedQuery("GoldLattice.findByGoldStatusInd")
-                .setParameter("goldStatusInd", GoldLattice.PRESENT);
+                .setParameter("goldStatusInd", GoldLatticeAPI.PRESENT);
         List<Lattice> glList = q.getResultList();
         List<Lattice> lList = new ArrayList<>();
         if (glList.isEmpty()) {
@@ -66,7 +69,7 @@ public class GoldLatticeAPI {
                 + " g.latticeId.machineModeId.machineModeName = :modeName "
                 + "AND g.latticeId.modelLineId.modelLineName = :lineName "
                 + "AND g.goldStatusInd = :gind").setParameter("modeName",mode)
-                .setParameter("lineName", line).setParameter("gind", GoldLattice.PRESENT);
+                .setParameter("lineName", line).setParameter("gind", GoldLatticeAPI.PRESENT);
         List<GoldLattice> gmList = q.getResultList();
         if (gmList.isEmpty()) {
             return null;
@@ -93,19 +96,19 @@ public class GoldLatticeAPI {
         List<GoldLattice> gList = em.createQuery("SELECT g FROM GoldLattice g WHERE"
                 + " g.latticeId.machineModeId.machineModeName = :modeName "
                 + "AND g.goldStatusInd = :gind")
-                .setParameter("gind", GoldLattice.PRESENT).getResultList();
+                .setParameter("gind", GoldLatticeAPI.PRESENT).getResultList();
         GoldLattice g_old = gList.get(0);
         
         em.getTransaction().begin();
         if (g_old != null) {
-            g_old.setGoldStatusInd(GoldLattice.PREVIOUS);
+            g_old.setGoldStatusInd(GoldLatticeAPI.PREVIOUS);
             g_old.setUpdateDate(date);
             g_old.setUpdatedBy(System.getProperty("user.name"));
             em.persist(g_old);
         }
         gl.setCreateDate(date);
         gl.setCreatedBy(System.getProperty("user.name"));
-        gl.setGoldStatusInd(GoldLattice.PRESENT);
+        gl.setGoldStatusInd(GoldLatticeAPI.PRESENT);
         gl.setLatticeId(l);
         em.persist(gl);
         
