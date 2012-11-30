@@ -170,4 +170,17 @@ public class ElementAPI {
             System.out.println("The element "+old_name+" doesn't exist!");
         }
     }
+    
+    public static int getMaxId(){
+        Query q;
+        q = em.createQuery("SELECT MAX(e.elementId) FROM Element e");
+        List<Integer> idList = q.getResultList();
+        if(idList.get(0)==null) {
+            return 0;
+        }
+        else {
+            return idList.get(0);
+        }
+        
+    }
 }

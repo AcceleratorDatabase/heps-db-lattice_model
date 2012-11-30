@@ -5,13 +5,21 @@
 package edu.msu.frib.xal.exl2DB.element2DB;
 
 import edu.msu.frib.xal.exl2DB.tools.DBTools;
+import edu.msu.frib.xal.exl2DB.tools.MyComparator;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.TreeMap;
 import org.openepics.model.api.BeamlineSequenceAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ElementTypeAPI;
@@ -58,6 +66,7 @@ public class Class2DB {
                     PreparedStatement state = null;
                     PreparedStatement propState = null;
                     PreparedStatement eState = null;
+                    PreparedStatement sState = null;
                     ResultSet rs = null;
                     try {
                         conn = DBTools.getConnection();
@@ -74,6 +83,11 @@ public class Class2DB {
                         ArrayList eleNameList = read.getColList("Eng_name", "Physical label");
                         ArrayList sequenceList = read.getColList("Section", "Physical Label");
                         ArrayList eleTypeList = read.getColList("XAL_KeyWord", "Physical Label");
+                        System.out.println(eleNameList.size());
+
+                        //key:element_id value:element/s
+                        HashMap<Integer, Double> hMap = new HashMap<Integer, Double>();
+
 
                         ArrayList dataClsList = d2c.getClsData();
 
@@ -176,19 +190,20 @@ public class Class2DB {
 
                                                     }
                                                 } else if ("element".equals(tableName)) {
-
-                                                    if (e == null) {
-                                                        Object value1 = cellProp.getValue();
-                                                        if ("".equals(value1)) {
-                                                            value1 = null;
-                                                        }
-                                                        String sql5 = "update element set " + cellProp.getName() + "=? where element_id=?";
-                                                        state = conn.prepareStatement(sql5);
-                                                        state.setObject(1, value1);
-                                                        state.setInt(2, element_id);
-                                                        state.executeUpdate();
-
+                                                    Object value1 = cellProp.getValue();
+                                                    if ("".equals(value1)) {
+                                                        value1 = null;
                                                     }
+                                                    String sql5 = "update element set " + cellProp.getName() + "=? where element_id=?";
+                                                    state = conn.prepareStatement(sql5);
+                                                    state.setObject(1, value1);
+                                                    state.setInt(2, element_id);
+                                                    state.executeUpdate();
+
+                                                    if (cellProp.getName().equals("s")) {
+                                                        hMap.put(element_id, Double.valueOf(cellProp.getValue().toString()));
+                                                    }
+
                                                 }
                                             }
                                         }
@@ -197,8 +212,25 @@ public class Class2DB {
                                 t++;
                             }
                         }
+                        
+                        int i = 0;
+                        List mapList = new ArrayList(hMap.entrySet());
+                        Collections.sort(mapList, new MyComparator());
+                        Iterator iter = mapList.iterator();
+                        while (iter.hasNext()) {
+                            i++;
+                            String sql6 = "update element set element_order=? where element_id=?";
+                            if (i == 1) {
+                                sState = conn.prepareStatement(sql6);
+                            }
+                            sState.setInt(1, i);
+                            Map.Entry entry = (Map.Entry) iter.next();
+                            sState.setInt(2, Integer.parseInt(entry.getKey().toString()));
+                            sState.addBatch();
+                        }
                         propState.executeBatch();
                         eState.executeBatch();
+                        sState.executeBatch();
                         conn.commit();
                         conn.setAutoCommit(true);
                     } catch (SQLException e) {
@@ -209,6 +241,7 @@ public class Class2DB {
                         }
                         DBTools.closePreparedStatement(state);
                         DBTools.closePreparedStatement(eState);
+                        DBTools.closePreparedStatement(sState);
                         DBTools.closePreparedStatement(propState);
                         DBTools.closeConnection(conn);
                     }
