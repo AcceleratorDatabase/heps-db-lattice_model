@@ -24,11 +24,10 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
- * @author chu
+ * @author paul
  */
 @Entity
 @Table(name = "model")
@@ -291,7 +290,6 @@ public class Model implements Serializable {
     }
 
     @XmlTransient
-    @JsonIgnore
     public Collection<BeamParameter> getBeamParameterCollection() {
         return beamParameterCollection;
     }
@@ -301,7 +299,6 @@ public class Model implements Serializable {
     }
 
     @XmlTransient
-    @JsonIgnore
     public Collection<GoldModel> getGoldModelCollection() {
         return goldModelCollection;
     }
