@@ -220,4 +220,17 @@ public class ElementPropAPI {
         
     }
     
+    public static int getMaxId(){
+        Query q;
+        q = em.createQuery("SELECT MAX(ep.elementPropId) FROM ElementProp ep");
+        List<Integer> idList = q.getResultList();
+        if(idList.get(0)==null) {
+            return 0;
+        }
+        else {
+            return idList.get(0);
+        }
+        
+    }
+    
 }

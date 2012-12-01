@@ -64,6 +64,7 @@ public class SeqMap2DB {
                     BeamlineSequenceAPI.setBeamlineSequence(sequence_name, first_ele_name,
                             last_ele_name, pre_seq, seq_length, seq_des);
                 } else {
+                    System.out.println("The sequence "+sequence_name+" is already in the database. Your execution will overwrite this record!");
                     em.getTransaction().begin();
                     bs = em.find(BeamlineSequence.class, bs.getBeamlineSequenceId());
                     bs.setFirstElementName(first_ele_name);

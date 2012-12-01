@@ -49,7 +49,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Model.findByChromeY0", query = "SELECT m FROM Model m WHERE m.chromeY0 = :chromeY0"),
     @NamedQuery(name = "Model.findByChromeY1", query = "SELECT m FROM Model m WHERE m.chromeY1 = :chromeY1"),
     @NamedQuery(name = "Model.findByChromeY2", query = "SELECT m FROM Model m WHERE m.chromeY2 = :chromeY2"),
-    @NamedQuery(name = "Model.findByFinalBeamEnergy", query = "SELECT m FROM Model m WHERE m.finalBeamEnergy = :finalBeamEnergy")})
+    @NamedQuery(name = "Model.findByFinalBeamEnergy", query = "SELECT m FROM Model m WHERE m.finalBeamEnergy = :finalBeamEnergy"),
+    @NamedQuery(name = "Model.findByInitialConditionInd", query = "SELECT m FROM Model m WHERE m.initialConditionInd = :initialConditionInd")})
 public class Model implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -94,6 +95,8 @@ public class Model implements Serializable {
     private Double chromeY2;
     @Column(name = "final_beam_energy")
     private Double finalBeamEnergy;
+    @Column(name = "initial_condition_ind")
+    private Integer initialConditionInd;
     @JoinColumn(name = "model_line_id", referencedColumnName = "model_line_id")
     @ManyToOne
     private ModelLine modelLineId;
@@ -247,6 +250,14 @@ public class Model implements Serializable {
 
     public void setFinalBeamEnergy(Double finalBeamEnergy) {
         this.finalBeamEnergy = finalBeamEnergy;
+    }
+
+    public Integer getInitialConditionInd() {
+        return initialConditionInd;
+    }
+
+    public void setInitialConditionInd(Integer initialConditionInd) {
+        this.initialConditionInd = initialConditionInd;
     }
 
     public ModelLine getModelLineId() {

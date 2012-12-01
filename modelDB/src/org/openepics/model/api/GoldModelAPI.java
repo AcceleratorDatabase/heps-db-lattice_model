@@ -14,6 +14,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
+import org.openepics.model.entity.BeamParameter;
 import org.openepics.model.entity.GoldModel;
 import org.openepics.model.entity.Model;
 
@@ -30,6 +31,10 @@ public class GoldModelAPI {
 
     @PersistenceContext
     
+    public static int PREVIOUS = 0;
+    
+    public static int PRESENT = 1;
+    
     /**
      * get all present gold models
      * 
@@ -39,7 +44,7 @@ public class GoldModelAPI {
         // TODO fill in code
         Query q;
         q = em.createNamedQuery("GoldModel.findByGoldStatusInd")
-                .setParameter("goldStatusInd", GoldModel.PRESENT);
+                .setParameter("goldStatusInd", GoldModelAPI.PRESENT);
         List<GoldModel> gmList = q.getResultList();
         List<Model> mList = new ArrayList<>();
         if (gmList.isEmpty()) {
@@ -70,7 +75,7 @@ public class GoldModelAPI {
                 + " g.modelId.latticeId.machineModeId.machineModeName=:modeName"
                 + " AND g.modelId.latticeId.modelLineId.modelLineName=:lineName"
                 + " AND g.goldStatusInd=:gind").setParameter("modeName", mode)
-                .setParameter("lineName", line).setParameter("gind", GoldModel.PRESENT);
+                .setParameter("lineName", line).setParameter("gind", GoldModelAPI.PRESENT);
         List<GoldModel> gmList = q.getResultList();
         if (gmList.isEmpty()) {
             return null;
@@ -84,6 +89,37 @@ public class GoldModelAPI {
         }
 
     }
+    
+    /**
+     * get default model initial conditions for all Gold tagged model lines
+     * @return default model initial conditions for all Gold tagged model lines
+     */
+    public static List<BeamParameter> getAllDefaultInitialConditions() {
+        Query q;
+        q = em.createQuery("SELECT g from GoldModel g WHERE g.goldStatusInd=\"1\" AND g.modelId.initialConditionInd=\"1\"");
+        List<GoldModel> gList = q.getResultList();
+        
+        List<BeamParameter> bpList = new ArrayList<>();
+
+         for (int i=0; i<gList.size(); i++) {
+            q = em.createQuery("SELECT bp from BeamParameter bp WHERE bp.modelId=:mid")
+                    .setParameter("mid", gList.get(i).getModelId());
+            bpList.add((BeamParameter)q.getResultList().get(0));
+        }
+                
+        return bpList;
+    }
+    
+    /**
+     * 
+     * @param model_line
+     * @return 
+     */
+    public static Model getDefaultInitialConditionForModelLine(String model_line) {
+        Model m = null;
+        
+        return m;
+    }
 
     /**
      * 
@@ -95,19 +131,19 @@ public class GoldModelAPI {
         List<GoldModel> gList = em.createQuery("SELECT g FROM GoldModel g WHERE"
                 + " g.modelId.latticeId.machineModeId.machineModeName=:modeName"
                 + " AND g.goldStatusInd=:gind")
-                .setParameter("gind", GoldModel.PRESENT).getResultList();
+                .setParameter("gind", GoldModelAPI.PRESENT).getResultList();
         GoldModel gm_old = gList.get(0);
         
         em.getTransaction().begin();
         if (gm_old!=null) {
-            gm_old.setGoldStatusInd(GoldModel.PREVIOUS);
+            gm_old.setGoldStatusInd(GoldModelAPI.PREVIOUS);
             gm_old.setUpdateDate(date);
             gm.setUpdatedBy(System.getProperty("user.name"));
             em.persist(gm_old);
         }
         gm.setCreateDate(date);
         gm.setCreatedBy(System.getProperty("user.name"));
-        gm.setGoldStatusInd(GoldModel.PRESENT);
+        gm.setGoldStatusInd(GoldModelAPI.PRESENT);
         gm.setModelId(m);
         em.persist(gm);
         em.getTransaction().commit();

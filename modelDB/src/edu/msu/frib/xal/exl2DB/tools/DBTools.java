@@ -16,7 +16,7 @@ public class DBTools {
     public static Connection getConnection() {
         Connection conn = null;
         String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/discs_model";
+        String url = "jdbc:mysql://localhost:3306/discs_model?rewriteBatchedStatements=true";
         String userName = "root";
         String userAddress = "123456";
         try {

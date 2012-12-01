@@ -130,8 +130,7 @@ public class ElementAPI {
             System.out.println("The element " + name + " doesn't exist!");
         }
         em.getTransaction().commit();
-        em.close();
-        emf.close();
+        
     }
 
     public static void updateElement(String old_name, String new_name, Object order, double s,
@@ -166,10 +165,22 @@ public class ElementAPI {
 
             em.merge(e);
             em.getTransaction().commit();
-            em.close();
-            emf.close();
+         
         }else{
             System.out.println("The element "+old_name+" doesn't exist!");
         }
+    }
+    
+    public static int getMaxId(){
+        Query q;
+        q = em.createQuery("SELECT MAX(e.elementId) FROM Element e");
+        List<Integer> idList = q.getResultList();
+        if(idList.get(0)==null) {
+            return 0;
+        }
+        else {
+            return idList.get(0);
+        }
+        
     }
 }
