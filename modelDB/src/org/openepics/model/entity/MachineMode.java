@@ -19,11 +19,10 @@ import javax.persistence.Table;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
- * @author chu
+ * @author paul
  */
 @Entity
 @Table(name = "machine_mode")
@@ -81,7 +80,6 @@ public class MachineMode implements Serializable {
     }
 
     @XmlTransient
-    @JsonIgnore
     public Collection<Model> getModelCollection() {
         return modelCollection;
     }

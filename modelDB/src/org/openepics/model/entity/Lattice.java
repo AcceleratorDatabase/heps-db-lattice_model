@@ -22,11 +22,10 @@ import javax.persistence.TemporalType;
 import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
 import javax.xml.bind.annotation.XmlTransient;
-import org.codehaus.jackson.annotate.JsonIgnore;
 
 /**
  *
- * @author chu
+ * @author paul
  */
 @Entity
 @Table(name = "lattice")
@@ -138,7 +137,6 @@ public class Lattice implements Serializable {
     }
 
     @XmlTransient
-    @JsonIgnore
     public Collection<Model> getModelCollection() {
         return modelCollection;
     }
@@ -148,7 +146,6 @@ public class Lattice implements Serializable {
     }
 
     @XmlTransient
-    @JsonIgnore
     public Collection<ElementProp> getElementPropCollection() {
         return elementPropCollection;
     }
@@ -158,7 +155,6 @@ public class Lattice implements Serializable {
     }
 
     @XmlTransient
-    @JsonIgnore
     public Collection<BlsequenceLattice> getBlsequenceLatticeCollection() {
         return blsequenceLatticeCollection;
     }
@@ -168,7 +164,6 @@ public class Lattice implements Serializable {
     }
 
     @XmlTransient
-    @JsonIgnore
     public Collection<GoldLattice> getGoldLatticeCollection() {
         return goldLatticeCollection;
     }

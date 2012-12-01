@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author chu
+ * @author paul
  */
 @Entity
 @Table(name = "beam_parameter_prop")
@@ -30,7 +30,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "BeamParameterProp.findAll", query = "SELECT b FROM BeamParameterProp b"),
     @NamedQuery(name = "BeamParameterProp.findByBeamParameterPropId", query = "SELECT b FROM BeamParameterProp b WHERE b.beamParameterPropId = :beamParameterPropId"),
     @NamedQuery(name = "BeamParameterProp.findByPropertyName", query = "SELECT b FROM BeamParameterProp b WHERE b.propertyName = :propertyName"),
-    @NamedQuery(name = "BeamParameterProp.findByPropCategory", query = "SELECT b FROM BeamParameterProp b WHERE b.propCategory = :propCategory"),
     @NamedQuery(name = "BeamParameterProp.findByPropertyDatatype", query = "SELECT b FROM BeamParameterProp b WHERE b.propertyDatatype = :propertyDatatype"),
     @NamedQuery(name = "BeamParameterProp.findByDescription", query = "SELECT b FROM BeamParameterProp b WHERE b.description = :description"),
     @NamedQuery(name = "BeamParameterProp.findByBeamParameterInt", query = "SELECT b FROM BeamParameterProp b WHERE b.beamParameterInt = :beamParameterInt"),
@@ -47,9 +46,6 @@ public class BeamParameterProp implements Serializable {
     @Size(max = 45)
     @Column(name = "property_name")
     private String propertyName;
-    @Size(max = 45)
-    @Column(name = "prop_category")
-    private String propCategory;
     @Size(max = 45)
     @Column(name = "property_datatype")
     private String propertyDatatype;
@@ -92,14 +88,6 @@ public class BeamParameterProp implements Serializable {
 
     public void setPropertyName(String propertyName) {
         this.propertyName = propertyName;
-    }
-
-    public String getPropCategory() {
-        return propCategory;
-    }
-
-    public void setPropCategory(String propCategory) {
-        this.propCategory = propCategory;
     }
 
     public String getPropertyDatatype() {

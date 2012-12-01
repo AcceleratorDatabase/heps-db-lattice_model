@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author chu
+ * @author paul
  */
 @Entity
 @Table(name = "rf_gap")
