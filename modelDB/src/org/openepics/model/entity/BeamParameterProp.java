@@ -37,6 +37,9 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "BeamParameterProp.findByBeamParameterString", query = "SELECT b FROM BeamParameterProp b WHERE b.beamParameterString = :beamParameterString"),
     @NamedQuery(name = "BeamParameterProp.findByTrnsferMatrix", query = "SELECT b FROM BeamParameterProp b WHERE b.trnsferMatrix = :trnsferMatrix")})
 public class BeamParameterProp implements Serializable {
+    @Size(max = 45)
+    @Column(name = "prop_category")
+    private String propCategory;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -169,6 +172,14 @@ public class BeamParameterProp implements Serializable {
     @Override
     public String toString() {
         return "org.openepics.model.entity.BeamParameterProp[ beamParameterPropId=" + beamParameterPropId + " ]";
+    }
+
+    public String getPropCategory() {
+        return propCategory;
+    }
+
+    public void setPropCategory(String propCategory) {
+        this.propCategory = propCategory;
     }
     
 }

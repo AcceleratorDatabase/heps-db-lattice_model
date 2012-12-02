@@ -1,6 +1,6 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 CREATE SCHEMA IF NOT EXISTS `discs_model` DEFAULT CHARACTER SET utf8 ;
 USE `discs_model` ;
@@ -170,7 +170,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`model` (
   `model_line_id` INT(11) NULL DEFAULT NULL ,
   `machine_mode_id` INT(11) NULL DEFAULT NULL ,
   `model_geometry_id` INT(11) NULL DEFAULT NULL ,
-  `initial_condition_ind` INT(1) NULL DEFAULT NULL ,
+  `initial_condition_ind` INT(11) NULL DEFAULT NULL ,
   PRIMARY KEY (`model_id`) ,
   INDEX `FK_model_code_idx` (`model_code_id` ASC) ,
   INDEX `FK_lattice_idx` (`lattice_id` ASC) ,
@@ -215,6 +215,9 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beam_parameter` (
   `twiss_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `element_id` INT(11) NULL DEFAULT NULL ,
   `model_id` INT(11) NULL DEFAULT NULL ,
+  `species_name` VARCHAR(45) NULL DEFAULT NULL ,
+  `species_mass` DOUBLE NULL DEFAULT NULL ,
+  `species_charge` DOUBLE NULL DEFAULT NULL ,
   PRIMARY KEY (`twiss_id`) ,
   INDEX `FK_element_id_idx` (`element_id` ASC) ,
   INDEX `FK_twiss_model_id_idx` (`model_id` ASC) ,
@@ -411,6 +414,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`gold_model` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
+AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -436,7 +440,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`rf_gap` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 333
 DEFAULT CHARACTER SET = utf8;
 
 

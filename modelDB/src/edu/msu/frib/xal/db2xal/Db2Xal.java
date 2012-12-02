@@ -8,7 +8,9 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -70,49 +72,80 @@ public class Db2Xal {
                 + "    <!ATTLIST record species CDATA #IMPLIED >\n"
                 + "    <!ATTLIST record KE CDATA #IMPLIED >\n"
                 + "]>\n");
-        
+
         sb.append("<tablegroup>\n");
 
         // find the models for each beamline sequence initial condition
         List<BeamParameter> bpList = GoldModelAPI.getAllDefaultInitialConditions();
-        System.out.println("There are " + bpList.size() + " beamline sequence initial conditions.");        
-        
+        System.out.println("There are " + bpList.size() + " beamline sequence initial conditions.");
+
+        // Beam Parameter Properties
+        List<BeamParameterProp> bppList = null;
         // for "species" table
         sb.append("  <table name=\"species\">\n");
         sb.append("     <schema>\n");
         sb.append("         <attribute isPrimaryKey=\"true\" name=\"name\" type=\"java.lang.String\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"mass\" type=\"java.lang.Double\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"charge\" type=\"java.lang.Double\"/>\n");
-	sb.append("	</schema>\n");
-        //TODO find all different species but no duplication
-        for (int i=0; i<bpList.size(); i++) {
+        sb.append("     </schema>\n");
+        //find all different species but no duplication
+        HashMap<String, Integer> spMap = new HashMap<>();
+        ArrayList<String> spList = new ArrayList<>();
+        for (int i = 0; i < bpList.size(); i++) {
+            if (!spList.contains(bpList.get(i).getSpeciesName())) {
+                spMap.put(bpList.get(i).getSpeciesName(), i);
+                spList.add(bpList.get(i).getSpeciesName());
+            }
+        }
+        // fill in all the distinct species
+        for (int j = 0; j < spList.size(); j++) {
             sb.append("     <record name=\"");
-            
+            sb.append(bpList.get(spMap.get(spList.get(j))).getSpeciesName());
+            sb.append("\" mass=\"");
+            sb.append(bpList.get(spMap.get(spList.get(j))).getSpeciesMass());
+            sb.append("\" charge=\"");
+            sb.append(bpList.get(spMap.get(spList.get(j))).getSpeciesCharge());
+            sb.append("\"/>\n");
         }
         sb.append("  </table>\n");
-        
+
         // for "beam" table
         sb.append("  <table name=\"beam\">\n");
         sb.append("     <schema>\n");
         sb.append("         <attribute isPrimaryKey=\"true\" name=\"name\" type=\"java.lang.String\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"I\" type=\"java.lang.Double\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"Q\" type=\"java.lang.Double\"/>\n");
-	sb.append("	</schema>\n");
-        for (int i=0; i<bpList.size(); i++) {
+        sb.append("     </schema>\n");
+        sb.append("     <record name=\"default\" I=\"0.0\" Q=\"0.\"/>\n");
+        for (int i = 0; i < bpList.size(); i++) {
             // get beam properties
             Query q;
-            q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp WHERE bpp.beamParameterId=:twiss_id")
+            q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp WHERE bpp.beamParameterId.twissId=:twiss_id")
                     .setParameter("twiss_id", bpList.get(i).getTwissId());
-            List<BeamParameterProp> bppList = q.getResultList();
-            //TODO 
-            
+            bppList = q.getResultList();
+
+            if (!bppList.isEmpty()) {
+                sb.append("     <record name=\"");
+                sb.append(bpList.get(i).getModelId().getModelName());
+                sb.append("\" ");
+                for (int j = 0; j < bppList.size(); j++) {
+                    if (bppList.get(j).getPropCategory().equals("beam")) {
+                        sb.append(bppList.get(j).getPropertyName());
+                        sb.append("=\"");
+                        sb.append(bppList.get(j).getBeamParameterDouble());
+                        sb.append("\" ");
+                    }
+                }
+                sb.append("/>\n");
+            }
         }
+
         sb.append("  </table>\n");
-        
+
         // for "adaptivetracker" table
         sb.append("  <table name=\"adaptivetracker\">\n");
         sb.append("     <schema>\n");
-	sb.append("         <attribute isPrimaryKey=\"true\" name=\"name\" type=\"java.lang.String\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"true\" name=\"name\" type=\"java.lang.String\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"errortol\" type=\"java.lang.Double\" defaultValue=\"1.0E-5\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"initstep\" type=\"java.lang.Double\" defaultValue=\"0.1\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"maxstep\" type=\"java.lang.Double\" defaultValue=\"0.\"/>\n");
@@ -120,28 +153,110 @@ public class Db2Xal {
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"order\" type=\"java.lang.Integer\" defaultValue=\"2\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"slack\" type=\"java.lang.Double\" defaultValue=\"0.05\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"maxiter\" type=\"java.lang.Integer\" defaultValue=\"100\"/>\n");
-	sb.append("	</schema>\n");
-	sb.append("	<record name=\"default\"/>\n");        
-        for (int i=0; i<bpList.size(); i++) {
-	    sb.append("     <record name=\"");
+        sb.append("	</schema>\n");
+        sb.append("	<record name=\"default\"/>\n");
+        for (int i = 0; i < bpList.size(); i++) {
+            sb.append("     <record name=\"");
             sb.append(bpList.get(i).getModelId().getModelName());
             sb.append("\" errortol=\"0.1\" initstep=\"0.1\" maxiter=\"100\"/>\n");
-        }		
+        }
         sb.append("  </table>\n");
-        
+
         // for "twiss" table
         sb.append("  <table name=\"twiss\">\n");
         sb.append("     <schema>\n");
         sb.append("         <attribute isPrimaryKey=\"true\" name=\"name\" type=\"java.lang.String\"/>\n");
-	sb.append("         <attribute isPrimaryKey=\"true\" name=\"coordinate\" type=\"java.lang.String\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"true\" name=\"coordinate\" type=\"java.lang.String\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"alpha\" type=\"java.lang.Double\"/>\n");
-	sb.append("         <attribute isPrimaryKey=\"false\" name=\"beta\" type=\"java.lang.Double\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"beta\" type=\"java.lang.Double\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"emittance\" type=\"java.lang.Double\"/>\n");
-	sb.append("	</schema>\n");
+        sb.append("	</schema>\n");
         // TODO
-        
+        for (int i = 0; i < bpList.size(); i++) {
+            // get twiss properties
+            Query q;
+            q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp WHERE bpp.beamParameterId.twissId=:twiss_id")
+                    .setParameter("twiss_id", bpList.get(i).getTwissId());
+            bppList = q.getResultList();
+            // TODO: need to fix problem here 
+            if (!bppList.isEmpty()) {
+                HashMap<String, Double> xTwissMap = new HashMap<>();
+                HashMap<String, Double> yTwissMap = new HashMap<>();
+                HashMap<String, Double> zTwissMap = new HashMap<>();
+                for (int j = 0; j < bppList.size(); j++) {
+                    if (bppList.get(j).getPropCategory().equals("twiss")) {
+                        switch (bppList.get(j).getPropertyName()) {
+                            case "x_alpha":
+                            case "x_beta":
+                            case "x_emittance":
+                                xTwissMap.put(bppList.get(j).getPropertyName(), bppList.get(j).getBeamParameterDouble());
+                                break;
+                            case "y_alpha":
+                            case "y_beta":
+                            case "y_emittance":
+                                yTwissMap.put(bppList.get(j).getPropertyName(), bppList.get(j).getBeamParameterDouble());
+                                break;
+                            case "z_alpha":
+                            case "z_beta":
+                            case "z_emittance":
+                                zTwissMap.put(bppList.get(j).getPropertyName(), bppList.get(j).getBeamParameterDouble());
+                                break;
+                        }
+                    }
+                }
+                if (!xTwissMap.isEmpty()) {
+                    sb.append("     <record name=\"");
+                    sb.append(bpList.get(i).getModelId().getModelName());
+                    sb.append("\" ");
+                    Set keys = xTwissMap.keySet();
+                    Iterator<String> kIt = keys.iterator();
+                    sb.append("coordinate=\"x\" ");
+                    while (kIt.hasNext()) {
+                        String twissName = kIt.next();
+                        sb.append(twissName.substring(2));
+                        sb.append("=\"");
+                        sb.append(xTwissMap.get(twissName));
+                        sb.append("\" ");
+                    }
+                }
+                sb.append("/>\n");
+                if (!yTwissMap.isEmpty()) {
+                    sb.append("     <record name=\"");
+                    sb.append(bpList.get(i).getModelId().getModelName());
+                    sb.append("\" ");
+                    Set keys = yTwissMap.keySet();
+                    Iterator<String> kIt = keys.iterator();
+                    sb.append("coordinate=\"y\" ");
+                    while (kIt.hasNext()) {
+                        String twissName = kIt.next();
+                        sb.append(twissName.substring(2));
+                        sb.append("=\"");
+                        sb.append(yTwissMap.get(twissName));
+                        sb.append("\" ");
+                    }
+                }
+                sb.append("/>\n");
+                if (!zTwissMap.isEmpty()) {
+                    sb.append("     <record name=\"");
+                    sb.append(bpList.get(i).getModelId().getModelName());
+                    sb.append("\" ");
+                    Set keys = zTwissMap.keySet();
+                    Iterator<String> kIt = keys.iterator();
+                    sb.append("coordinate=\"z\" ");
+                    while (kIt.hasNext()) {
+                        String twissName = kIt.next();
+                        sb.append(twissName.substring(2));
+                        sb.append("=\"");
+                        sb.append(zTwissMap.get(twissName));
+                        sb.append("\" ");
+                    }
+                }
+                sb.append("/>\n");
+            }
+        }
+
         sb.append("  </table>\n");
-        
+
         // for "location" table
         sb.append("  <table name=\"location\">\n");
         sb.append("     <schema>\n");
@@ -151,13 +266,38 @@ public class Db2Xal {
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"start_elem\" type=\"java.lang.String\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"s\" type=\"java.lang.Double\" defaultValue=\"0\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"t\" type=\"java.lang.Double\" defaultValue=\"0\"/>\n");
-	sb.append("	</schema>\n");
+        sb.append("	</schema>\n");
         // TODO
-        
+        for (int i = 0; i < bpList.size(); i++) {
+            // get location properties
+            Query q;
+            q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp WHERE bpp.beamParameterId.twissId=:twiss_id")
+                    .setParameter("twiss_id", bpList.get(i).getTwissId());
+            bppList = q.getResultList();
+
+            if (!bppList.isEmpty()) {
+                sb.append("     <record name=\"");
+                sb.append(bpList.get(i).getModelId().getModelName());
+                sb.append("\" ");
+                for (int j = 0; j < bppList.size(); j++) {
+                    if (bppList.get(j).getPropCategory().equals("location")) {
+                        sb.append(bppList.get(j).getPropertyName());
+                        sb.append("=\"");
+                        sb.append(bppList.get(j).getBeamParameterDouble());
+                        sb.append("\" ");
+                    }
+                }
+                sb.append("/>\n");
+            }
+        }
+
         sb.append("  </table>\n");
-        
+
         // close the tablegroup
-        sb.append("</tablegroup>");        
+        sb.append("</tablegroup>");
+
+        System.out.println(sb);
+
     }
 
     /**
@@ -259,7 +399,7 @@ public class Db2Xal {
                     } catch (NullPointerException ne) {
                         // do nothing if there is no pid
                     }
-                    
+
                     sb.append("\" type=\"");
                     sb.append(e.getElementTypeId().getElementType());
                     sb.append("\" pos=\"");
