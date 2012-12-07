@@ -298,6 +298,21 @@ public class Db2Xal {
 
         System.out.println(sb);
 
+        // write to file
+        BufferedWriter writer = null;
+        try {
+            File file = new File("frib.xdxf");
+            writer = new BufferedWriter(new FileWriter(file));
+            writer.write(sb.toString());
+        } catch (IOException ex) {
+            Logger.getLogger(Db2Xal.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            try {
+                writer.close();
+            } catch (IOException ex) {
+                Logger.getLogger(Db2Xal.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     /**
