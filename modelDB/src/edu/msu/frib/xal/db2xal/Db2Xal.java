@@ -278,6 +278,8 @@ public class Db2Xal {
             if (!bppList.isEmpty()) {
                 sb.append("     <record name=\"");
                 sb.append(bpList.get(i).getModelId().getModelName());
+                sb.append("\" species=\"");
+                sb.append(bpList.get(i).getSpeciesName());
                 sb.append("\" ");
                 for (int j = 0; j < bppList.size(); j++) {
                     if (bppList.get(j).getPropCategory().equals("location")) {
@@ -301,7 +303,7 @@ public class Db2Xal {
         // write to file
         BufferedWriter writer = null;
         try {
-            File file = new File("frib.xdxf");
+            File file = new File("model.params");
             writer = new BufferedWriter(new FileWriter(file));
             writer.write(sb.toString());
         } catch (IOException ex) {
@@ -626,8 +628,8 @@ public class Db2Xal {
 
         // TODO get the accelerator name to override the default one (accName)
 
-//        x.write2IMPL();
+        x.write2IMPL();
         x.write2ModelParam();
-//        x.write2XDXF();
+        x.write2XDXF();
     }
 }
