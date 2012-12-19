@@ -2,14 +2,15 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.msu.frib.xal.exl2DB.element2DB;
+package edu.msu.frib.xal.exl2DB.ele2DB;
 
 /**
  *
  * @author lv
  * @author chu
  */
-public class CellProperty {
+public class ElementCell {
+
     public String tableName;
     public String type;
     public String name;
@@ -55,5 +56,4 @@ public class CellProperty {
     public void setValue(Object value) {
         this.value = value;
     }
-            
 }
