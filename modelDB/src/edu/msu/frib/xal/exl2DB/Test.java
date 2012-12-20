@@ -12,7 +12,7 @@ public class Test {
 
     public static void main(String[] args) {
    
-       Excel2DB.exl2DB("E:\\xal\\lattice_model_template.xlsx");
+       Excel2DB.exl2DB("E:\\xal\\lattice_model_template.xlsx","CSNS1");
       
     }
 }

@@ -14,13 +14,13 @@ import org.apache.poi.ss.usermodel.Workbook;
  */
 public class Excel2DB {
 
-    public static void exl2DB(String filePath) {
+    public static void exl2DB(String filePath,String latticeName) {
         Workbook wb = ReadExl.getWorkbook(filePath);
 
         SeqMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "beamline sequences")));
         DevTpMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device types")));
         DevModTpMap2BD.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device-model types")));
-        EncapData2DB.instDB(wb, "elements", "CSNS");
+        EncapData2DB.instDB(wb, "elements", latticeName);
         RfMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "Rf Gaps")));
     }
 }

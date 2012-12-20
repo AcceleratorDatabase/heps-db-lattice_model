@@ -6,6 +6,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+
 /**
  *
  * @author lv
@@ -30,7 +31,6 @@ public class DBTools {
         return conn;
     }
 
-
     public static void closeConnection(Connection conn) {
         try {
             conn.close();
@@ -38,21 +38,24 @@ public class DBTools {
             e.printStackTrace();
         }
     }
- 
 
     public static void closeStatement(Statement state) {
-        try {
-            state.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (state != null) {
+            try {
+                state.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
-   
+
     public static void closePreparedStatement(PreparedStatement state) {
-        try {
-            state.close();
-        } catch (SQLException e) {
-            e.printStackTrace();
+        if (state != null) {
+            try {
+                state.close();
+            } catch (SQLException e) {
+                e.printStackTrace();
+            }
         }
     }
 
