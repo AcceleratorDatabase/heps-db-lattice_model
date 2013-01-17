@@ -49,6 +49,10 @@ public class EncapData2DB {
                 PreparedStatement eState = null;
                 PreparedStatement sState = null;
                 ResultSet rs = null;
+
+                boolean propStateSign = false;
+                boolean eStateSign = false;
+                boolean sStateSign = false;
                 try {
                     conn = (Connection) DBTools.getConnection();
                     conn.setAutoCommit(false);
@@ -123,6 +127,8 @@ public class EncapData2DB {
                                         eState.setInt(11, element_id);
                                         eState.addBatch();
 
+                                        eStateSign = true;
+
 
                                         Iterator it1 = rowClsList.iterator();
                                         while (it1.hasNext()) {
@@ -158,6 +164,8 @@ public class EncapData2DB {
                                                     propState.setInt(5, element_prop_id);
                                                     propState.addBatch();
 
+                                                    propStateSign = true;
+
                                                     String sql4 = "update element_prop set " + cellProp.getType() + "=? where element_prop_id=?";
                                                     state = (PreparedStatement) conn.prepareStatement(sql4);
                                                     state.setObject(1, value);
@@ -188,25 +196,35 @@ public class EncapData2DB {
                             t++;
                         }
                     }
+                 
+                    int i = 0;                  
+                    if (!hMap.isEmpty()) {
+                        List mapList = new ArrayList(hMap.entrySet());
+                        Collections.sort(mapList, new MyComparator());
+                        Iterator iter = mapList.iterator();
+                        while (iter.hasNext()) {
+                            i++;
+                            String sql6 = "update element set element_order=? where element_id=?";
+                            if (i == 1) {
+                                sState = (PreparedStatement) conn.prepareStatement(sql6);
+                            }
+                            sState.setInt(1, i);
+                            Map.Entry entry = (Map.Entry) iter.next();
+                            sState.setInt(2, Integer.parseInt(entry.getKey().toString()));
+                            sState.addBatch();
 
-                    int i = 0;
-                    List mapList = new ArrayList(hMap.entrySet());
-                    Collections.sort(mapList, new MyComparator());
-                    Iterator iter = mapList.iterator();
-                    while (iter.hasNext()) {
-                        i++;
-                        String sql6 = "update element set element_order=? where element_id=?";
-                        if (i == 1) {
-                            sState = (PreparedStatement) conn.prepareStatement(sql6);
+                            sStateSign = true;
                         }
-                        sState.setInt(1, i);
-                        Map.Entry entry = (Map.Entry) iter.next();
-                        sState.setInt(2, Integer.parseInt(entry.getKey().toString()));
-                        sState.addBatch();
                     }
-                    propState.executeBatch();
-                    eState.executeBatch();
-                    sState.executeBatch();
+                    if (propStateSign) {
+                        propState.executeBatch();
+                    }
+                    if (eStateSign) {
+                        eState.executeBatch();
+                    }
+                    if (sStateSign) {
+                        sState.executeBatch();
+                    }
                     conn.commit();
                     conn.setAutoCommit(true);
                 } catch (SQLException e) {
