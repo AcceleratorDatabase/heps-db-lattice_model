@@ -23,11 +23,11 @@ import org.openepics.model.entity.BeamlineSequence;
 public class SeqMap2DB {
 
     @PersistenceUnit
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
+    static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     static EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
-    public static void instDB(ArrayList mapData) {
+    public void setDB(ArrayList mapData) {
         Iterator it = mapData.iterator();
         while (it.hasNext()) {
             Map dataMap = (Map) it.next();

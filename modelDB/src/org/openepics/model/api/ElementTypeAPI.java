@@ -11,7 +11,6 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
-import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.ElementType;
 
 /**
@@ -20,10 +19,39 @@ import org.openepics.model.entity.ElementType;
  */
 public class ElementTypeAPI {
     @PersistenceUnit
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
-    static EntityManager em = emf.createEntityManager();
+    static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
+    static final EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
+    
+    /**
+     * set element type definition in DB
+     * 
+     * @param type element type
+     * @param desc element type description
+     */
+    public void setElementType(String type) {
+        ElementType et = new ElementType();
+        et.setElementType(type);
+        em.getTransaction().begin();
+        em.persist(et);
+        em.getTransaction().commit();
+    }
+    
+    /**
+     * set element type definition in DB
+     * 
+     * @param type element type
+     * @param desc element type description
+     */
+    public void setElementType(String type, String desc) {
+        ElementType et = new ElementType();
+        et.setElementType(type);
+        et.setElementTypeDescription(desc);
+        em.getTransaction().begin();
+        em.persist(et);
+        em.getTransaction().commit();
+    }
     
     /**
      * Get all element types.
@@ -50,21 +78,6 @@ public class ElementTypeAPI {
         else{
             return eltList.get(0);
         }
-    }
-    
-    /**
-     * set element type definition in DB
-     * 
-     * @param type element type
-     * @param desc element type description
-     */
-    public void setElementType(String type, String desc) {
-        ElementType et = new ElementType();
-        et.setElementType(type);
-        et.setElementTypeDescription(desc);
-        em.getTransaction().begin();
-        em.persist(et);
-        em.getTransaction().commit();
     }
     
 }

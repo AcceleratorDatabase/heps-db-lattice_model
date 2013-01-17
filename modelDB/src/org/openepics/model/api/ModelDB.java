@@ -24,9 +24,9 @@ import org.openepics.model.entity.Model;
 public class ModelDB {
 
     @PersistenceUnit
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
-    private static Object latticeId;
-    static EntityManager em = emf.createEntityManager();
+    static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
+//    private static Object latticeId;
+    static final EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
     /**

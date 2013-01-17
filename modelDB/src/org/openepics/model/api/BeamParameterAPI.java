@@ -27,11 +27,19 @@ import org.openepics.model.entity.BeamParameter;
  */
 public class BeamParameterAPI {
     @PersistenceUnit
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
-    static EntityManager em = emf.createEntityManager();
+    static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
+    static final EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
     
+    /**
+     * 
+     * @param elm 
+     */
+    public void setBeamParametersForElement(String elm) {
+        // TODO fill in code
+    }
+
     /**
      * get all beam parameters for the specified element
      * @param elm element name
@@ -73,11 +81,4 @@ public class BeamParameterAPI {
         return null;
     }
     
-    /**
-     * 
-     * @param elm 
-     */
-    public void setBeamParametersForElement(String elm) {
-        // TODO fill in code
-    }
 }

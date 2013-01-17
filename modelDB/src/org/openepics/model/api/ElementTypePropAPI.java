@@ -21,10 +21,36 @@ import org.openepics.model.entity.ElementTypeProp;
 public class ElementTypePropAPI {
 
     @PersistenceUnit
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
-    static EntityManager em = emf.createEntityManager();
+    static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
+    static final EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
+
+    /**
+     * 
+     * @param et element type
+     * @param ele_type_prop_name element property name
+     * @param ele_type_prop_desc element property description
+     * @param ele_type_prop_defa element property default value
+     * @param ele_type_prop_unit element property unit
+     * @param ele_type_prop_data element property data type
+     * 
+     */
+    public void setElementTypeProp(ElementType et, String ele_type_prop_name, String ele_type_prop_desc, String ele_type_prop_defa, String ele_type_prop_unit, String ele_type_prop_data) {
+
+        ElementTypeProp etp = new ElementTypeProp();
+        etp.setElementTypeId(et);
+        etp.setElementTypePropName(ele_type_prop_name);
+        etp.setElementTypePropDescription(ele_type_prop_desc);
+        etp.setElementTypePropDefault(ele_type_prop_defa);
+        etp.setElementTypePropUnit(ele_type_prop_unit);
+        etp.setElementTypePropDatatype(ele_type_prop_data);
+
+        em.getTransaction().begin();
+        em.persist(etp);
+        em.getTransaction().commit();
+    }    
+    
     /**
      * Get the element_type_prop with the specified element type prop name
      *
@@ -42,18 +68,4 @@ public class ElementTypePropAPI {
         }
     }
 
-    public void setElementTypeProp(ElementType et, String ele_type_prop_name, String ele_type_prop_desc, String ele_type_prop_defa, String ele_type_prop_unit, String ele_type_prop_data) {
-
-        ElementTypeProp etp = new ElementTypeProp();
-        etp.setElementTypeId(et);
-        etp.setElementTypePropName(ele_type_prop_name);
-        etp.setElementTypePropDescription(ele_type_prop_desc);
-        etp.setElementTypePropDefault(ele_type_prop_defa);
-        etp.setElementTypePropUnit(ele_type_prop_unit);
-        etp.setElementTypePropDatatype(ele_type_prop_data);
-
-        em.getTransaction().begin();
-        em.persist(etp);
-        em.getTransaction().commit();
-    }
 }

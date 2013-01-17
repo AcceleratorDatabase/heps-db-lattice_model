@@ -25,10 +25,35 @@ import org.openepics.model.entity.RfGap;
 public class BeamlineSequenceAPI {
 
     @PersistenceUnit
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
-    static EntityManager em = emf.createEntityManager();
+    static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
+    static final EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
+
+    /**
+     * Set a new beamline sequence
+     *
+     * @param seq_name sequence name
+     * @param first_elem_name first element name
+     * @param last_elem_name last element name
+     * @param previous_seq previous sequence name
+     * @param seq_length sequence length
+     * @param seq_desc description for this sequence
+     */
+    public void setBeamlineSequence(String seq_name, String first_elem_name,
+            String last_elem_name, String previous_seq, double seq_length, String seq_desc) {
+        BeamlineSequence bs = new BeamlineSequence();
+        bs.setSequenceName(seq_name);
+        bs.setFirstElementName(first_elem_name);
+        bs.setLastElementName(last_elem_name);
+        bs.setPredecessorSequence(previous_seq);
+        bs.setSequenceLength(seq_length);
+        bs.setSequenceDescription(seq_desc);
+        em.getTransaction().begin();
+        em.persist(bs);
+        em.getTransaction().commit();
+    }
+    
     /**
      * Get all accelerator sequences.
      *
@@ -145,30 +170,6 @@ public class BeamlineSequenceAPI {
                 .setParameter("seqName", seq);
         List<Element> eList = q.getResultList();
         return eList.size();
-    }
-
-    /**
-     * Set a new beamline sequence
-     *
-     * @param seq_name sequence name
-     * @param first_elem_name first element name
-     * @param last_elem_name last element name
-     * @param previous_seq previous sequence name
-     * @param seq_length sequence length
-     * @param seq_desc description for this sequence
-     */
-    public void setBeamlineSequence(String seq_name, String first_elem_name,
-            String last_elem_name, String previous_seq, double seq_length, String seq_desc) {
-        BeamlineSequence bs = new BeamlineSequence();
-        bs.setSequenceName(seq_name);
-        bs.setFirstElementName(first_elem_name);
-        bs.setLastElementName(last_elem_name);
-        bs.setPredecessorSequence(previous_seq);
-        bs.setSequenceLength(seq_length);
-        bs.setSequenceDescription(seq_desc);
-        em.getTransaction().begin();
-        em.persist(bs);
-        em.getTransaction().commit();
     }
 
     /**

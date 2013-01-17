@@ -28,6 +28,47 @@ public class LatticeAPI {
     static EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
+
+    /**
+     * 
+     */
+    public int setLattice(String lattice_name) {
+        Lattice l=new Lattice();
+        Date date=new Date();
+        l.setLatticeName(lattice_name);
+        l.setCreatedBy(System.getProperty("user.name"));
+        l.setCreateDate(date);
+        
+        em.getTransaction().begin();
+        em.persist(l);
+        em.getTransaction().commit();
+        
+        return l.getLatticeId();
+    }
+
+    /**
+     * 
+     */
+    public int setLattice(String lattice_name,String lattice_description) {
+        Lattice l=new Lattice();
+        Date date=new Date();
+        l.setLatticeName(lattice_name);
+        l.setLatticeDescription(lattice_description);
+        l.setCreatedBy(System.getProperty("user.name"));
+        l.setCreateDate(date);
+        
+        em.getTransaction().begin();
+        em.persist(l);
+        em.getTransaction().commit();
+        
+        return l.getLatticeId();
+    }
+
+    /**
+     * 
+     * @param latticeName
+     * @return 
+     */
     public Lattice getLatticeByName(String latticeName) {
         Query q;
         q = em.createNamedQuery("Lattice.findByLatticeName").setParameter("latticeName", latticeName);
@@ -39,6 +80,11 @@ public class LatticeAPI {
         }
     }
 
+    /**
+     * 
+     * @param latticeName
+     * @return 
+     */
     public List<ElementProp> getAllPropertiesForLattice(String latticeName) {
         Query q;
         q = em.createQuery("SELECT ep FROM ElementProp ep JOIN ep.latticeId l "
@@ -47,6 +93,10 @@ public class LatticeAPI {
         return epList;
     }
 
+    /**
+     * 
+     * @param name 
+     */
     public void deleteLatticeByName(String name) {
         Lattice l = getLatticeByName(name);
         if (l != null) {
@@ -64,20 +114,5 @@ public class LatticeAPI {
             System.out.println("The lattice " + name + " doesn't exist!");
         }
     }
-
   
-    public int setLattice(String lattice_name,String lattice_description) {
-        Lattice l=new Lattice();
-        Date date=new Date();
-        l.setLatticeName(lattice_name);
-        l.setLatticeDescription(lattice_description);
-        l.setCreatedBy(System.getProperty("user.name"));
-        l.setCreateDate(date);
-        
-        em.getTransaction().begin();
-        em.persist(l);
-        em.getTransaction().commit();
-        
-        return l.getLatticeId();
-    }
 }
