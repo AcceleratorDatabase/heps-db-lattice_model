@@ -76,7 +76,8 @@ public class Db2Xal {
         sb.append("<tablegroup>\n");
 
         // find the models for each beamline sequence initial condition
-        List<BeamParameter> bpList = GoldModelAPI.getAllDefaultInitialConditions();
+        GoldModelAPI gmAPI = new GoldModelAPI();
+        List<BeamParameter> bpList = gmAPI.getAllDefaultInitialConditions();
         System.out.println("There are " + bpList.size() + " beamline sequence initial conditions.");
 
         // Beam Parameter Properties
@@ -371,7 +372,8 @@ public class Db2Xal {
         sb.append("\" ver=\"1.0.0\">\n");
         //TODO set up combo sequences
         // get all sequences
-        List<BeamlineSequence> blsList = BeamlineSequenceAPI.getAllSequences();
+        BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
+        List<BeamlineSequence> blsList = beamlineSequenceAPI.getAllSequences();
         Iterator<BeamlineSequence> blsIt = blsList.iterator();
         // loop through each sequence
         while (blsIt.hasNext()) {
@@ -390,14 +392,15 @@ public class Db2Xal {
             // loop through each node
             // need to treat RF specially
 
-            List<Element> eList = BeamlineSequenceAPI.getAllElementsForSequence(bls.getSequenceName());
+            List<Element> eList = beamlineSequenceAPI.getAllElementsForSequence(bls.getSequenceName());
             Iterator<Element> eIt = eList.iterator();
             while (eIt.hasNext()) {
 
                 Element e = eIt.next();
                 if (e.getElementTypeId() != null) {
                     // get all properties for this element
-                    List<ElementProp> epList = ElementAPI.getAllPropertiesForElement(e.getElementName());
+                    ElementAPI elementAPI = new ElementAPI();
+                    List<ElementProp> epList = elementAPI.getAllPropertiesForElement(e.getElementName());
                     // everything other than RF cavities treated as node
                     if (!e.getElementTypeId().getElementType().equals("CAV")) {
                         sb.append("      <node id=\"");
@@ -407,11 +410,12 @@ public class Db2Xal {
                     }
                     sb.append(e.getElementName());
                     // get physics name, if there is any
+                    ElementPropAPI elementPropAPI = new ElementPropAPI();
                     try {
-                        if (!ElementPropAPI.getPidForElement(e.getElementName()).equals("")
-                                && !ElementPropAPI.getPidForElement(e.getElementName()).isEmpty()) {
+                        if (!elementPropAPI.getPidForElement(e.getElementName()).equals("")
+                                && !elementPropAPI.getPidForElement(e.getElementName()).isEmpty()) {
                             sb.append("\" pid=\"");
-                            sb.append(ElementPropAPI.getPidForElement(e.getElementName()));
+                            sb.append(elementPropAPI.getPidForElement(e.getElementName()));
                         }
                     } catch (NullPointerException ne) {
                         // do nothing if there is no pid
@@ -449,7 +453,7 @@ public class Db2Xal {
                         // insert node attributes
 
                         // set apertures
-                        Map aperAttMap = ElementPropAPI.getApertureAttributesForElement(e.getElementName());
+                        Map aperAttMap = elementPropAPI.getApertureAttributesForElement(e.getElementName());
                         if (!aperAttMap.isEmpty()) {
                             sb.append("            <aperture ");
 
@@ -467,7 +471,7 @@ public class Db2Xal {
                         }
 
                         // set magnet attributes
-                        Map magAttMap = ElementPropAPI.getMagnetAttributesForElement(e.getElementName());
+                        Map magAttMap = elementPropAPI.getMagnetAttributesForElement(e.getElementName());
                         if (!magAttMap.isEmpty()) {
 
                             sb.append("            <magnet ");
@@ -486,7 +490,7 @@ public class Db2Xal {
                         }
 
                         // set bpm attributes 
-                        Map bpmAttMap = ElementPropAPI.getBpmAttributesForElement(e.getElementName());
+                        Map bpmAttMap = elementPropAPI.getBpmAttributesForElement(e.getElementName());
                         if (!bpmAttMap.isEmpty()) {
 
                             sb.append("            <bpm ");
@@ -505,7 +509,7 @@ public class Db2Xal {
                         }
 
                         // set rfcavity attributes
-                        Map rfAttMap = ElementPropAPI.getRfcavityAttributesForElement(e.getElementName());
+                        Map rfAttMap = elementPropAPI.getRfcavityAttributesForElement(e.getElementName());
                         if (!rfAttMap.isEmpty()) {
 
                             sb.append("            <rfcavity ");
@@ -529,7 +533,7 @@ public class Db2Xal {
                     if (!e.getElementTypeId().getElementType().equals("MARK")) {
                         sb.append("         <channelsuite>\n");
                         // for magnets
-                        if (!ElementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty()) {
+                        if (!elementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty()) {
                             sb.append("            <channel handle=\"fieldRB\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":B\" settable=\"false\"/>\n");
@@ -538,7 +542,7 @@ public class Db2Xal {
                             sb.append(":B_Set\" settable=\"true\"/>\n");
                         }
                         // for BPMs
-                        if (!ElementPropAPI.getBpmAttributesForElement(e.getElementName()).isEmpty()) {
+                        if (!elementPropAPI.getBpmAttributesForElement(e.getElementName()).isEmpty()) {
                             sb.append("            <channel handle=\"xAvg\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":xAvg\" settable=\"false\"/>\n");

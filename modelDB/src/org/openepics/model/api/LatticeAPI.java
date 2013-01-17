@@ -28,7 +28,7 @@ public class LatticeAPI {
     static EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
-    public static Lattice getLatticeByName(String latticeName) {
+    public Lattice getLatticeByName(String latticeName) {
         Query q;
         q = em.createNamedQuery("Lattice.findByLatticeName").setParameter("latticeName", latticeName);
         List<Lattice> latList = q.getResultList();
@@ -39,7 +39,7 @@ public class LatticeAPI {
         }
     }
 
-    public static List<ElementProp> getAllPropertiesForLattice(String latticeName) {
+    public List<ElementProp> getAllPropertiesForLattice(String latticeName) {
         Query q;
         q = em.createQuery("SELECT ep FROM ElementProp ep JOIN ep.latticeId l "
                 + "WHERE l.latticeName = :latticeName").setParameter("latticeName", latticeName);
@@ -47,11 +47,11 @@ public class LatticeAPI {
         return epList;
     }
 
-    public static void deleteLatticeByName(String name) {
-        Lattice l = LatticeAPI.getLatticeByName(name);
+    public void deleteLatticeByName(String name) {
+        Lattice l = getLatticeByName(name);
         if (l != null) {
             em.getTransaction().begin();
-            List<ElementProp> epList = LatticeAPI.getAllPropertiesForLattice(name);
+            List<ElementProp> epList = getAllPropertiesForLattice(name);
             Iterator it = epList.iterator();
             while (it.hasNext()) {
                 ElementProp ep = (ElementProp) it.next();
@@ -66,7 +66,7 @@ public class LatticeAPI {
     }
 
   
-    public static int setLattice(String lattice_name,String lattice_description) {
+    public int setLattice(String lattice_name,String lattice_description) {
         Lattice l=new Lattice();
         Date date=new Date();
         l.setLatticeName(lattice_name);

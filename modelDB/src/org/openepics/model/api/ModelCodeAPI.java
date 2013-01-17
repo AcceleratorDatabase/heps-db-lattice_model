@@ -28,7 +28,7 @@ public class ModelCodeAPI {
      * Get all modeling codes
      * @return all modeling codes
      */
-    public static List<ModelCode> getAllModelCodes() {
+    public List<ModelCode> getAllModelCodes() {
         Query q;
         q = em.createNamedQuery("ModelCode.findAll");
         List<ModelCode> codeList = q.getResultList();
@@ -41,7 +41,7 @@ public class ModelCodeAPI {
      * @param code_name model code
      * @return all algorithms for the specified model code
      */
-    public static List<ModelCode> getAlgorithmsForModelCode(String code_name) {
+    public List<ModelCode> getAlgorithmsForModelCode(String code_name) {
         Query q;
         q = em.createNamedQuery("ModelCode.findByCodeName").setParameter("codeName", code_name);
         return q.getResultList();
@@ -52,7 +52,7 @@ public class ModelCodeAPI {
      * @param name model code name
      * @return all models run with this model code
      */
-    public static List<ModelCode> getAllModelCodesWithName(String name) {
+    public List<ModelCode> getAllModelCodesWithName(String name) {
         final Query q = em.createNamedQuery("ModelCode.findByCodeName");
         q.setParameter("codeName", name);
         List<ModelCode> mc = q.getResultList();
@@ -65,7 +65,7 @@ public class ModelCodeAPI {
      * @param codeName model code name, e.g. XAL
      * @param algorithm algorithm used, e.g. EnvelopeTracker
      */
-    public static void setModelCode(String codeName, String algorithm) {
+    public void setModelCode(String codeName, String algorithm) {
         ModelCode mc = new ModelCode();
         mc.setCodeName(codeName);
         mc.setAlgorithm(algorithm);

@@ -28,7 +28,7 @@ public class ModelLineAPI {
      * Get all model lines
      * @return all model lines
      */
-    public static List<ModelLine> getAllModelLines() {
+    public List<ModelLine> getAllModelLines() {
        Query q;
         q = em.createNamedQuery("ModelLine.findAll");
         List<ModelLine> lineList = q.getResultList();
@@ -47,7 +47,7 @@ public class ModelLineAPI {
      * @param start_marker starting marker  name
      * @param end_marker ending marker name
      */
-    public static void setModelLine(String model_line_name, String model_line_desc, 
+    public void setModelLine(String model_line_name, String model_line_desc, 
             double start_pos, double end_pos, String start_marker, String end_marker) {
         ModelLine ml = new ModelLine();
         ml.setModelLineName(model_line_name);

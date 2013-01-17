@@ -36,7 +36,7 @@ public class ElementAPI {
      * @param elementName element name
      * @return all properties for the specified element
      */
-    public static List<ElementProp> getAllPropertiesForElement(String elementName) {
+    public List<ElementProp> getAllPropertiesForElement(String elementName) {
         Query q;
         q = em.createQuery("SELECT ep FROM ElementProp ep JOIN ep.elementId e "
                 + "WHERE e.elementName = :elementName").setParameter("elementName", elementName);
@@ -50,7 +50,7 @@ public class ElementAPI {
      * @param name element name
      * @return element for the specified element name
      */
-    public static Element getElementByName(String name) {
+    public Element getElementByName(String name) {
         Query q;
         q = em.createNamedQuery("Element.findByElementName").setParameter("elementName", name);
         List<Element> eList = q.getResultList();
@@ -77,11 +77,11 @@ public class ElementAPI {
      * @param pos distance from start of the sequence
      * @param sequence_name the sequence name the element resided in
      */
-    public static void setElement(String name, int order, double s,
+    public void setElement(String name, int order, double s,
             double len, double dx, double dy, double dz, double pitch, double yaw, double roll,
             double pos, String sequence_name) {
         // first, check if this element has already in the DB
-        if (ElementAPI.getElementByName(name) == null) {
+        if (getElementByName(name) == null) {
             Element e = new Element();
             Date date = new Date();
             e.setInsertDate(date);
@@ -98,7 +98,8 @@ public class ElementAPI {
             e.setPos(pos);
 
             // find out the beamline sequence id
-            BeamlineSequence bls = BeamlineSequenceAPI.getSequenceByName(sequence_name);
+            BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
+            BeamlineSequence bls = beamlineSequenceAPI.getSequenceByName(sequence_name);
             e.setBeamlineSequenceId(bls);
         }
     }
@@ -108,11 +109,11 @@ public class ElementAPI {
      * Delete the RfGaps belonging to the Element
      */
 
-    public static void deleteElementByName(String name) {
+    public void deleteElementByName(String name) {
         em.getTransaction().begin();
-        Element e = ElementAPI.getElementByName(name);
+        Element e = getElementByName(name);
         if (e != null) {
-            List<ElementProp> epList = ElementAPI.getAllPropertiesForElement(name);
+            List<ElementProp> epList = getAllPropertiesForElement(name);
             Iterator it1 = epList.iterator();
             while (it1.hasNext()) {
                 ElementProp ep = (ElementProp) it1.next();
@@ -133,11 +134,11 @@ public class ElementAPI {
         
     }
 
-    public static void updateElement(String old_name, String new_name, Object order, double s,
+    public void updateElement(String old_name, String new_name, Object order, double s,
             double len, double dx, double dy, double dz, double pitch, double yaw, double roll,
             double pos, String sequence_name) {
 
-        Element e = ElementAPI.getElementByName(old_name);
+        Element e = getElementByName(old_name);
         if (e != null) {
             em.getTransaction().begin();
             e.setElementName(new_name);
@@ -160,7 +161,8 @@ public class ElementAPI {
             e.setPos(pos);
 
             // find out the beamline sequence id
-            BeamlineSequence bls = BeamlineSequenceAPI.getSequenceByName(sequence_name);
+            BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
+            BeamlineSequence bls = beamlineSequenceAPI.getSequenceByName(sequence_name);
             e.setBeamlineSequenceId(bls);
 
             em.merge(e);
@@ -171,7 +173,7 @@ public class ElementAPI {
         }
     }
     
-    public static int getMaxId(){
+    public int getMaxId(){
         Query q;
         q = em.createQuery("SELECT MAX(e.elementId) FROM Element e");
         List<Integer> idList = q.getResultList();

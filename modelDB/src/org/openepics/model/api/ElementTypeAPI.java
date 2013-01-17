@@ -29,7 +29,7 @@ public class ElementTypeAPI {
      * Get all element types.
      * @return all element types
      */
-    public static List<ElementType> getAllElementTypes() {
+    public List<ElementType> getAllElementTypes() {
         Query q;
         q = em.createNamedQuery("ElementType.findAll");
         List<ElementType> typeList = q.getResultList();
@@ -42,7 +42,7 @@ public class ElementTypeAPI {
      * @param type element type
      * @return the element type for specified type
      */
-    public static ElementType getElementTypeByType(String type) {
+    public ElementType getElementTypeByType(String type) {
         Query q;
         q = em.createNamedQuery("ElementType.findByElementType").setParameter("elementType",type);
         List<ElementType> eltList = q.getResultList();
@@ -58,7 +58,7 @@ public class ElementTypeAPI {
      * @param type element type
      * @param desc element type description
      */
-    public static void setElementType(String type, String desc) {
+    public void setElementType(String type, String desc) {
         ElementType et = new ElementType();
         et.setElementType(type);
         et.setElementTypeDescription(desc);

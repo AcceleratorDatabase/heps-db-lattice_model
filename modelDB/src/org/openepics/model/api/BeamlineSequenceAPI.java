@@ -34,7 +34,7 @@ public class BeamlineSequenceAPI {
      *
      * @return all sequences
      */
-    public static List<BeamlineSequence> getAllSequences() {
+    public List<BeamlineSequence> getAllSequences() {
         Query q;
         q = em.createNamedQuery("BeamlineSequence.findAll");
         List<BeamlineSequence> seqList = q.getResultList();
@@ -48,7 +48,7 @@ public class BeamlineSequenceAPI {
      * @param seq sequence name
      * @return elements within the specified sequence
      */
-    public static List<Element> getAllElementsForSequence(String seq) {
+    public List<Element> getAllElementsForSequence(String seq) {
         Query q;
         q = em.createQuery("SELECT e FROM Element e JOIN e.beamlineSequenceId b "
                 + "WHERE b.sequenceName = :sequenceName").setParameter("sequenceName", seq);
@@ -80,7 +80,7 @@ public class BeamlineSequenceAPI {
      * @param seqName sequence name
      * @return the sequence with the specified sequence name
      */
-    public static BeamlineSequence getSequenceByName(String seqName) {
+    public BeamlineSequence getSequenceByName(String seqName) {
         Query q;
         q = em.createNamedQuery("BeamlineSequence.findBySequenceName").setParameter("sequenceName", seqName);
         List<BeamlineSequence> seqList = q.getResultList();
@@ -97,7 +97,7 @@ public class BeamlineSequenceAPI {
      * @param seq sequence name
      * @return the first element name in the specified sequence
      */
-    public static String getEntranceElementForSequence(String seq) {
+    public String getEntranceElementForSequence(String seq) {
         Query q;
 
         q = em.createNamedQuery("BeamlineSequence.findBySequenceName").setParameter("sequenceName", seq);
@@ -123,7 +123,7 @@ public class BeamlineSequenceAPI {
      * @return all elements of the specified type and within the specified
      * sequence
      */
-    public static List<Element> getAllElementsOfTypeForSequence(String seq, String type) {
+    public List<Element> getAllElementsOfTypeForSequence(String seq, String type) {
         Query q;
         q = em.createQuery("SELECT e FROM Element e WHERE "
                 + "e.sequenceId.sequenceName=:seqName "
@@ -139,7 +139,7 @@ public class BeamlineSequenceAPI {
      * @param seq sequence name
      * @return element count for the specified sequence
      */
-    public static int getElementCountForSequence(String seq) {
+    public int getElementCountForSequence(String seq) {
         Query q;
         q = em.createQuery("SELECT e FROM Element e WHERE e.sequenceId.sequenceName=:seqName")
                 .setParameter("seqName", seq);
@@ -157,7 +157,7 @@ public class BeamlineSequenceAPI {
      * @param seq_length sequence length
      * @param seq_desc description for this sequence
      */
-    public static void setBeamlineSequence(String seq_name, String first_elem_name,
+    public void setBeamlineSequence(String seq_name, String first_elem_name,
             String last_elem_name, String previous_seq, double seq_length, String seq_desc) {
         BeamlineSequence bs = new BeamlineSequence();
         bs.setSequenceName(seq_name);
@@ -177,16 +177,17 @@ public class BeamlineSequenceAPI {
      * delete the ElementProps belonging to the Elements 
      * delete the RfGaps belonging to the Elements
      */
-    public static void deleteBySequence(String seqName) {
+    public void deleteBySequence(String seqName) {
         em.getTransaction().begin();
-        BeamlineSequence bls = BeamlineSequenceAPI.getSequenceByName(seqName);
+        BeamlineSequence bls = getSequenceByName(seqName);
         if (bls != null) {
-            List<Element> eList = BeamlineSequenceAPI.getAllElementsForSequence(seqName);
+            List<Element> eList = getAllElementsForSequence(seqName);
             Iterator it = eList.iterator();
             while (it.hasNext()) {
                 Element e = (Element) it.next();
 
-                List<ElementProp> epList = ElementAPI.getAllPropertiesForElement(e.getElementName());
+                ElementAPI elementAPI = new ElementAPI();
+                List<ElementProp> epList = elementAPI.getAllPropertiesForElement(e.getElementName());
                 Iterator it1 = epList.iterator();
                 while (it1.hasNext()) {
                     ElementProp ep = (ElementProp) it1.next();
@@ -209,20 +210,21 @@ public class BeamlineSequenceAPI {
        
     }
 
-    public static void deleteAll() {
-        List sequences = BeamlineSequenceAPI.getAllSequences();
+    public void deleteAll() {
+        List sequences = getAllSequences();
 
         Iterator it = sequences.iterator();
         em.getTransaction().begin();
         while (it.hasNext()) {
 
             BeamlineSequence bls = (BeamlineSequence) it.next();
-            List<Element> eList = BeamlineSequenceAPI.getAllElementsForSequence(bls.getSequenceName());
+            List<Element> eList = getAllElementsForSequence(bls.getSequenceName());
             Iterator it3 = eList.iterator();
             while (it3.hasNext()) {
                 Element e = (Element) it3.next();
-
-                List<ElementProp> epList = ElementAPI.getAllPropertiesForElement(e.getElementName());
+                
+                ElementAPI elementAPI = new ElementAPI();
+                List<ElementProp> epList = elementAPI.getAllPropertiesForElement(e.getElementName());
                 Iterator it1 = epList.iterator();
                 while (it1.hasNext()) {
                     ElementProp ep = (ElementProp) it1.next();
@@ -244,10 +246,10 @@ public class BeamlineSequenceAPI {
      
     }
     
-    public static void updateBeamlineSequence(String old_seq_name, String new_seq_name,
+    public void updateBeamlineSequence(String old_seq_name, String new_seq_name,
             String first_elem_name, String last_elem_name, String previous_seq, double seq_length, String seq_desc){
         em.getTransaction().begin();
-        BeamlineSequence bs=BeamlineSequenceAPI.getSequenceByName(old_seq_name);
+        BeamlineSequence bs=getSequenceByName(old_seq_name);
         bs.setSequenceName(new_seq_name);
         bs.setFirstElementName(first_elem_name);
         bs.setLastElementName(last_elem_name);

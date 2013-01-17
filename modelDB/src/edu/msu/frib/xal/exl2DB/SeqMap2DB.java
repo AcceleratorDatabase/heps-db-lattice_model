@@ -41,9 +41,10 @@ public class SeqMap2DB {
             }
             Double seq_length = Double.parseDouble(dataMap.get("sequence_length").toString());
             String seq_des = dataMap.get("sequence_description").toString();
-            BeamlineSequence bs = BeamlineSequenceAPI.getSequenceByName(sequence_name);
+            BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
+            BeamlineSequence bs = beamlineSequenceAPI.getSequenceByName(sequence_name);
             if (bs == null) {
-                BeamlineSequenceAPI.setBeamlineSequence(sequence_name, first_ele_name,
+                beamlineSequenceAPI.setBeamlineSequence(sequence_name, first_ele_name,
                         last_ele_name, pre_seq, seq_length, seq_des);
             } else {
                 System.out.println("The sequence " + sequence_name + " is already in the database. Your execution will overwrite this record!");

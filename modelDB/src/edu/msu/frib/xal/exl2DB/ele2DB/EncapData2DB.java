@@ -38,7 +38,8 @@ public class EncapData2DB {
         if (latticeName == null || "".equals(latticeName)) {
             System.out.println("Please insert the Lattice name!");
         } else {
-            Lattice l = LatticeAPI.getLatticeByName(latticeName);
+            LatticeAPI latticeAPI = new LatticeAPI();
+            Lattice l = latticeAPI.getLatticeByName(latticeName);
             if (l != null) {
                 System.out.println("The Lattice " + latticeName + " is already in the database! Please don't insert repeatedly!");
             } else {
@@ -51,7 +52,7 @@ public class EncapData2DB {
                 try {
                     conn = (Connection) DBTools.getConnection();
                     conn.setAutoCommit(false);
-                    int lattice_id = LatticeAPI.setLattice(latticeName, null);
+                    int lattice_id = latticeAPI.setLattice(latticeName, null);
 
                     ArrayList eleNameList = ReadEleSheet.getColList(wb, sheetName, "Eng_name", "Physical label");
                     ArrayList sequenceList = ReadEleSheet.getColList(wb, sheetName, "Section", "Physical Label");
@@ -73,10 +74,12 @@ public class EncapData2DB {
                             ArrayList rowClsList = (ArrayList) it.next();
 
                             String sequence_name = (String) sequenceList.get(t);
-                            BeamlineSequence bls = BeamlineSequenceAPI.getSequenceByName(sequence_name);
+                            BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
+                            BeamlineSequence bls = beamlineSequenceAPI.getSequenceByName(sequence_name);
 
                             String ele_type = (String) eleTypeList.get(t);
-                            ElementType et = ElementTypeAPI.getElementTypeByType(ele_type);
+                            ElementTypeAPI elementTypeAPI = new ElementTypeAPI();
+                            ElementType et = elementTypeAPI.getElementTypeByType(ele_type);
 
                             if (bls == null) {
                                 System.out.println("Warning:The sequence " + sequence_name + " doesn't exist!");
@@ -86,7 +89,8 @@ public class EncapData2DB {
                                 } else {
                                     int element_id;
                                     String ele_name = (String) eleNameList.get(t);
-                                    Element e = ElementAPI.getElementByName(ele_name);
+                                    ElementAPI elementAPI = new ElementAPI();
+                                    Element e = elementAPI.getElementByName(ele_name);
 
                                     if (e != null && e.getBeamlineSequenceId().getSequenceName().equals(sequence_name)) {
                                         System.out.println("Warning:The element " + ele_name + " of " + sequence_name + " is already in the database! Please don't insert repeatedly!");

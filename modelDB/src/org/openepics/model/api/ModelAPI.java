@@ -48,7 +48,7 @@ public class ModelAPI {
      * @param mode machine mode name
      * @return models for the specified machine mode
      */
-    public static List<Model> getAllModelsForMachineMode(String mode) {
+    public List<Model> getAllModelsForMachineMode(String mode) {
         Query q;
         q = em.createQuery("SELECT m FROM Model m "
                 + "JOIN m.machineModeId mm WHERE mm.machineModeName = :modeName").setParameter("modeName", mode);
@@ -63,7 +63,7 @@ public class ModelAPI {
      * @param line model line name
      * @return models for the specified model line
      */
-    public static List<Model> getAllModelsForModelLine(String line) {
+    public List<Model> getAllModelsForModelLine(String line) {
         Query q;
         q = em.createQuery("SELECT m FROM Model m JOIN m.latticeId l "
                 + "JOIN l.modelLineId ml WHERE ml.modelLineName = :lineName").setParameter("lineName", line);
@@ -79,7 +79,7 @@ public class ModelAPI {
      * @param mode machine mode
      * @return modes with specified model line and machine mode
      */
-    public static List<Model> getAllModelsForModelLineAndMachineMode(String line, String mode) {
+    public List<Model> getAllModelsForModelLineAndMachineMode(String line, String mode) {
         Query q;
         q = em.createQuery("SELECT m FROM Model m JOIN m.latticeId l "
                 + "WHERE "
@@ -95,7 +95,7 @@ public class ModelAPI {
      * 
      * @return the default model
      */
-    public static Model getDefaultModel() {
+    public Model getDefaultModel() {
         Model m = null;
         
         // TODO fill in the code
@@ -112,7 +112,7 @@ public class ModelAPI {
      * @param model_name a name for this model
      * @param model_desc description for this model
      */
-    public static void setModelHeader(String model_line, String model_code, String machine_mode, 
+    public void setModelHeader(String model_line, String model_code, String machine_mode, 
             String model_name, String model_desc) {
 
         Model m = new Model();

@@ -27,7 +27,7 @@ public class MachineModeAPI {
      * @param machine_mode_name machine mode name
      * @param machine_mode_desc description for this machine mode
      */
-    public static void setMachineMode(String machine_mode_name, String machine_mode_desc) {
+    public void setMachineMode(String machine_mode_name, String machine_mode_desc) {
         MachineMode mm = new MachineMode();
         mm.setMachineModeName(machine_mode_name);
         mm.setMachineModeDescription(machine_mode_desc);

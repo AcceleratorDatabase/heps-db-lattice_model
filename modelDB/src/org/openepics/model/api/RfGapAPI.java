@@ -9,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContextType;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import org.openepics.model.entity.Element;
@@ -20,10 +21,10 @@ import org.openepics.model.entity.RfGap;
  */
 public class RfGapAPI {
     @PersistenceUnit
+    @PersistenceContext(unitName = "modelAPIPU", type=PersistenceContextType.TRANSACTION)
     static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     static EntityManager em = emf.createEntityManager();
 
-    @PersistenceContext
     public static List<RfGap> getAllRfgapsForCavity(String cav) {
         
         Query q;

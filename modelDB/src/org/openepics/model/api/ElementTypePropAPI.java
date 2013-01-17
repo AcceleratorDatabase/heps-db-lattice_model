@@ -31,7 +31,7 @@ public class ElementTypePropAPI {
      * @param eleTypePropName element type prop name
      * @return the element type prop with the specified element type prop name
      */
-    public static ElementTypeProp getElementTypePropByName(String eleTypePropName) {
+    public ElementTypeProp getElementTypePropByName(String eleTypePropName) {
         Query q;
         q = em.createNamedQuery("ElementTypeProp.findByElementTypePropName").setParameter("elementTypePropName", eleTypePropName);
         List<ElementTypeProp> eletpList = q.getResultList();
@@ -42,7 +42,7 @@ public class ElementTypePropAPI {
         }
     }
 
-    public static void setElementTypeProp(ElementType et, String ele_type_prop_name, String ele_type_prop_desc, String ele_type_prop_defa, String ele_type_prop_unit, String ele_type_prop_data) {
+    public void setElementTypeProp(ElementType et, String ele_type_prop_name, String ele_type_prop_desc, String ele_type_prop_defa, String ele_type_prop_unit, String ele_type_prop_data) {
 
         ElementTypeProp etp = new ElementTypeProp();
         etp.setElementTypeId(et);

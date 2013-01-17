@@ -23,11 +23,12 @@ public class DevTpMap2DB {
             Map dataMap = (Map) it.next();
             String type = dataMap.get("element_type").toString();
             String desc = dataMap.get("element_type_description").toString();
-            ElementType et = ElementTypeAPI.getElementTypeByType(type);
+            ElementTypeAPI elementTypeAPI = new ElementTypeAPI();
+            ElementType et = elementTypeAPI.getElementTypeByType(type);
             if (et != null) {
                 System.out.println("The ElementType " + type + " is already in the database! Please don't insert repeatedly!");
             } else {
-                ElementTypeAPI.setElementType(type, desc);
+                elementTypeAPI.setElementType(type, desc);
             }
         }
     }

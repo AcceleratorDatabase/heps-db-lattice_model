@@ -27,7 +27,7 @@ public class ModelGeometryAPI {
      * @param model_geometry_name model geometry name
      * @param model_geometry_desc description for this model geometry
      */
-    public static void setModelGeometry(String model_geometry_name, String model_geometry_desc) {
+    public void setModelGeometry(String model_geometry_name, String model_geometry_desc) {
         ModelGeometry mg = new ModelGeometry();
         mg.setModelGeometryName(model_geometry_name);
         mg.setModelGeometryDescription(model_geometry_desc);

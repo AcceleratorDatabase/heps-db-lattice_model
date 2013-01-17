@@ -37,7 +37,7 @@ public class BeamParameterAPI {
      * @param elm element name
      * @return all beam parameters for the specified element
      */
-    public static Map<String, Object> getAllBeamParametersForElement(String elm) 
+    public Map<String, Object> getAllBeamParametersForElement(String elm) 
             throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException{
         Query q;
         q = em.createQuery("SELECT  bp FROM BeamParameter bp WHERE bp.elementId.elementName=:elName")
@@ -77,7 +77,7 @@ public class BeamParameterAPI {
      * 
      * @param elm 
      */
-    public static void setBeamParametersForElement(String elm) {
+    public void setBeamParametersForElement(String elm) {
         // TODO fill in code
     }
 }

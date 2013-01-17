@@ -34,7 +34,7 @@ public class ElementPropAPI {
      * @param elm element name
      * @return physics name for the element
      */
-    public static String getPidForElement(String elm) {
+    public String getPidForElement(String elm) {
         String pid = "";
         
         Query q;
@@ -58,7 +58,7 @@ public class ElementPropAPI {
      * @param elm element name
      * @return magnet attributes for the specified element
      */
-    public static Map getMagnetAttributesForElement(String elm) {
+    public Map getMagnetAttributesForElement(String elm) {
         HashMap<String, Object> atts = new HashMap<>();
         
         Query q;
@@ -91,7 +91,7 @@ public class ElementPropAPI {
      * @param elm element name
      * @return aperture attributes for the specified element
      */
-    public static Map getApertureAttributesForElement(String elm) {
+    public Map getApertureAttributesForElement(String elm) {
         HashMap<String, Object> atts = new HashMap<>();
         
         Query q;
@@ -118,7 +118,7 @@ public class ElementPropAPI {
      * @param elm element name
      * @return alignment attributes for the specified element
      */
-    public static Map getAlignmentAttributesForElement(String elm) {
+    public Map getAlignmentAttributesForElement(String elm) {
         HashMap<String, Object> atts = new HashMap<>();
         
         Query q;
@@ -145,7 +145,7 @@ public class ElementPropAPI {
      * @param elm element name
      * @return bpm attributes for the specified element 
      */
-    public static Map getBpmAttributesForElement(String elm) {
+    public Map getBpmAttributesForElement(String elm) {
         HashMap<String, Object> atts = new HashMap<>();
         
         Query q;
@@ -172,7 +172,7 @@ public class ElementPropAPI {
      * @param elm element name
      * @return rfgap attributes for the specified element
      */
-    public static Map getRfcavityAttributesForElement(String elm) {
+    public Map getRfcavityAttributesForElement(String elm) {
         HashMap<String, Object> atts = new HashMap<>();
         
         Query q;
@@ -202,7 +202,7 @@ public class ElementPropAPI {
      * @param prop elment prop value 
      * @return initialized ElementProp
      */
-    public static ElementProp setElementProperty(Element e, String propCategory, String propName, Object prop) {
+    public ElementProp setElementProperty(Element e, String propCategory, String propName, Object prop) {
         ElementProp ep = new ElementProp();
         ep.setElementId(e);
         ep.setPropCategory(propCategory);
@@ -220,7 +220,7 @@ public class ElementPropAPI {
         
     }
     
-    public static int getMaxId(){
+    public int getMaxId(){
         Query q;
         q = em.createQuery("SELECT MAX(ep.elementPropId) FROM ElementProp ep");
         List<Integer> idList = q.getResultList();

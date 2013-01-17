@@ -114,7 +114,8 @@ public class ModelDB {
         //   List<Element> eList=BeamlineSequenceAPI.getAllElementsOfTypeForSequence("SEQ1", "MARK");
         // System.out.println(BeamlineSequenceAPI.getElementCountForSequence("Sa"));
         try {
-           Map map= BeamParameterAPI.getAllBeamParametersForElement("SEQ1_START");
+            BeamParameterAPI beamParameterAPI = new BeamParameterAPI();
+           Map map= beamParameterAPI.getAllBeamParametersForElement("SEQ1_START");
            System.out.println(map.get("alphaX"));
           
         } catch (IllegalAccessException ex) {

@@ -26,7 +26,8 @@ public class DevModTpMap2BD {
             String elementTypePropDefault = dataMap.get("element_type_prop_default").toString();
             String elementTypePropUnit = dataMap.get("element_type_prop_unit").toString();
             String elementTypePropDatatype = dataMap.get("element_type_prop_datatype").toString();
-            ElementTypePropAPI.setElementTypeProp(null, elementTypePropName, elementTypePropDesc, elementTypePropDefault, elementTypePropUnit, elementTypePropDatatype);
+            ElementTypePropAPI elementTypePropAPI = new ElementTypePropAPI();
+            elementTypePropAPI.setElementTypeProp(null, elementTypePropName, elementTypePropDesc, elementTypePropDefault, elementTypePropUnit, elementTypePropDatatype);
         }
     }
 }

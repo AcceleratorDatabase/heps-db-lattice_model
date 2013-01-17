@@ -40,7 +40,7 @@ public class GoldModelAPI {
      * 
      * @return all present gold models
      */
-    public static List<Model> getAllPresentGoldModels() {
+    public List<Model> getAllPresentGoldModels() {
         // TODO fill in code
         Query q;
         q = em.createNamedQuery("GoldModel.findByGoldStatusInd")
@@ -68,7 +68,7 @@ public class GoldModelAPI {
      * @param line Model Line name
      * @return Gold Model for the specified machine mode and model line 
      */
-    public static Model getGoldModelForMachineModeAndModelLine(String mode, String line) {
+    public Model getGoldModelForMachineModeAndModelLine(String mode, String line) {
         Query q;
 
         q = em.createQuery("SELECT g FROM GoldModel g WHERE"
@@ -94,7 +94,7 @@ public class GoldModelAPI {
      * get default model initial conditions for all Gold tagged model lines
      * @return default model initial conditions for all Gold tagged model lines
      */
-    public static List<BeamParameter> getAllDefaultInitialConditions() {
+    public List<BeamParameter> getAllDefaultInitialConditions() {
         Query q;
         q = em.createQuery("SELECT g from GoldModel g WHERE g.goldStatusInd=\"1\" AND g.modelId.initialConditionInd=\"1\"");
         List<GoldModel> gList = q.getResultList();
@@ -115,7 +115,7 @@ public class GoldModelAPI {
      * @param model_line
      * @return 
      */
-    public static Model getDefaultInitialConditionForModelLine(String model_line) {
+    public Model getDefaultInitialConditionForModelLine(String model_line) {
         Model m = null;
         
         return m;
@@ -125,7 +125,7 @@ public class GoldModelAPI {
      * 
      * @param m 
      */
-    public static void setGoldModel(Model m) {
+    public void setGoldModel(Model m) {
         GoldModel gm = new GoldModel();
         Date date = new Date();
         List<GoldModel> gList = em.createQuery("SELECT g FROM GoldModel g WHERE"
@@ -153,7 +153,7 @@ public class GoldModelAPI {
      * 
      * @param modelId 
      */
-    public static void setGoldModel(int modelId) {
+    public void setGoldModel(int modelId) {
         Query q;
         q = em.createNamedQuery("Model.findByModelId").setParameter("modelId", modelId);
         Model m = (Model) q.getResultList().get(0);

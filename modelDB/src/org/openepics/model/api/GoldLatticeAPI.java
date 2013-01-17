@@ -37,7 +37,7 @@ public class GoldLatticeAPI {
      * 
      * @return all present gold lattices
      */
-    public static List<Lattice> getAllPresentGoldModels() {
+    public List<Lattice> getAllPresentGoldModels() {
         Query q;
         q = em.createNamedQuery("GoldLattice.findByGoldStatusInd")
                 .setParameter("goldStatusInd", GoldLatticeAPI.PRESENT);
@@ -63,7 +63,7 @@ public class GoldLatticeAPI {
      * @param line model line
      * @return the gold model for the specified machine mode and model line
      */
-    public static Lattice getGoldLatticeForMachineModeAndModelLine(String mode, String line) {
+    public Lattice getGoldLatticeForMachineModeAndModelLine(String mode, String line) {
         Query q;
         q=em.createQuery("SELECT g FROM GoldLattice g WHERE"
                 + " g.latticeId.machineModeId.machineModeName = :modeName "
@@ -89,7 +89,7 @@ public class GoldLatticeAPI {
      * 
      * @param l the Lattice to be tagged as Gold
      */
-    public static void setGoldLattice(Lattice l) {
+    public void setGoldLattice(Lattice l) {
         // move present Gold to previous Gold
         GoldLattice gl = new GoldLattice();
         Date date = new Date();
@@ -119,7 +119,7 @@ public class GoldLatticeAPI {
      * Tag a Gold lattice by lattice ID
      * @param latticeId 
      */
-    public static void setGoldLattice(int latticeId) {
+    public void setGoldLattice(int latticeId) {
         Query q;
         q = em.createNamedQuery("Lattice.findByLatticeId").setParameter("latticeId", latticeId);
         Lattice lat = (Lattice) q.getResultList().get(0);
