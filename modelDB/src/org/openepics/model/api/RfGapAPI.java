@@ -25,7 +25,7 @@ public class RfGapAPI {
     static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     static EntityManager em = emf.createEntityManager();
 
-    public static List<RfGap> getAllRfgapsForCavity(String cav) {
+    public List<RfGap> getAllRfgapsForCavity(String cav) {
         
         Query q;
         q = em.createQuery("SELECT rg from RfGap rg WHERE rg.cavityId.elementName = :elementname ")
@@ -35,7 +35,7 @@ public class RfGapAPI {
         return gaps;
     } 
     
-     public static RfGap getRfGapByName(String gapName) {
+     public RfGap getRfGapByName(String gapName) {
         Query q;
         q = em.createNamedQuery("RfGap.findByGapName").setParameter("gapName", gapName);
         List<RfGap> gapList = q.getResultList();
@@ -46,7 +46,7 @@ public class RfGapAPI {
         }
     }
     
-    public static void setRfGap(String gap_name,double pos, double TTF, double ampFactor, int endCell_ind, 
+    public void setRfGap(String gap_name,double pos, double TTF, double ampFactor, int endCell_ind, 
             double gapOffset, double len, double phaseFactor, Element cavity) {
         RfGap rf=new RfGap();
         rf.setPos(pos);

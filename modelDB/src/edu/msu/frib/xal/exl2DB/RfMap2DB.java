@@ -71,7 +71,9 @@ public class RfMap2DB {
 
 
             }
-            RfGap rfGap = RfGapAPI.getRfGapByName(gap_name);
+            
+            RfGapAPI rfGapAPI = new RfGapAPI();
+            RfGap rfGap = rfGapAPI.getRfGapByName(gap_name);
             ElementAPI elementAPI = new ElementAPI();
             cavity = elementAPI.getElementByName(cavity_name);
             if (rfGap != null) {
@@ -81,7 +83,7 @@ public class RfMap2DB {
                 System.out.println("The cavity " + cavity_name + " doesn't exist. Please insert it firse!");
             }
             if (rfGap == null && cavity != null) {
-                RfGapAPI.setRfGap(gap_name, pos, TTF, ampFactor, endCell_ind, gapOffset, len, phaseFactor, cavity);
+                rfGapAPI.setRfGap(gap_name, pos, TTF, ampFactor, endCell_ind, gapOffset, len, phaseFactor, cavity);
             }
         }
 

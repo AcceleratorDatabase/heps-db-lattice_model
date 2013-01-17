@@ -194,8 +194,9 @@ public class BeamlineSequenceAPI {
                     ElementProp ep = (ElementProp) it1.next();
                     em.remove(em.merge(ep));
                 }
-
-                List<RfGap> rfList = RfGapAPI.getAllRfgapsForCavity(e.getElementName());
+                
+                RfGapAPI rfGapAPI = new RfGapAPI();
+                List<RfGap> rfList = rfGapAPI.getAllRfgapsForCavity(e.getElementName());
                 Iterator it2 = rfList.iterator();
                 while (it2.hasNext()) {
                     RfGap rf = (RfGap) it2.next();
@@ -231,8 +232,9 @@ public class BeamlineSequenceAPI {
                     ElementProp ep = (ElementProp) it1.next();
                     em.remove(em.merge(ep));
                 }
-
-                List<RfGap> rfList = RfGapAPI.getAllRfgapsForCavity(e.getElementName());
+                
+                RfGapAPI rfGapAPI = new RfGapAPI();
+                List<RfGap> rfList = rfGapAPI.getAllRfgapsForCavity(e.getElementName());
                 Iterator it2 = rfList.iterator();
                 while (it2.hasNext()) {
                     RfGap rf = (RfGap) it2.next();

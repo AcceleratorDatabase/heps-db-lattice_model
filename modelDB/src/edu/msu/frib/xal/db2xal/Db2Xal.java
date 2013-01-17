@@ -555,7 +555,8 @@ public class Db2Xal {
 
                         // now we need to check if this is an RF cavity and fill in all the RF gaps within this cavity
                         if (e.getElementTypeId().getElementType().equals("CAV")) {
-                            List<RfGap> gaps = RfGapAPI.getAllRfgapsForCavity(e.getElementName());
+                            RfGapAPI rfGapAPI = new RfGapAPI();
+                            List<RfGap> gaps = rfGapAPI.getAllRfgapsForCavity(e.getElementName());
                             Iterator<RfGap> gapIt = gaps.iterator();
                             while (gapIt.hasNext()) {
                                 RfGap rg = gapIt.next();
