@@ -29,6 +29,11 @@ public class ModelDB {
     static final EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
+    
+    public void setModelDB() {
+        // do nothing but to satisfy deployment to Glassfish
+    }
+    
     /**
      * get all element type to modeling class mappings
      *

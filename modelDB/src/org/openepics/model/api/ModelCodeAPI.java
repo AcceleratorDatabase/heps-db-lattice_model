@@ -25,6 +25,33 @@ public class ModelCodeAPI {
     @PersistenceContext
     
     /**
+     * Set a new model code in DB
+     * @param codeName model code name, e.g. XAL
+     * @param algorithm algorithm used, e.g. EnvelopeTracker
+     */
+    public void setModelCode(String codeName) {
+        ModelCode mc = new ModelCode();
+        mc.setCodeName(codeName);
+        em.getTransaction().begin();
+        em.persist(mc);
+        em.getTransaction().commit();
+    }    
+    
+    /**
+     * Set a new model code in DB
+     * @param codeName model code name, e.g. XAL
+     * @param algorithm algorithm used, e.g. EnvelopeTracker
+     */
+    public void setModelCode(String codeName, String algorithm) {
+        ModelCode mc = new ModelCode();
+        mc.setCodeName(codeName);
+        mc.setAlgorithm(algorithm);
+        em.getTransaction().begin();
+        em.persist(mc);
+        em.getTransaction().commit();
+    }
+    
+    /**
      * Get all modeling codes
      * @return all modeling codes
      */
@@ -59,20 +86,5 @@ public class ModelCodeAPI {
         
         return mc;
     }
-    
-    /**
-     * Set a new model code in DB
-     * @param codeName model code name, e.g. XAL
-     * @param algorithm algorithm used, e.g. EnvelopeTracker
-     */
-    public void setModelCode(String codeName, String algorithm) {
-        ModelCode mc = new ModelCode();
-        mc.setCodeName(codeName);
-        mc.setAlgorithm(algorithm);
-        em.getTransaction().begin();
-        em.persist(mc);
-        em.getTransaction().commit();
-    }
-    
-    
+       
 }
