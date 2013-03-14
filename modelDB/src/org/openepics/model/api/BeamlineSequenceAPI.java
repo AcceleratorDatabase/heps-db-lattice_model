@@ -6,6 +6,7 @@ package org.openepics.model.api;
 
 import java.util.Iterator;
 import java.util.List;
+import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -22,6 +23,7 @@ import org.openepics.model.entity.RfGap;
  * @author chu
  * @author lv
  */
+@Stateless
 public class BeamlineSequenceAPI {
 
     @PersistenceUnit
