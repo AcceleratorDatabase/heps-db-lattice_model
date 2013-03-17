@@ -346,7 +346,8 @@ public class Db2Xal {
         // write to file
         BufferedWriter writer = null;
         try {
-            File file = new File("frib.impl");
+           // File file = new File("frib.impl");
+            File file = new File("csns.impl");
             writer = new BufferedWriter(new FileWriter(file));
             writer.write(sb.toString());
         } catch (IOException ex) {
@@ -611,7 +612,8 @@ public class Db2Xal {
         // write to file
         BufferedWriter writer = null;
         try {
-            File file = new File("frib.xdxf");
+           // File file = new File("frib.xdxf");
+            File file = new File("csns.xdxf");
             writer = new BufferedWriter(new FileWriter(file));
             writer.write(sb.toString());
         } catch (IOException ex) {
@@ -633,7 +635,7 @@ public class Db2Xal {
 
         // TODO get the accelerator name to override the default one (accName)
 
-        x.write2IMPL();
+       // x.write2IMPL();
         x.write2ModelParam();
         x.write2XDXF();
     }

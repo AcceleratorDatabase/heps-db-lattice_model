@@ -38,11 +38,13 @@ public class EncapData2DB {
         if (latticeName == null || "".equals(latticeName)) {
             System.out.println("Please insert the Lattice name!");
         } else {
+           
             LatticeAPI latticeAPI = new LatticeAPI();
             Lattice l = latticeAPI.getLatticeByName(latticeName);
             if (l != null) {
                 System.out.println("The Lattice " + latticeName + " is already in the database! Please don't insert repeatedly!");
             } else {
+                
                 Connection conn = null;
                 PreparedStatement state = null;
                 PreparedStatement propState = null;
@@ -57,7 +59,7 @@ public class EncapData2DB {
                     conn = (Connection) DBTools.getConnection();
                     conn.setAutoCommit(false);
                     int lattice_id = latticeAPI.setLattice(latticeName, null);
-
+                    
                     ArrayList eleNameList = ReadEleSheet.getColList(wb, sheetName, "Eng_name", "Physical label");
                     ArrayList sequenceList = ReadEleSheet.getColList(wb, sheetName, "Section", "Physical Label");
                     ArrayList eleTypeList = ReadEleSheet.getColList(wb, sheetName, "XAL_KeyWord", "Physical Label");
@@ -71,8 +73,9 @@ public class EncapData2DB {
                     int t = 0;
                     int p_sign = 0;
                     int e_sign = 0;
-
+                   // System.out.println(eleNameList.size()+"**************"+sequenceList.size()+"*******"+eleTypeList.size()+"*********"+encapDataList.size());
                     if (eleNameList.size() == sequenceList.size() && sequenceList.size() == eleTypeList.size() && eleTypeList.size() == encapDataList.size()) {
+                        
                         Iterator it = encapDataList.iterator();
                         while (it.hasNext()) {
                             ArrayList rowClsList = (ArrayList) it.next();
@@ -91,6 +94,7 @@ public class EncapData2DB {
                                 if (et == null) {
                                     System.out.println("Warning:The element_type " + ele_type + " doesn't exist!");
                                 } else {
+                                    
                                     int element_id;
                                     String ele_name = (String) eleNameList.get(t);
                                     ElementAPI elementAPI = new ElementAPI();
@@ -131,11 +135,15 @@ public class EncapData2DB {
 
 
                                         Iterator it1 = rowClsList.iterator();
+                                        
                                         while (it1.hasNext()) {
                                             ElementCell cellProp = (ElementCell) it1.next();
                                             String tableName = cellProp.getTableName();
+                                           
                                             if ("element_prop".equals(tableName)) {
+                                               
                                                 Object value = cellProp.getValue();
+                                                 
                                                 if (!"".equals(value) && value != null) {
                                                     p_sign++;
                                                     String sql2 = "insert into element_prop values()";
@@ -147,6 +155,7 @@ public class EncapData2DB {
 
                                                     String category = cellProp.getCategory();
 
+                                                   
                                                     String sql3 = "update element_prop set element_id=?,prop_category=?,element_prop_name=?,lattice_id=? where element_prop_id=?";
                                                     if ("".equals(category)) {
                                                         category = null;
@@ -166,6 +175,7 @@ public class EncapData2DB {
 
                                                     propStateSign = true;
 
+                                                    //System.out.println(cellProp.getType()+"******"+value);
                                                     String sql4 = "update element_prop set " + cellProp.getType() + "=? where element_prop_id=?";
                                                     state = (PreparedStatement) conn.prepareStatement(sql4);
                                                     state.setObject(1, value);

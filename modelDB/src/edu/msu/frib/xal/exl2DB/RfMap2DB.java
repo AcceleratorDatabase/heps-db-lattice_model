@@ -80,7 +80,7 @@ public class RfMap2DB {
                 System.out.println("The RfGap " + gap_name + " is already in the database! Please don't insert repeatedly!");
             }
             if (cavity == null) {
-                System.out.println("The cavity " + cavity_name + " doesn't exist. Please insert it firse!");
+                System.out.println("The cavity " + cavity_name + " doesn't exist. Please insert it first!");
             }
             if (rfGap == null && cavity != null) {
                 rfGapAPI.setRfGap(gap_name, pos, TTF, ampFactor, endCell_ind, gapOffset, len, phaseFactor, cavity);

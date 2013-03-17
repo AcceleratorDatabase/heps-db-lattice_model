@@ -20,6 +20,7 @@ public class DataEncap {
         ArrayList XALLabels = ReadEleSheet.getRowLabels(wb, sheetName, "XAL label");
         ArrayList DBLabels = ReadEleSheet.getRowLabels(wb, sheetName, "DB label");
         ArrayList dataList = ReadEleSheet.getDataList(wb, sheetName);
+        //System.out.println("*********"+DBLabels.size());
 
         ArrayList encapDataList = new ArrayList();
 
@@ -27,38 +28,45 @@ public class DataEncap {
         while (it.hasNext()) {
             ArrayList<ElementCell> rowClsList = new ArrayList();
             ArrayList oneRow = (ArrayList) it.next();
+
             int i = 0;
             Iterator dbit = DBLabels.iterator();
             while (dbit.hasNext()) {
                 Object object = dbit.next();
-                if (!"".equals(object)) {
 
+                if (!"".equals(object)) {
+                    //System.out.println(object);
                     ElementCell cellProp = new ElementCell();
                     String dbCell = (String) object;
+                    //System.out.println(dbCell);
                     int dbSepLine = dbCell.indexOf("/");
+
                     String firstStr = dbCell.substring(0, dbSepLine);
                     String secStr = dbCell.substring(dbSepLine + 1);
-                    if ("element_prop".equals(firstStr) && !"".equals(oneRow.get(i))) {
-                        String xalLabel = (String) XALLabels.get(i);
-                        int xalSepLine = xalLabel.indexOf("_");
-                        if (xalSepLine > -1) {
-                            cellProp.setCategory(xalLabel.substring(0, xalSepLine));
-                            cellProp.setName(xalLabel.substring(xalSepLine + 1));
+                    if (!("".equals(oneRow.get(i)) || " ".equals(oneRow.get(i)))) {
+                        if ("element_prop".equals(firstStr)) {
 
-                        } else {
-                            cellProp.setName(xalLabel);
+                            String xalLabel = (String) XALLabels.get(i);
+                            int xalSepLine = xalLabel.indexOf("_");
+                            if (xalSepLine > -1) {
+                                cellProp.setCategory(xalLabel.substring(0, xalSepLine));
+                                cellProp.setName(xalLabel.substring(xalSepLine + 1));
+
+                            } else {
+                                cellProp.setName(xalLabel);
+                            }
+                            cellProp.setTableName("element_prop");
+                            cellProp.setType(secStr);
+                            cellProp.setValue(oneRow.get(i));
                         }
-                        cellProp.setTableName("element_prop");
-                        cellProp.setType(secStr);
-                        cellProp.setValue(oneRow.get(i));
-                    } else {
-                        cellProp.setTableName(firstStr);
-                        cellProp.setName(secStr);
-                        cellProp.setValue(oneRow.get(i));
+                        if (!"element_prop".equals(firstStr)) {
+                            cellProp.setTableName(firstStr);
+                            cellProp.setName(secStr);
+                            cellProp.setValue(oneRow.get(i));
+                        }
+
+                        rowClsList.add(cellProp);
                     }
-
-                    rowClsList.add(cellProp);
-
                 }
 
                 i++;
