@@ -24,8 +24,8 @@ public class BeamPamt2DB {
         String dataType;
         Iterator it = mapData.iterator();
         while (it.hasNext()) {
-            Map dataMap=(Map) it.next();
-            
+            //Map dataMap=(Map) it.next();
+  
             /*Map.Entry entry = (Map.Entry) it.next();
             if (entry.getKey().toString().equals("particle_type")) {
                 speciesName = entry.getValue().toString();

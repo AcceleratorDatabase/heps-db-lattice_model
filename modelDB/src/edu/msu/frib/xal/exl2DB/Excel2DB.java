@@ -22,7 +22,7 @@ public class Excel2DB {
 
     public static void exl2DB(String filePath,String latticeName) {
         Workbook wb = ReadExl.getWorkbook(filePath);
-
+        
         SeqMap2DB seqMap2DB = new SeqMap2DB();
         seqMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "beamline sequences")));
         
