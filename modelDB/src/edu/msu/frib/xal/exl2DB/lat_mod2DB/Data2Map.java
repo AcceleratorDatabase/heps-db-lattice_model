@@ -16,6 +16,7 @@ import java.util.Map;
  */
 public class Data2Map {
 
+    
     public static ArrayList getMapData(ArrayList dataList) {
         ArrayList mapList = new ArrayList();
         ArrayList labelRow = (ArrayList) dataList.get(0);

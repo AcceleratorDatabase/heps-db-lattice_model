@@ -24,8 +24,7 @@ public class DBTools {
             Class.forName(driver);
             conn = DriverManager.getConnection(url, userName, userAddress);
         } catch (Exception e) {
-
-            e.printStackTrace();
+             e.printStackTrace();
         }
 
         return conn;
@@ -54,7 +53,7 @@ public class DBTools {
             try {
                 state.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                 e.printStackTrace();
             }
         }
     }
@@ -63,8 +62,7 @@ public class DBTools {
         try {
             rs.close();
         } catch (SQLException e) {
-
-            e.printStackTrace();
+             e.printStackTrace();
         }
     }
 }

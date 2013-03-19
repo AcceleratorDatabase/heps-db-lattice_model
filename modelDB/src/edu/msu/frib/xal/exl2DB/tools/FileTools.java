@@ -33,9 +33,7 @@ public class FileTools {
         Workbook wb=null;
         try {
             wb=WorkbookFactory.create(inp);
-        } catch (IOException ex) {
-            Logger.getLogger(FileTools.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (InvalidFormatException ex) {
+        } catch (IOException | InvalidFormatException ex) {
             Logger.getLogger(FileTools.class.getName()).log(Level.SEVERE, null, ex);
         }
         return wb;

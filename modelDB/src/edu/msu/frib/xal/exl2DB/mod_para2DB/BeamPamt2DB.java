@@ -18,7 +18,7 @@ public class BeamPamt2DB {
         String speciesName;
         double speciesMass;
         double speciesCharge;
-        
+ 
         String propertyName;
         Object propertyValue;
         String dataType;

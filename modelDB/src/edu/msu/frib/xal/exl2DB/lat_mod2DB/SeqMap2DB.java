@@ -27,6 +27,7 @@ public class SeqMap2DB {
     static EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
+    
     public void instDB(ArrayList mapData) {
         Iterator it = mapData.iterator();
         while (it.hasNext()) {

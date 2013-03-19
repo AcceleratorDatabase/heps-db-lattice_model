@@ -67,9 +67,6 @@ public class RfMap2DB {
                 if (entry.getKey().toString().toLowerCase().contains("phase") && entry.getKey().toString().toLowerCase().contains("factor")) {
                     phaseFactor = Double.parseDouble(entry.getValue().toString());
                 }
-
-
-
             }
             
             RfGapAPI rfGapAPI = new RfGapAPI();
