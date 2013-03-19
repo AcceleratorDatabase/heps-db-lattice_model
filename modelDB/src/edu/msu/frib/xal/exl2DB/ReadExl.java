@@ -2,8 +2,9 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.msu.frib.xal.exl2DB.tools;
+package edu.msu.frib.xal.exl2DB;
 
+import edu.msu.frib.xal.exl2DB.tools.FileTools;
 import edu.msu.frib.xal.exl2DB.tools.FileTools;
 import java.io.FileInputStream;
 import org.apache.poi.ss.usermodel.Workbook;

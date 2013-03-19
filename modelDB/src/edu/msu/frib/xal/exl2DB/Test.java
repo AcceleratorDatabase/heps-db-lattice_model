@@ -2,13 +2,14 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.msu.frib.xal.exl2DB.lat_mod2DB;
+package edu.msu.frib.xal.exl2DB;
 
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
 import edu.msu.frib.xal.exl2DB.ele2DB.DataEncap;
 import edu.msu.frib.xal.exl2DB.ele2DB.ReadEleSheet;
+import edu.msu.frib.xal.exl2DB.Excel2DB;
 import edu.msu.frib.xal.exl2DB.tools.DBTools;
 import java.sql.ResultSet;
 import java.sql.SQLException;
