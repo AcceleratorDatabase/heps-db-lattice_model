@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.msu.frib.xal.exl2DB;
+package edu.msu.frib.xal.exl2DB.lat_mod2DB;
 
 import java.util.ArrayList;
 import java.util.Iterator;

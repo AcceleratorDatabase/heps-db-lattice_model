@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.msu.frib.xal.exl2DB;
+package edu.msu.frib.xal.exl2DB.tools;
 
 import edu.msu.frib.xal.exl2DB.tools.FileTools;
 import java.io.FileInputStream;

@@ -19,7 +19,7 @@ public class DBTools {
         String driver = "com.mysql.jdbc.Driver";
         String url = "jdbc:mysql://localhost:3306/discs_model?rewriteBatchedStatements=true";
         String userName = "root";
-        String userAddress = "123456";
+        String userAddress = "826529";
         try {
             Class.forName(driver);
             conn = DriverManager.getConnection(url, userName, userAddress);
