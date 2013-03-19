@@ -4,8 +4,8 @@
  */
 package edu.msu.frib.xal.exl2DB.lat_mod2DB;
 
-import edu.msu.frib.xal.exl2DB.tools.ReadExl;
 import edu.msu.frib.xal.exl2DB.ele2DB.EncapData2DB;
+import edu.msu.frib.xal.exl2DB.tools.ReadExl;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /**
@@ -20,6 +20,7 @@ public class Excel2DB {
 
         SeqMap2DB seqMap2DB = new SeqMap2DB();
         seqMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "beamline sequences")));
+        
         DevTpMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device types")));
         DevModTpMap2BD.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device-model types")));
         EncapData2DB.instDB(wb, "elements", latticeName);
