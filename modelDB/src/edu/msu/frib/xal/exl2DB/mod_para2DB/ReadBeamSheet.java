@@ -20,8 +20,7 @@ public class ReadBeamSheet {
     public static int getColNum(Workbook wb, String sheetName) {
         Sheet sheet = wb.getSheet(sheetName);
         return sheet.getRow(0).getLastCellNum();
-    }
-    
+    }    
     /*
      *  @param rowLabel:physical, xal, unit, data type
      */

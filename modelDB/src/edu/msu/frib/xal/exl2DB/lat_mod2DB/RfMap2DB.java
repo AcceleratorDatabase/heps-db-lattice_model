@@ -83,6 +83,5 @@ public class RfMap2DB {
                 rfGapAPI.setRfGap(gap_name, pos, TTF, ampFactor, endCell_ind, gapOffset, len, phaseFactor, cavity);
             }
         }
-
     }
 }

@@ -34,9 +34,6 @@ public class BeamPamt2DB {
             } else if (entry.getKey().toString().equals("particle_charge")) {
                 speciesCharge = Double.parseDouble(entry.getValue().toString());
             }*/
-
-
-
         }
     }
 }

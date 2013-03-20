@@ -16,8 +16,7 @@ import org.openepics.model.entity.ElementType;
  * @author chu
  */
 public class DevTpMap2DB {
-
-    
+   
     public static void instDB(ArrayList mapData) {
         Iterator it = mapData.iterator();
         while (it.hasNext()) {

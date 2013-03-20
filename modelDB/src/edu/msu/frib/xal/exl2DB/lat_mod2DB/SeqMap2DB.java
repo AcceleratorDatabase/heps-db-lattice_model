@@ -60,4 +60,5 @@ public class SeqMap2DB {
             }
         }
     }
+    
 }

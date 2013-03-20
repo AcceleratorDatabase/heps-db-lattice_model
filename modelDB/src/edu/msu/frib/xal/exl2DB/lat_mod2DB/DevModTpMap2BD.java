@@ -39,4 +39,5 @@ public class DevModTpMap2BD {
             elementTypePropAPI.setElementTypeProp(et, elementTypePropName, elementTypePropDesc, elementTypePropDefault, elementTypePropUnit, elementTypePropDatatype);
         }
     }
+    
 }
