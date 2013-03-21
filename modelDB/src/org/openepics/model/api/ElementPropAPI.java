@@ -187,6 +187,10 @@ public class ElementPropAPI {
             ElementProp ep = it.next();
             if (ep.getElementPropDouble() != null) {
                 atts.put(ep.getElementPropName(), ep.getElementPropDouble());
+            } else if (ep.getElementPropString() != null) {
+                atts.put(ep.getElementPropName(), ep.getElementPropString());
+            } else if (ep.getElementPropInt() != null) {
+                atts.put(ep.getElementPropName(), ep.getElementPropInt());
             }
         }
         

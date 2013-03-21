@@ -347,7 +347,7 @@ public class Db2Xal {
         BufferedWriter writer = null;
         try {
            // File file = new File("frib.impl");
-            File file = new File("csns.impl");
+            File file = new File(accName + ".impl");
             writer = new BufferedWriter(new FileWriter(file));
             writer.write(sb.toString());
         } catch (IOException ex) {
@@ -613,7 +613,7 @@ public class Db2Xal {
         BufferedWriter writer = null;
         try {
            // File file = new File("frib.xdxf");
-            File file = new File("csns.xdxf");
+            File file = new File(accName + ".xdxf");
             writer = new BufferedWriter(new FileWriter(file));
             writer.write(sb.toString());
         } catch (IOException ex) {
