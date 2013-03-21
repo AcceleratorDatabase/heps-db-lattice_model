@@ -4,6 +4,7 @@
  */
 package org.openepics.model.api;
 
+import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 import javax.ejb.Stateless;
@@ -14,6 +15,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import org.openepics.model.entity.BeamlineSequence;
+import org.openepics.model.entity.BlsequenceLattice;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
 import org.openepics.model.entity.RfGap;
@@ -42,7 +44,7 @@ public class BeamlineSequenceAPI {
      * @param seq_length sequence length
      * @param seq_desc description for this sequence
      */
-    public void setBeamlineSequence(String seq_name, String first_elem_name,
+    public int setBeamlineSequence(String seq_name, String first_elem_name,
             String last_elem_name, String previous_seq, double seq_length, String seq_desc) {
         BeamlineSequence bs = new BeamlineSequence();
         bs.setSequenceName(seq_name);
@@ -54,6 +56,37 @@ public class BeamlineSequenceAPI {
         em.getTransaction().begin();
         em.persist(bs);
         em.getTransaction().commit();
+        
+        return bs.getBeamlineSequenceId();
+    }
+    
+   
+     /**
+     * Set a new beamline sequence
+     *
+     * @param seq_name sequence name
+     * @param first_elem_name first element name
+     * @param last_elem_name last element name
+     * @param previous_seq previous sequence name
+     * @param seq_length sequence length
+     * @param seq_desc description for this sequence
+     */
+    public int setBeamlineSequence(String seq_name, String first_elem_name,
+            String last_elem_name, String previous_seq, double seq_length, 
+            String seq_desc,Collection<BlsequenceLattice> blsequenceLatticeCollection) {
+        BeamlineSequence bs = new BeamlineSequence();
+        bs.setSequenceName(seq_name);
+        bs.setFirstElementName(first_elem_name);
+        bs.setLastElementName(last_elem_name);
+        bs.setPredecessorSequence(previous_seq);
+        bs.setSequenceLength(seq_length);
+        bs.setSequenceDescription(seq_desc);
+        bs.setBlsequenceLatticeCollection(blsequenceLatticeCollection);
+        em.getTransaction().begin();
+        em.persist(bs);
+        em.getTransaction().commit();
+        
+        return bs.getBeamlineSequenceId();
     }
     
     /**

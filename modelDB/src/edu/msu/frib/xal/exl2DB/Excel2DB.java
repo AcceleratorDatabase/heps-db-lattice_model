@@ -24,7 +24,7 @@ public class Excel2DB {
         Workbook wb = ReadExl.getWorkbook(filePath);
     
         SeqMap2DB seqMap2DB = new SeqMap2DB();
-        seqMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "beamline sequences")));       
+        seqMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "beamline sequences")),latticeName);       
         DevTpMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device types")));
         DevModTpMap2BD.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device-model types")));
         EncapData2DB.instDB(wb, "elements", latticeName);
