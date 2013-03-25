@@ -474,20 +474,21 @@ public class Db2Xal {
                         // set magnet attributes
                         Map magAttMap = elementPropAPI.getMagnetAttributesForElement(e.getElementName());
                         if (!magAttMap.isEmpty()) {
+                            if (!e.getElementTypeId().getElementType().equals("CAV")) {
+                                sb.append("            <magnet ");
 
-                            sb.append("            <magnet ");
+                                Set keySet2 = magAttMap.keySet();
+                                Iterator<String> keyIt2 = keySet2.iterator();
+                                while (keyIt2.hasNext()) {
+                                    String key2 = keyIt2.next();
+                                    sb.append(key2);
+                                    sb.append("=\"");
+                                    sb.append(magAttMap.get(key2));
+                                    sb.append("\" ");
+                                }
 
-                            Set keySet2 = magAttMap.keySet();
-                            Iterator<String> keyIt2 = keySet2.iterator();
-                            while (keyIt2.hasNext()) {
-                                String key2 = keyIt2.next();
-                                sb.append(key2);
-                                sb.append("=\"");
-                                sb.append(magAttMap.get(key2));
-                                sb.append("\" ");
-                            }
-
-                            sb.append("/>\n");
+                                sb.append("/>\n");
+                            } 
                         }
 
                         // set bpm attributes 
@@ -524,6 +525,13 @@ public class Db2Xal {
                                 sb.append(rfAttMap.get(key4));
                                 sb.append("\" ");
                             }
+                            
+                            if (!magAttMap.isEmpty()) {
+                                    sb.append("len");
+                                    sb.append("=\"");
+                                    sb.append(magAttMap.get("len"));
+                                    sb.append("\" ");                               
+                            }
 
                             sb.append("/>\n");
                         }
@@ -534,7 +542,8 @@ public class Db2Xal {
                     if (!e.getElementTypeId().getElementType().equals("MARK")) {
                         sb.append("         <channelsuite>\n");
                         // for magnets
-                        if (!elementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty()) {
+                        if (!elementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty() &&
+                               !e.getElementTypeId().getElementType().equals("CAV") ) {
                             sb.append("            <channel handle=\"fieldRB\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":B\" settable=\"false\"/>\n");
