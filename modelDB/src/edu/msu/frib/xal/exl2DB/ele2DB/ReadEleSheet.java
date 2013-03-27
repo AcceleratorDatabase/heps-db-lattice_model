@@ -175,7 +175,7 @@ public class ReadEleSheet {
                         }
                     } catch (NullPointerException e) {
                         o = "";
-                    }
+                    }                
                     oneRow.add(o);
                 }
                 dataList.add(oneRow);

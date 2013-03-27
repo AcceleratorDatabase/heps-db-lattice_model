@@ -44,4 +44,6 @@ public class BlsequenceLatticeAPI {
        em.persist(blsl);
        em.getTransaction().commit();
     }
+   
+   
 }

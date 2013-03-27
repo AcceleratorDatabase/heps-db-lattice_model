@@ -46,7 +46,7 @@ public class BeamParameterAPI {
      * @return all beam parameters for the specified element
      */
     public Map<String, Object> getAllBeamParametersForElement(String elm) 
-            throws NoSuchMethodException, IllegalAccessException, IllegalArgumentException{
+           {
         Query q;
         q = em.createQuery("SELECT  bp FROM BeamParameter bp WHERE bp.elementId.elementName=:elName")
                 .setParameter("elName", elm);
@@ -66,12 +66,26 @@ public class BeamParameterAPI {
                 for (int i = 1; i < l; i++) {
                     String fieldName = fields[i].getName();
                     String getter = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-                    Method method = bp.getClass().getMethod(getter, new Class[]{});
+                    Method method = null;
+                    try {
+                        method = bp.getClass().getMethod(getter, new Class[]{});
+                    } catch (NoSuchMethodException ex) {
+                        Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (SecurityException ex) {
+                        Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     Object value = null;
                     try {
-                        value = method.invoke(bp, new Object[]{});
+                        try {
+                            value = method.invoke(bp, new Object[]{});
+                        } catch (IllegalAccessException ex) {
+                            Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (IllegalArgumentException ex) {
+                            Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+                        }
                     } catch (InvocationTargetException ex) {
                         Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+                      
                     }
                     map.put(fieldName, value);
                 }
