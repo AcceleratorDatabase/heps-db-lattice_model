@@ -93,19 +93,19 @@ public class Db2Xal {
         HashMap<String, Integer> spMap = new HashMap<>();
         ArrayList<String> spList = new ArrayList<>();
         for (int i = 0; i < bpList.size(); i++) {
-            if (!spList.contains(bpList.get(i).getSpeciesName())) {
-                spMap.put(bpList.get(i).getSpeciesName(), i);
-                spList.add(bpList.get(i).getSpeciesName());
+            if (!spList.contains(bpList.get(i).getParticleType().getParticleName())) {
+                spMap.put(bpList.get(i).getParticleType().getParticleName(), i);
+                spList.add(bpList.get(i).getParticleType().getParticleName());
             }
         }
         // fill in all the distinct species
         for (int j = 0; j < spList.size(); j++) {
             sb.append("     <record name=\"");
-            sb.append(bpList.get(spMap.get(spList.get(j))).getSpeciesName());
+            sb.append(bpList.get(spMap.get(spList.get(j))).getParticleType().getParticleName());
             sb.append("\" mass=\"");
-            sb.append(bpList.get(spMap.get(spList.get(j))).getSpeciesMass());
+            sb.append(bpList.get(spMap.get(spList.get(j))).getParticleType().getParticleMass());
             sb.append("\" charge=\"");
-            sb.append(bpList.get(spMap.get(spList.get(j))).getSpeciesCharge());
+            sb.append(bpList.get(spMap.get(spList.get(j))).getParticleType().getParticleCharge());
             sb.append("\"/>\n");
         }
         sb.append("  </table>\n");
@@ -280,7 +280,7 @@ public class Db2Xal {
                 sb.append("     <record name=\"");
                 sb.append(bpList.get(i).getModelId().getModelName());
                 sb.append("\" species=\"");
-                sb.append(bpList.get(i).getSpeciesName());
+                sb.append(bpList.get(i).getParticleType().getParticleName());
                 sb.append("\" ");
                 for (int j = 0; j < bppList.size(); j++) {
                     if (bppList.get(j).getPropCategory().equals("location")) {
@@ -529,7 +529,7 @@ public class Db2Xal {
                             if (!magAttMap.isEmpty()) {
                                     sb.append("len");
                                     sb.append("=\"");
-                                    sb.append(magAttMap.get("len"));
+                                    sb.append(magAttMap.get(""));
                                     sb.append("\" ");                               
                             }
 
