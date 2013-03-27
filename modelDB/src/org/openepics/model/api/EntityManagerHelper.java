@@ -94,7 +94,8 @@ public class EntityManagerHelper {
              try {
                  EntityManagerHelper.rollback();
                  logger.log(Level.INFO, "Transaction rollback success");                
-             } catch (Exception ex) {              
+             } catch (Exception ex) {
+                 
                  logger.log(Level.SEVERE, "Transaction rollback exception", ex);
              }
          } finally {
