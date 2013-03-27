@@ -11,6 +11,9 @@ import edu.msu.frib.xal.exl2DB.lat_mod2DB.DevTpMap2DB;
 import edu.msu.frib.xal.exl2DB.lat_mod2DB.ReadSheet;
 import edu.msu.frib.xal.exl2DB.lat_mod2DB.RfMap2DB;
 import edu.msu.frib.xal.exl2DB.lat_mod2DB.SeqMap2DB;
+import java.sql.SQLException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /**
@@ -26,8 +29,8 @@ public class Excel2DB {
         SeqMap2DB seqMap2DB = new SeqMap2DB();
         seqMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "beamline sequences")),latticeName);       
         DevTpMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device types")));
-        DevModTpMap2BD.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device-model types")));
-        EncapData2DB.instDB(wb, "elements", latticeName);
+        DevModTpMap2BD.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device-model types")));            
+        EncapData2DB.instDB(wb, "elements", latticeName);     
         RfMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "RF Gaps")));
     }
 }

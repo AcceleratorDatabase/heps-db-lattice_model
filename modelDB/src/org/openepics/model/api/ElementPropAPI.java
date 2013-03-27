@@ -206,22 +206,23 @@ public class ElementPropAPI {
      * @param prop elment prop value 
      * @return initialized ElementProp
      */
-    public ElementProp setElementProperty(Element e, String propCategory, String propName, Object prop) {
+    public ElementProp setElementProperty(Element e, String propCategory, String propName,String datatype, Object prop) {
         ElementProp ep = new ElementProp();
         ep.setElementId(e);
         ep.setPropCategory(propCategory);
         ep.setElementPropName(propName);
-        try{
-           double dval=Double.parseDouble(prop.toString());
-           int ival=(int)dval;
-           if(Math.abs(dval-ival)<Math.pow(10, -10)) ep.setElementPropInt(ival);
-           else ep.setElementPropDouble(dval);
-        }catch(Exception e1){
-           ep.setElementPropString(prop.toString());
-        }
-        return ep;
-       
-        
+        switch (datatype.toLowerCase()) {
+            case "string":
+                ep.setElementPropString(prop.toString());
+                break;
+            case "int":
+                ep.setElementPropInt(Integer.parseInt(prop.toString()));
+                break;
+            case "double":
+                ep.setElementPropDouble(Double.parseDouble(prop.toString()));
+                break;
+        }      
+        return ep;               
     }
     
     public int getMaxId(){
@@ -234,6 +235,10 @@ public class ElementPropAPI {
         else {
             return idList.get(0);
         }
+        
+    }
+    
+    public void deleteElementProp(ElementProp ep){
         
     }
     

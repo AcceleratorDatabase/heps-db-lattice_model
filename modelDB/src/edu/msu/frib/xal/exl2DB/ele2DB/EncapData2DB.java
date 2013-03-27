@@ -17,6 +17,8 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.apache.poi.ss.usermodel.Workbook;
 import org.openepics.model.api.BeamlineSequenceAPI;
 import org.openepics.model.api.ElementAPI;
@@ -58,10 +60,10 @@ public class EncapData2DB {
             boolean eStateSign = false;
             boolean sStateSign = false;
             try {
-                conn = (Connection) DBTools.getConnection();
+                conn = (Connection) DBTools.getConnection();           
                 conn.setAutoCommit(false);
                 //int lattice_id = latticeAPI.setLattice(latticeName, null);
-                int lattice_id=l.getLatticeId();
+                int lattice_id = l.getLatticeId();
                 ArrayList eleNameList = ReadEleSheet.getColList(wb, sheetName, "Eng_name", "Physical label");
                 ArrayList sequenceList = ReadEleSheet.getColList(wb, sheetName, "Section", "Physical Label");
                 ArrayList eleTypeList = ReadEleSheet.getColList(wb, sheetName, "XAL_KeyWord", "Physical Label");

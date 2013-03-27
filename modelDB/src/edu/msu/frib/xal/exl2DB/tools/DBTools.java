@@ -14,7 +14,7 @@ import java.sql.Statement;
  */
 public class DBTools {
 
-    public static Connection getConnection() {
+    public static Connection getConnection(){
         Connection conn = null;
         String driver = "com.mysql.jdbc.Driver";
         String url = "jdbc:mysql://localhost:3306/discs_model?rewriteBatchedStatements=true";
@@ -23,8 +23,10 @@ public class DBTools {
         try {
             Class.forName(driver);
             conn = DriverManager.getConnection(url, userName, userAddress);
-        } catch (Exception e) {
-             e.printStackTrace();
+        } catch (ClassNotFoundException  ce) {
+           ce.printStackTrace();
+        }catch(SQLException se){
+          se.printStackTrace();
         }
 
         return conn;
