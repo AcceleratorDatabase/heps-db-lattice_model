@@ -72,39 +72,29 @@ public class EntityManagerHelper {
              EntityManagerHelper.beginTransaction();
              runnable.run();
              EntityManagerHelper.commit();          
-             logger.log(Level.INFO, "Transaction execution success");
-             //logger.info("事务执行成功");
+             logger.log(Level.INFO, "Transaction execution success");            
          } catch (PersistenceException e) {
-             logger.log(Level.SEVERE, "Persistence exception",e);
-            // logger.severe("持久化异常：" + e);
+             logger.log(Level.SEVERE, "Persistence exception",e);            
              try {
                  EntityManagerHelper.rollback();
-                 logger.log(Level.INFO, "Transaction rollback success");
-                 //logger.info("事务回滚成功");
+                 logger.log(Level.INFO, "Transaction rollback success");              
              } catch (Exception ex) {
-                 logger.log(Level.SEVERE, "Transaction rollback exception", ex);
-                // logger.severe("事务回滚异常：" + ex);
+                 logger.log(Level.SEVERE, "Transaction rollback exception", ex);              
              }
          } catch (IllegalStateException e) {
-             logger.log(Level.SEVERE, "Illegal State Exception", e);
-             //logger.severe("非法状态异常：" + e);
+             logger.log(Level.SEVERE, "Illegal State Exception", e);           
              try {
                  EntityManagerHelper.rollback();
-                 logger.log(Level.INFO, "Transaction rollback success");
-                 //logger.info("事务回滚成功");
-             } catch (Exception ex) {
-                // logger.severe("事务回滚异常：" + ex);
+                 logger.log(Level.INFO, "Transaction rollback success");               
+             } catch (Exception ex) {             
                  logger.log(Level.SEVERE, "Transaction rollback exception", ex);
              }
-         } catch (IllegalArgumentException e) {
-             //logger.severe("非法参数异常：" + e);
+         } catch (IllegalArgumentException e) {        
              logger.log(Level.SEVERE, "Illegal Argument Exception", e);
              try {
                  EntityManagerHelper.rollback();
-                 logger.log(Level.INFO, "Transaction rollback success");
-                 //logger.info("事务回滚成功");
-             } catch (Exception ex) {
-                 //logger.severe("事务回滚异常：" + ex);
+                 logger.log(Level.INFO, "Transaction rollback success");                
+             } catch (Exception ex) {              
                  logger.log(Level.SEVERE, "Transaction rollback exception", ex);
              }
          } finally {
