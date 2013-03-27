@@ -1,9 +1,22 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 CREATE SCHEMA IF NOT EXISTS `discs_model` DEFAULT CHARACTER SET utf8 ;
 USE `discs_model` ;
+
+-- -----------------------------------------------------
+-- Table `discs_model`.`particle_type`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `discs_model`.`particle_type` (
+  `particle_type_id` INT(11) NOT NULL ,
+  `particle_name` VARCHAR(45) NULL DEFAULT NULL ,
+  `particle_mass` DOUBLE NULL DEFAULT NULL ,
+  `particle_charge` INT(11) NULL DEFAULT NULL ,
+  PRIMARY KEY (`particle_type_id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = utf8;
+
 
 -- -----------------------------------------------------
 -- Table `discs_model`.`beamline_sequence`
@@ -18,7 +31,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beamline_sequence` (
   `sequence_description` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`beamline_sequence_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 24
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -31,7 +43,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type` (
   `element_type_description` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`element_type_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 90
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -69,7 +80,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 1299
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -215,14 +225,18 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beam_parameter` (
   `twiss_id` INT(11) NOT NULL AUTO_INCREMENT ,
   `element_id` INT(11) NULL DEFAULT NULL ,
   `model_id` INT(11) NULL DEFAULT NULL ,
-  `species_name` VARCHAR(45) NULL DEFAULT NULL ,
-  `species_mass` DOUBLE NULL DEFAULT NULL ,
-  `species_charge` DOUBLE NULL DEFAULT NULL ,
+  `particle_type` INT(11) NULL DEFAULT NULL ,
   PRIMARY KEY (`twiss_id`) ,
   INDEX `FK_element_id_idx` (`element_id` ASC) ,
   INDEX `FK_twiss_model_id_idx` (`model_id` ASC) ,
   INDEX `FK_element` (`element_id` ASC) ,
   INDEX `FK_model` (`model_id` ASC) ,
+  INDEX `FK_particle_type` (`particle_type` ASC) ,
+  CONSTRAINT `FK_particle_type`
+    FOREIGN KEY (`particle_type` )
+    REFERENCES `discs_model`.`particle_type` (`particle_type_id` )
+    ON DELETE CASCADE
+    ON UPDATE CASCADE,
   CONSTRAINT `FK_element`
     FOREIGN KEY (`element_id` )
     REFERENCES `discs_model`.`element` (`element_id` )
@@ -234,7 +248,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beam_parameter` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -329,7 +342,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type_prop` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 37
 DEFAULT CHARACTER SET = utf8;
 
 
@@ -368,7 +380,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_prop` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 39963
 DEFAULT CHARACTER SET = utf8;
 
 

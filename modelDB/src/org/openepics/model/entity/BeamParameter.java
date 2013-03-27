@@ -5,7 +5,6 @@
 package org.openepics.model.entity;
 
 import java.io.Serializable;
-import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -16,25 +15,19 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import javax.xml.bind.annotation.XmlRootElement;
-import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author paul
+ * @author chu
  */
 @Entity
 @Table(name = "beam_parameter")
 @XmlRootElement
 @NamedQueries({
     @NamedQuery(name = "BeamParameter.findAll", query = "SELECT b FROM BeamParameter b"),
-    @NamedQuery(name = "BeamParameter.findByTwissId", query = "SELECT b FROM BeamParameter b WHERE b.twissId = :twissId"),
-    @NamedQuery(name = "BeamParameter.findBySpeciesName", query = "SELECT b FROM BeamParameter b WHERE b.speciesName = :speciesName"),
-    @NamedQuery(name = "BeamParameter.findBySpeciesMass", query = "SELECT b FROM BeamParameter b WHERE b.speciesMass = :speciesMass"),
-    @NamedQuery(name = "BeamParameter.findBySpeciesCharge", query = "SELECT b FROM BeamParameter b WHERE b.speciesCharge = :speciesCharge")})
+    @NamedQuery(name = "BeamParameter.findByTwissId", query = "SELECT b FROM BeamParameter b WHERE b.twissId = :twissId")})
 public class BeamParameter implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -42,22 +35,15 @@ public class BeamParameter implements Serializable {
     @Basic(optional = false)
     @Column(name = "twiss_id")
     private Integer twissId;
-    @Size(max = 45)
-    @Column(name = "species_name")
-    private String speciesName;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "species_mass")
-    private Double speciesMass;
-    @Column(name = "species_charge")
-    private Double speciesCharge;
     @JoinColumn(name = "model_id", referencedColumnName = "model_id")
     @ManyToOne
     private Model modelId;
     @JoinColumn(name = "element_id", referencedColumnName = "element_id")
     @ManyToOne
     private Element elementId;
-    @OneToMany(mappedBy = "beamParameterId")
-    private Collection<BeamParameterProp> beamParameterPropCollection;
+    @JoinColumn(name = "particle_type", referencedColumnName = "particle_type_id")
+    @ManyToOne
+    private ParticleType particleType;
 
     public BeamParameter() {
     }
@@ -72,30 +58,6 @@ public class BeamParameter implements Serializable {
 
     public void setTwissId(Integer twissId) {
         this.twissId = twissId;
-    }
-
-    public String getSpeciesName() {
-        return speciesName;
-    }
-
-    public void setSpeciesName(String speciesName) {
-        this.speciesName = speciesName;
-    }
-
-    public Double getSpeciesMass() {
-        return speciesMass;
-    }
-
-    public void setSpeciesMass(Double speciesMass) {
-        this.speciesMass = speciesMass;
-    }
-
-    public Double getSpeciesCharge() {
-        return speciesCharge;
-    }
-
-    public void setSpeciesCharge(Double speciesCharge) {
-        this.speciesCharge = speciesCharge;
     }
 
     public Model getModelId() {
@@ -114,13 +76,12 @@ public class BeamParameter implements Serializable {
         this.elementId = elementId;
     }
 
-    @XmlTransient
-    public Collection<BeamParameterProp> getBeamParameterPropCollection() {
-        return beamParameterPropCollection;
+    public ParticleType getParticleType() {
+        return particleType;
     }
 
-    public void setBeamParameterPropCollection(Collection<BeamParameterProp> beamParameterPropCollection) {
-        this.beamParameterPropCollection = beamParameterPropCollection;
+    public void setParticleType(ParticleType particleType) {
+        this.particleType = particleType;
     }
 
     @Override
