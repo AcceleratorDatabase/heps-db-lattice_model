@@ -123,9 +123,7 @@ public class ModelDB {
            Map map= beamParameterAPI.getAllBeamParametersForElement("SEQ1_START");
            System.out.println(map.get("alphaX"));
           
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ModelDB.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalArgumentException ex) {
+        }  catch (IllegalArgumentException ex) {
             Logger.getLogger(ModelDB.class.getName()).log(Level.SEVERE, null, ex);
         }
 
