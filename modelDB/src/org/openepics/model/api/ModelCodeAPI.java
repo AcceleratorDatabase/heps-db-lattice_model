@@ -79,10 +79,10 @@ public class ModelCodeAPI {
      * @param name model code name
      * @return all models run with this model code
      */
-    public List<ModelCode> getAllModelCodesWithName(String name) {
+    public ModelCode getModelCodeWithName(String name) {
         final Query q = em.createNamedQuery("ModelCode.findByCodeName");
         q.setParameter("codeName", name);
-        List<ModelCode> mc = q.getResultList();
+        ModelCode mc = (ModelCode) q.getResultList().get(0);
         
         return mc;
     }
