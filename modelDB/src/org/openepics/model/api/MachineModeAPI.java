@@ -4,6 +4,7 @@
  */
 package org.openepics.model.api;
 
+import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -21,6 +22,24 @@ public class MachineModeAPI {
     static EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
+    
+    /**
+     * Get all machine modes
+     * @return all machine modes
+     */
+    public List<MachineMode> getAllMachineModes() {
+        return null;
+    }
+    
+    /**
+     * Get the machine mode with the specified name
+     * @param machine_mode_name machine mode name 
+     * @return the machine mode with the specified name
+     */
+    public MachineMode getMachineModeWithName(String machine_mode_name) {
+        return null;
+    }
+    
     
     /**
      * Set a new machine mode in DB
