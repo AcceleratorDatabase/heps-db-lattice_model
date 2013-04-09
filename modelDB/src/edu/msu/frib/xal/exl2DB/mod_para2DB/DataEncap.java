@@ -49,7 +49,6 @@ public class DataEncap {
             }
             encapDataList.add(rowClsList);
         }
-
         return encapDataList;
     }
 }

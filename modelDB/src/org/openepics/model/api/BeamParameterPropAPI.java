@@ -65,6 +65,5 @@ public class BeamParameterPropAPI {
         em.getTransaction().begin();
         em.persist(bpp);
         em.getTransaction().commit();
-    }
-    
+    }  
 }

@@ -201,8 +201,7 @@ public class ReadBeamSheet {
                 }
                 dataList.add(oneRow);
             }
-        }
-        
+        }      
         return dataList;
     }
 }
