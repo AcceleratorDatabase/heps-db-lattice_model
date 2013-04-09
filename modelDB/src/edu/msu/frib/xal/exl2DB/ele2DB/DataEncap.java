@@ -40,7 +40,6 @@ public class DataEncap {
                     String dbCell = (String) object;
                     //System.out.println(dbCell);
                     int dbSepLine = dbCell.indexOf("/");
-
                     String firstStr = dbCell.substring(0, dbSepLine);
                     String secStr = dbCell.substring(dbSepLine + 1);
                     if (!("".equals(oneRow.get(i)) || " ".equals(oneRow.get(i)))) {
