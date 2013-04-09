@@ -32,12 +32,17 @@ public class EncapData2DB {
         for (int i = 0; i < num; i++) {
             String eleName = (String) eleList.get(i);
             Element element = new ElementAPI().getElementByName(eleName);
+            if(element==null){
+               System.out.println("The element "+eleName+" doesn't exist in the database!");
+            }
 
-            Map particle=(Map) particleList.get(i);  
-            
+            Map particle=(Map) particleList.get(i);                          
             ParticleType parType = new ParticleTypeAPI().getParticleType(particle.get("particle_name").toString() ,
                     Double.parseDouble(particle.get("particle_mass").toString()), 
                     (int)Double.parseDouble(particle.get("particle_charge").toString()));
+            if(parType==null){
+               System.out.println("The ParticleType "+particle.get("particle_name")+" "+particle.get("particle_mass")+" "+particle.get("particle_charge")+" doesn't exist in the database!");
+            }
 
             BeamParameter bp = new BeamParameterAPI().setBeamParameter(element, null, parType);
 

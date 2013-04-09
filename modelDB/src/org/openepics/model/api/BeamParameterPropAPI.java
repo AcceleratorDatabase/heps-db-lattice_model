@@ -14,16 +14,37 @@ import org.openepics.model.entity.BeamParameterProp;
 
 /**
  *
- * @author lv
  * @author chu
  */
 public class BeamParameterPropAPI {
-
     @PersistenceUnit
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
-    static EntityManager em = emf.createEntityManager();
+    static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
+    static final EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
+    
+    /**
+     * 
+     * @param elem_name
+     * @param prop_name
+     * @return 
+     */
+    public Object getBeamParameterPropFor(String elem_name, String prop_name) {
+        //TODO
+        return null;
+    }
+    
+    
+    /**
+     * Set beam parameter property for the specified element.
+     * @param elem_name Element name
+     * @param prop_name Property name
+     * @param prop Property value
+     */
+    public void setBeamParameterPropFor(String elem_name, String prop_name, Object prop) {
+        //TODO
+    }
+    
     public void setBeamParameterProp(BeamParameter bp, String category, String name, String datatype, Object prop, String description) {
         BeamParameterProp bpp = new BeamParameterProp();
         bpp.setBeamParameterId(bp);
@@ -45,4 +66,5 @@ public class BeamParameterPropAPI {
         em.persist(bpp);
         em.getTransaction().commit();
     }
+    
 }
