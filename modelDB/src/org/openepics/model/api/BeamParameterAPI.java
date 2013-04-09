@@ -19,6 +19,9 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import org.openepics.model.entity.BeamParameter;
+import org.openepics.model.entity.Element;
+import org.openepics.model.entity.Model;
+import org.openepics.model.entity.ParticleType;
 
 /**
  *
@@ -26,15 +29,15 @@ import org.openepics.model.entity.BeamParameter;
  * @author lv
  */
 public class BeamParameterAPI {
+
     @PersistenceUnit
     static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     static final EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
-    
     /**
-     * 
-     * @param elm 
+     *
+     * @param elm
      */
     public void setBeamParametersForElement(String elm) {
         // TODO fill in code
@@ -42,11 +45,11 @@ public class BeamParameterAPI {
 
     /**
      * get all beam parameters for the specified element
+     *
      * @param elm element name
      * @return all beam parameters for the specified element
      */
-    public Map<String, Object> getAllBeamParametersForElement(String elm) 
-           {
+    public Map<String, Object> getAllBeamParametersForElement(String elm) {
         Query q;
         q = em.createQuery("SELECT  bp FROM BeamParameter bp WHERE bp.elementId.elementName=:elName")
                 .setParameter("elName", elm);
@@ -85,7 +88,7 @@ public class BeamParameterAPI {
                         }
                     } catch (InvocationTargetException ex) {
                         Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
-                      
+
                     }
                     map.put(fieldName, value);
                 }
@@ -94,5 +97,15 @@ public class BeamParameterAPI {
         }
         return null;
     }
-    
+
+    public BeamParameter setBeamParameter(Element ele, Model model, ParticleType pt) {
+        BeamParameter bp = new BeamParameter();
+        bp.setElementId(ele);
+        bp.setModelId(model);
+        bp.setParticleType(pt);
+        em.getTransaction().begin();
+        em.persist(bp);
+        em.getTransaction().commit();
+        return bp;
+    }
 }

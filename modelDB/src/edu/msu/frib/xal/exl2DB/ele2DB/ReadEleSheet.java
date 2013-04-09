@@ -31,12 +31,12 @@ public class ReadEleSheet {
         for (int i = 0; i < 10; i++) {
             Row row = sheet.getRow(i);
             Cell cell = row.getCell(0);
-            if(cell!=null){
-            //if (Cell.CELL_TYPE_BLANK != cell.getCellType()) {
+            if (cell != null) {
+                //if (Cell.CELL_TYPE_BLANK != cell.getCellType()) {
                 String value = cell.getStringCellValue();
-                if (value.toLowerCase().contains(label.toLowerCase())) {                 
+                if (value.toLowerCase().contains(label.toLowerCase())) {
                     return i;
-                    
+
                 }
             }
         }
@@ -55,25 +55,36 @@ public class ReadEleSheet {
         int rowNum = 0;
         if (labelType.toLowerCase().contains("physical")) {
             rowNum = getLabelRowNum(wb, sheetName, "XAL label") - 1;
-           
+
         } else if (labelType.toLowerCase().contains("xal")) {
             rowNum = getLabelRowNum(wb, sheetName, "XAL label");
         } else if (labelType.toLowerCase().contains("db")) {
             rowNum = getLabelRowNum(wb, sheetName, "DB label");
         }
         row = sheet.getRow(rowNum);
-        int i = 0;
-        Iterator it = row.iterator();
-        while (it.hasNext()) {
-            Cell cell = (Cell) it.next();
-            if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
-                String s = cell.getStringCellValue();
-               // System.out.println(i+"*******"+s);
-                if (label.toLowerCase().equals(s.toLowerCase())) {
-                    return i;
+        /*int i = 0;
+         Iterator it = row.iterator();
+         while (it.hasNext()) {
+         Cell cell = (Cell) it.next();
+         if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+         String s = cell.getStringCellValue();
+         // System.out.println(i+"*******"+s);
+         if (label.toLowerCase().equals(s.toLowerCase())) {
+         return i+row.getFirstCellNum();
+         }
+         }
+         i++;
+         }*/
+        for (int i = 0; i < row.getLastCellNum(); i++) {
+            Cell cell = row.getCell(i);
+            if (cell != null) {
+                if (cell.getCellType() == Cell.CELL_TYPE_STRING) {
+                    String s = cell.getStringCellValue();
+                    if (label.toLowerCase().equals(s.toLowerCase())) {
+                        return i ;
+                    }
                 }
             }
-            i++;
         }
 
         return -1;
@@ -123,8 +134,15 @@ public class ReadEleSheet {
             Row row = (Row) rit.next();
             if (row.getRowNum() >= startRowNum) {
                 Cell cell = row.getCell(colNum);
+
                 if (Cell.CELL_TYPE_STRING == cell.getCellType()) {
                     colList.add(cell.getStringCellValue());
+                } else if (Cell.CELL_TYPE_FORMULA == cell.getCellType()) {
+                    colList.add(cell.getCellFormula());
+                } else if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
+                    colList.add(cell.getNumericCellValue());
+                } else {
+                    colList.add("");
                 }
             }
         }
@@ -175,7 +193,7 @@ public class ReadEleSheet {
                         }
                     } catch (NullPointerException e) {
                         o = "";
-                    }                
+                    }
                     oneRow.add(o);
                 }
                 dataList.add(oneRow);
