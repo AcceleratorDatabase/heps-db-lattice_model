@@ -20,7 +20,7 @@ public class BeamCell {
     public String getTableName() {
         return tableName;
     }
-
+    
     public void setTableName(String tableName) {
         this.tableName = tableName;
     }

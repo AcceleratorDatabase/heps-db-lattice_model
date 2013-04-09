@@ -45,7 +45,6 @@ public class DataEncap {
                     String secStr = dbCell.substring(dbSepLine + 1);
                     if (!("".equals(oneRow.get(i)) || " ".equals(oneRow.get(i)))) {
                         if ("element_prop".equals(firstStr)) {
-
                             String xalLabel = (String) XALLabels.get(i);
                             int xalSepLine = xalLabel.indexOf("_");
                             if (xalSepLine > -1) {

@@ -32,8 +32,7 @@ public class BeamParameterPropAPI {
     public Object getBeamParameterPropFor(String elem_name, String prop_name) {
         //TODO
         return null;
-    }
-    
+    }   
     
     /**
      * Set beam parameter property for the specified element.

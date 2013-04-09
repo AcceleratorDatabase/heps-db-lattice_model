@@ -46,15 +46,13 @@ public class EncapData2DB {
 
             BeamParameter bp = new BeamParameterAPI().setBeamParameter(element, null, parType);
 
-            ArrayList rowClsList = (ArrayList) encapDataList.get(i);
-            
+            ArrayList rowClsList = (ArrayList) encapDataList.get(i);           
             Iterator it = rowClsList.iterator();
             while (it.hasNext()) {
                 BeamCell cell = (BeamCell) it.next();
                 
                 new BeamParameterPropAPI().setBeamParameterProp(bp, cell.getCategory(), cell.getName(), cell.getDatatype(), cell.getValue(), null);
             }
-
         }
     }
 }

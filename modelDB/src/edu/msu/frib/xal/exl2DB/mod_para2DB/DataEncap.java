@@ -44,9 +44,7 @@ public class DataEncap {
                         cell.setValue(oneRow.get(i));
                         rowClsList.add(cell);
                     }
-
                 }
-
                 i++;
             }
             encapDataList.add(rowClsList);

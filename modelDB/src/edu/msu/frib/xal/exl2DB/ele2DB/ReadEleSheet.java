@@ -36,7 +36,6 @@ public class ReadEleSheet {
                 String value = cell.getStringCellValue();
                 if (value.toLowerCase().contains(label.toLowerCase())) {
                     return i;
-
                 }
             }
         }
