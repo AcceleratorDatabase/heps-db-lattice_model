@@ -20,6 +20,7 @@ public class Test {
     public static void main(String args[]) {
         Workbook wb = ReadExl.getWorkbook("E:\\xal\\source_code\\code\\modelDB\\data\\model_parameters_template.xlsx");
         EncapData2DB.instDB(wb,"beam_parameters");
+        
         //   ReadBeamSheet.getColNum(wb, "beam_parameters");
        /*ArrayList a= ReadBeamSheet.getRowLabels(wb, "beam_parameters", "data type");
          for(int i=0;i<a.size();i++){
