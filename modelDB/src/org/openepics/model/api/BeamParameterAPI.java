@@ -108,4 +108,21 @@ public class BeamParameterAPI {
         em.getTransaction().commit();
         return bp;
     }
+
+    public BeamParameter getBeamParameterForElementAndModel(String ele_name, String model_name) {
+        Query q;
+        if (model_name == null || model_name.equals("")) {
+            q = em.createQuery("SELECT bp FROM BeamParameter bp WHERE bp.elementId.elementName=:eleName ").setParameter("eleName", ele_name);
+        } else {
+            q = em.createQuery("SELECT bp FROM BeamParameter bp WHERE bp.elementId.elementName=:eleName "
+                    + "AND bp.modelId.modelName=:modelName").setParameter("eleName", ele_name).setParameter("modelName", model_name);
+        }
+
+        List<BeamParameter> bpList = q.getResultList();
+        if (bpList.isEmpty()) {
+            return null;
+        } else {
+            return bpList.get(0);
+        }
+    }
 }

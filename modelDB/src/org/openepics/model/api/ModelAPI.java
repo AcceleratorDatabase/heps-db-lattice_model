@@ -187,4 +187,12 @@ public class ModelAPI {
         em.getTransaction().commit();
     }
     
+    public Model getModelForName(String model_name){
+       Query q;
+       q=em.createQuery("SELECT m FROM Model m WHERE m.modelName=:modelName").setParameter("modelName", model_name);
+       List<Model> mList=q.getResultList();
+       if(mList.isEmpty()) return null;
+       else return mList.get(0);
+    }
+    
 }

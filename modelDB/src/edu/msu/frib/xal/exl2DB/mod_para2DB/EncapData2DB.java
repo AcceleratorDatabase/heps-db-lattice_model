@@ -30,6 +30,7 @@ public class EncapData2DB {
         ArrayList encapDataList = DataEncap.getEncapData(wb, sheetName);
         int num = encapDataList.size();
         for (int i = 0; i < num; i++) {
+            System.out.println("*****"+i);
             String eleName = (String) eleList.get(i);
             Element element = new ElementAPI().getElementByName(eleName);
             if(element==null){

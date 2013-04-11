@@ -10,6 +10,7 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
+import javax.persistence.Query;
 import org.openepics.model.entity.MachineMode;
 
 /**
@@ -36,8 +37,12 @@ public class MachineModeAPI {
      * @param machine_mode_name machine mode name 
      * @return the machine mode with the specified name
      */
-    public MachineMode getMachineModeWithName(String machine_mode_name) {
-        return null;
+    public MachineMode getMachineModeWithName(String machine_mode_name) {      
+        Query q;
+        q=em.createNamedQuery("MachineMode.findByMachineModeName").setParameter("machineModeName", machine_mode_name);
+        List<MachineMode> mmList=q.getResultList();
+        if(mmList.isEmpty()) return null;
+        else return mmList.get(0);      
     }
     
     
