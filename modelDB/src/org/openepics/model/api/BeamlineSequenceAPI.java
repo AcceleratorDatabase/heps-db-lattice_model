@@ -7,6 +7,7 @@ package org.openepics.model.api;
 import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -19,6 +20,7 @@ import org.openepics.model.entity.BlsequenceLattice;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
 import org.openepics.model.entity.RfGap;
+import org.tools.persistence.PersistenceTools;
 
 /**
  *
@@ -29,7 +31,8 @@ import org.openepics.model.entity.RfGap;
 public class BeamlineSequenceAPI {
 
     @PersistenceUnit
-    static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
+    static Map properties=PersistenceTools.getPersistenceParameters("mysql", "localhost:3306", "root", "826529");
+    static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU",properties);
     static final EntityManager em = emf.createEntityManager();
 
     @PersistenceContext

@@ -6,6 +6,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.util.Map;
+import org.tools.persistence.PersistenceTools;
 
 /**
  *
@@ -14,21 +16,56 @@ import java.sql.Statement;
  */
 public class DBTools {
 
-    public static Connection getConnection(){
+    public static Connection getConnection(String driver, String url, String user, String password) {
         Connection conn = null;
-        String driver = "com.mysql.jdbc.Driver";
-        String url = "jdbc:mysql://localhost:3306/discs_model?rewriteBatchedStatements=true";
-        String userName = "root";
-        String userAddress = "826529";
+        Map properties = PersistenceTools.getPersistenceParameters(driver, url, user, password);
+        String driver1 = (String) properties.get("javax.persistence.jdbc.driver");
+        String url1 = (String) properties.get("javax.persistence.jdbc.url") + "?rewriteBatchedStatements=true";
+        // String url = "jdbc:mysql://localhost:3306/discs_model?rewriteBatchedStatements=true";
+
         try {
-            Class.forName(driver);
-            conn = DriverManager.getConnection(url, userName, userAddress);
-        } catch (ClassNotFoundException  ce) {
-           ce.printStackTrace();
-        }catch(SQLException se){
-          se.printStackTrace();
+            Class.forName(driver1);
+            conn = DriverManager.getConnection(url1, user, password);
+        } catch (ClassNotFoundException ce) {
+            ce.printStackTrace();
+        } catch (SQLException se) {
+            se.printStackTrace();
         }
 
+        return conn;
+    }
+
+    public static Connection getConnection(String user, String password) {
+        Connection conn = null;
+        Map properties = ReadPersistenceXML.getPropMap();
+        String driver = (String) properties.get("javax.persistence.jdbc.driver");
+        String url = properties.get("javax.persistence.jdbc.url") + "?rewriteBatchedStatements=true";
+        try {
+            Class.forName(driver);
+            conn = DriverManager.getConnection(url, user, password);
+        } catch (ClassNotFoundException ce) {
+            ce.printStackTrace();
+        } catch (SQLException se) {
+            se.printStackTrace();
+        }
+        return conn;
+    }
+
+    public static Connection getConnection() {
+        Connection conn = null;
+        Map properties = ReadPersistenceXML.getPropMap();
+        String driver = (String) properties.get("javax.persistence.jdbc.driver");
+        String url = properties.get("javax.persistence.jdbc.url") + "?rewriteBatchedStatements=true";
+        String user = (String) properties.get("javax.persistence.jdbc.user");
+        String password = (String) properties.get("javax.persistence.jdbc.password");
+        try {
+            Class.forName(driver);
+            conn = DriverManager.getConnection(url, user, password);
+        } catch (ClassNotFoundException ce) {
+            ce.printStackTrace();
+        } catch (SQLException se) {
+            se.printStackTrace();
+        }
         return conn;
     }
 
@@ -55,16 +92,16 @@ public class DBTools {
             try {
                 state.close();
             } catch (SQLException e) {
-                 e.printStackTrace();
+                e.printStackTrace();
             }
         }
     }
-    
+
     public static void closeResultSet(ResultSet rs) {
         try {
             rs.close();
         } catch (SQLException e) {
-             e.printStackTrace();
+            e.printStackTrace();
         }
     }
 }
