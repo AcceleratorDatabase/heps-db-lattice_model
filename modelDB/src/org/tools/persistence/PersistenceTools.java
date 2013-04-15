@@ -14,7 +14,7 @@ import java.util.Map;
  */
 public class PersistenceTools {
 
-    public static Map getPersistenceParameters(String driver, String url, String user, String password) {
+    public static Map setPersistenceParameters(String driver, String url, String user, String password) {
         Map map = new HashMap();
         String driver1 = null;
         String url1 = null;
