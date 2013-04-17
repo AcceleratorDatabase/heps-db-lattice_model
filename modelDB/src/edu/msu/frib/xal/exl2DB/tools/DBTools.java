@@ -18,7 +18,7 @@ public class DBTools {
 
     public static Connection getConnection(String driver, String url, String user, String password) {
         Connection conn = null;
-        Map properties = PersistenceTools.getPersistenceParameters(driver, url, user, password);
+        Map properties = PersistenceTools.setPersistenceParameters(driver, url, user, password);
         String driver1 = (String) properties.get("javax.persistence.jdbc.driver");
         String url1 = (String) properties.get("javax.persistence.jdbc.url") + "?rewriteBatchedStatements=true";
         // String url = "jdbc:mysql://localhost:3306/discs_model?rewriteBatchedStatements=true";
