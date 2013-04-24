@@ -34,8 +34,8 @@ public class PersistenceTools {
         }      
         map.put("javax.persistence.jdbc.driver",driver1);
         map.put("javax.persistence.jdbc.url",url1);
-        map.put("javax.persistence.jdbc.user", "root");
-        map.put("javax.persistence.jdbc.password", "826529");
+        map.put("javax.persistence.jdbc.user", user);
+        map.put("javax.persistence.jdbc.password", password);
         return map;
     }
     
