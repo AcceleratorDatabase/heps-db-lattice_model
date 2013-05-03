@@ -24,6 +24,14 @@ public class ParticleTypeAPI {
     static EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
+    
+    /**
+     * Set a particle type with name, mass and charge
+     * 
+     * @param particle_name particle name
+     * @param particle_mass particle mass in Mev/c^2
+     * @param particle_charge particle charge in e.u.
+     */
     public void setParticleType(String particle_name,double particle_mass,int paritcle_charge){
         ParticleType pt=new ParticleType();
         pt.setParticleName(particle_name);
@@ -35,11 +43,15 @@ public class ParticleTypeAPI {
         em.getTransaction().commit();   
     }
     
-    public ParticleType getParticleType(String particle_name,double particle_mass,int particle_charge){
+    /**
+     * Get the specified particle type
+     * @param particle_name particle name
+     * 
+     * @return the specified particle type
+     */
+    public ParticleType getParticleType(String particle_name){
         Query q;
-        q = em.createQuery("SELECT pt FROM ParticleType pt WHERE pt.particleName=:particleName "
-                + "AND pt.particleMass=:particleMass AND pt.particleCharge=:particleCharge").setParameter("particleName", particle_name)
-                .setParameter("particleMass", particle_mass).setParameter("particleCharge", particle_charge);             
+        q = em.createQuery("SELECT pt FROM ParticleType pt WHERE pt.particleName=:particleName");             
               
         List<ParticleType> pList = q.getResultList();
         if (pList.isEmpty()) {
@@ -47,5 +59,18 @@ public class ParticleTypeAPI {
         } else {
             return pList.get(0);
         }
+    }
+    
+    /**
+     * Get all particle types
+     * @return all particle types
+     */
+    public List<ParticleType> getAllParticleTypes() {
+        List<ParticleType> pList = null;
+        Query q;
+        q = em.createNamedQuery("ParticleType.findAll");
+        pList = q.getResultList();
+        
+        return pList;
     }
 }

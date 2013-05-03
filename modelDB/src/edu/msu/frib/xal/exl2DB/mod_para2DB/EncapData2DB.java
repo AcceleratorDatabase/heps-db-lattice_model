@@ -38,9 +38,7 @@ public class EncapData2DB {
             }
 
             Map particle=(Map) particleList.get(i);                          
-            ParticleType parType = new ParticleTypeAPI().getParticleType(particle.get("particle_name").toString() ,
-                    Double.parseDouble(particle.get("particle_mass").toString()), 
-                    (int)Double.parseDouble(particle.get("particle_charge").toString()));
+            ParticleType parType = new ParticleTypeAPI().getParticleType(particle.get("particle_name").toString());
             if(parType==null){
                System.out.println("The ParticleType "+particle.get("particle_name")+" "+particle.get("particle_mass")+" "+particle.get("particle_charge")+" doesn't exist in the database!");
             }
