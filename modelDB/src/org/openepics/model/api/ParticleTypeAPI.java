@@ -34,13 +34,14 @@ public class ParticleTypeAPI {
      */
     public void setParticleType(String particle_name,double particle_mass,int paritcle_charge){
         ParticleType pt=new ParticleType();
+       
         pt.setParticleName(particle_name);
         pt.setParticleMass(particle_mass);
         pt.setParticleCharge(paritcle_charge);
         
         em.getTransaction().begin();
         em.persist(pt);
-        em.getTransaction().commit();   
+        em.getTransaction().commit();
     }
     
     /**
@@ -51,7 +52,29 @@ public class ParticleTypeAPI {
      */
     public ParticleType getParticleType(String particle_name){
         Query q;
-        q = em.createQuery("SELECT pt FROM ParticleType pt WHERE pt.particleName=:particleName");             
+        q = em.createQuery("SELECT pt FROM ParticleType pt WHERE pt.particleName=:particleName").setParameter("particleName", particle_name);             
+              
+        List<ParticleType> pList = q.getResultList();
+        if (pList.isEmpty()) {
+            return null;
+        } else {
+            return pList.get(0);
+        }
+    }
+    
+    /**
+     * Get the specified particle type
+     * @param particle_name particle name
+     * @param particle_mass particle mass
+     * @param  particle_charge particle charge
+     * 
+     * @return the specified particle type
+     */
+    public ParticleType getParticleType(String particle_name,double particle_mass,int particle_charge){
+        Query q;
+        q = em.createQuery("SELECT pt FROM ParticleType pt WHERE pt.particleName=:particleName "
+                + "AND pt.particleMass=:particleMass AND pt.particleCharge=:particleCharge")
+                .setParameter("particleName", particle_name).setParameter("particleMass", particle_mass).setParameter("particleCharge", particle_charge);             
               
         List<ParticleType> pList = q.getResultList();
         if (pList.isEmpty()) {

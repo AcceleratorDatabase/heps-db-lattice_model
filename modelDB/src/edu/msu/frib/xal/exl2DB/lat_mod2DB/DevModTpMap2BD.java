@@ -23,6 +23,7 @@ public class DevModTpMap2BD {
         Iterator it = mapData.iterator();
         while (it.hasNext()) {
             Map dataMap = (Map) it.next();
+            //System.out.println(dataMap.size());
             //int elementTypeId = (int) Double.parseDouble(dataMap.get("element_type_id").toString());
             String element_type=dataMap.get("element_type").toString();           
             ElementType et=new ElementTypeAPI().getElementTypeByType(element_type);

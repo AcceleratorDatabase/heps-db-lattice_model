@@ -4,6 +4,7 @@
  */
 package edu.msu.frib.xal.exl2DB.ele2DB;
 
+import edu.msu.frib.xal.exl2DB.lat_mod2DB.ReadComSheet;
 import com.mysql.jdbc.Connection;
 import com.mysql.jdbc.PreparedStatement;
 import com.mysql.jdbc.Statement;
@@ -62,9 +63,9 @@ public class EncapData2DB {
                 conn.setAutoCommit(false);
                 //int lattice_id = latticeAPI.setLattice(latticeName, null);
                 int lattice_id = l.getLatticeId();
-                ArrayList eleNameList = ReadEleSheet.getColList(wb, sheetName, "Eng_name", "Physical label");
-                ArrayList sequenceList = ReadEleSheet.getColList(wb, sheetName, "Section", "Physical Label");
-                ArrayList eleTypeList = ReadEleSheet.getColList(wb, sheetName, "XAL_KeyWord", "Physical Label");
+                ArrayList eleNameList = ReadComSheet.getColList(wb, sheetName, "Eng_name", "Physical label");
+                ArrayList sequenceList = ReadComSheet.getColList(wb, sheetName, "Section", "Physical Label");
+                ArrayList eleTypeList = ReadComSheet.getColList(wb, sheetName, "XAL_KeyWord", "Physical Label");
 
                 //key:element_id value:element/s
                 HashMap<Integer, Double> hMap = new HashMap<Integer, Double>();
