@@ -74,8 +74,6 @@ public class Db2OpenXAL {
 
         sb.append("<tablegroup>\n");        
         
-        // Beam Parameter Properties
-        List<BeamParameterProp> bppList = null;
         // for "species" table
         sb.append("  <table name=\"species\">\n");
         sb.append("     <schema>\n");
@@ -194,7 +192,15 @@ public class Db2OpenXAL {
         sb.append("     </schema>\n");
         sb.append("     <record name=\"default\"/>\n"); 
         
-        // TODO fill in
+        // for every beamline sequence
+        List<BeamlineSequence> blsList = null;
+        BeamlineSequenceAPI blsa = new BeamlineSequenceAPI();
+        blsList = blsa.getAllSequences();
+        for (int i=0; i<blsList.size(); i++) {
+            sb.append("     <record name=\"");
+            sb.append(blsList.get(i).getSequenceName());
+            sb.append("\" errortol=\"1.0e-8\" initstep=\"0.1\" maxiter=\"1000\"/>\n");
+        }
         
         sb.append("  </table>\n");
         
@@ -238,12 +244,12 @@ public class Db2OpenXAL {
             writer = new BufferedWriter(new FileWriter(file));
             writer.write(sb.toString());
         } catch (IOException ex) {
-            Logger.getLogger(Db2Xal.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Db2OpenXAL.class.getName()).log(Level.SEVERE, null, ex);
         } finally {
             try {
                 writer.close();
             } catch (IOException ex) {
-                Logger.getLogger(Db2Xal.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(Db2OpenXAL.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
         
