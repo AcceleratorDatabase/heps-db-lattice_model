@@ -186,8 +186,10 @@ public class ModelAPI {
         em.getTransaction().commit();
     }
 
-    public void setModelForInit(String model_name) {
+    public void setModelForInit(String model_name, String lattice_name) {
         Model m = new Model();
+        Lattice l=new LatticeAPI().getLatticeByName(lattice_name);
+        m.setLatticeId(l);
         m.setModelName(model_name);
         m.setCreatedBy(System.getProperty("user.name"));
         m.setCreateDate(new Date());

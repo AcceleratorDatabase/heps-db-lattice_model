@@ -34,6 +34,6 @@ public class Excel2DB {
         DevModTpMap2BD.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device-model types")));            
         EncapData2DB.instDB(wb, "elements", latticeName);     
         RfMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "RF Gaps")));
-        BeamEncapData2DB.instDB(wb, "init conditions");
+        BeamEncapData2DB.instDB(wb, "init conditions",latticeName);
     }
 }

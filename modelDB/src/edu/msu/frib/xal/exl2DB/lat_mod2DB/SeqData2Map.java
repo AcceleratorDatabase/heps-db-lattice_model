@@ -12,6 +12,7 @@ import java.util.Map;
 /**
  *
  * @author lv
+ * @author chu
  */
 public class SeqData2Map {
      public static ArrayList getMapData(ArrayList dataList) {
