@@ -209,4 +209,14 @@ public class ModelAPI {
             return mList.get(0);
         }
     }
+    
+    public List<Model> getAllModelInitialConditions() {
+        List<Model> mList = null;
+        
+        Query q;
+        q = em.createQuery("SELECT m FROM Model m WHERE m.initialConditionInd=:ind").setParameter("ind", 1);
+        mList = q.getResultList();
+        
+        return mList;
+    }
 }
