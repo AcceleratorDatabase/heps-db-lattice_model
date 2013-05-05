@@ -103,6 +103,24 @@ public class ElementAPI {
             e.setBeamlineSequenceId(bls);
         }
     }
+    
+    public void setElement(String ele_name,double s,String seq_name){
+       if (getElementByName(ele_name) == null) {
+            Element e = new Element();
+            Date date = new Date();
+            e.setInsertDate(date);
+            e.setCreatedBy(System.getProperty("user.name")); 
+            e.setS(s);
+            e.setElementName(ele_name);
+            // find out the beamline sequence id
+            BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
+            BeamlineSequence bls = beamlineSequenceAPI.getSequenceByName(seq_name);
+            e.setBeamlineSequenceId(bls);
+            em.getTransaction().begin();
+            em.persist(e);
+            em.getTransaction().commit();
+        }
+    }
     /*
      * Delete the element by the given name
      * Delete the ElementProps belonging to the Element

@@ -22,8 +22,7 @@ public class ReadSheet {
         if (wb == null) {
             System.out.println("Error!");
         } else {
-            Sheet sheet = wb.getSheet(sheetName);
-            
+            Sheet sheet = wb.getSheet(sheetName);            
             ArrayList dataList = new ArrayList();
             for (Iterator<Row> rit = sheet.rowIterator(); rit.hasNext();) {
                 Row row = (Row) rit.next();
@@ -52,6 +51,7 @@ public class ReadSheet {
                             System.out.println("Error");
                             break;
                     }
+                    
                     oneRow.add(o);
                 }
                 dataList.add(oneRow);

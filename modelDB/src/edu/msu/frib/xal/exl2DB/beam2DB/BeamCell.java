@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.msu.frib.xal.exl2DB.mod_para2DB;
+package edu.msu.frib.xal.exl2DB.beam2DB;
 
 /**
  *

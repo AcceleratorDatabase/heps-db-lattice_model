@@ -2,7 +2,7 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-package edu.msu.frib.xal.exl2DB.ele2DB;
+package edu.msu.frib.xal.exl2DB.lat_mod2DB;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -16,20 +16,23 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @author lv
  * @author chu
  */
-public class ReadEleSheet {
+public class ReadComSheet {
 
     public static int getColNum(Workbook wb, String sheetName) {
         Sheet sheet = wb.getSheet(sheetName);
         return sheet.getRow(0).getLastCellNum();
     }
-
+/*
+ * @param label the row lable name:XAL, DB, Unit
+ * @return the row number of the label
+ */
     public static int getLabelRowNum(Workbook wb, String sheetName, String label) {
         Sheet sheet = wb.getSheet(sheetName);
         if (label.indexOf(" ") > 0) {
             label = label.substring(0, label.indexOf(" "));
         }
         for (int i = 0; i < 10; i++) {
-            Row row = sheet.getRow(i);
+            Row row = sheet.getRow(i);          
             Cell cell = row.getCell(0);
             if (cell != null) {
                 //if (Cell.CELL_TYPE_BLANK != cell.getCellType()) {
@@ -88,10 +91,11 @@ public class ReadEleSheet {
         return -1;
     }
 
-    public static ArrayList getRowLabels(Workbook wb, String sheetName, String rowLabel) {
+    public static ArrayList getRowLabels(Workbook wb, String sheetName, String rowLabel,String startLabel, String startLabelType) {
         ArrayList rowLabels = new ArrayList();
         Sheet sheet = wb.getSheet(sheetName);
-        int startColNum = getLabelColNum(wb, sheetName, "element", "Physical label");
+        int startColNum = getLabelColNum(wb, sheetName, startLabel, startLabelType);     
+       //int startColNum = getLabelColNum(wb, sheetName, "element", "Physical label");   
         int totalColNum = getColNum(wb, sheetName);
         int rowNum = getLabelRowNum(wb, sheetName, rowLabel);
         for (int i = startColNum; i < totalColNum; i++) {
@@ -127,7 +131,7 @@ public class ReadEleSheet {
         ArrayList colList = new ArrayList();
         Sheet sheet = wb.getSheet(sheetName);
         int colNum = getLabelColNum(wb, sheetName, label, labelType);
-        int startRowNum = getLabelRowNum(wb, sheetName, "Unit") + 1;
+        int startRowNum = getLabelRowNum(wb, sheetName, "Unit") + 1;       
         for (Iterator<Row> rit = sheet.rowIterator(); rit.hasNext();) {
             Row row = (Row) rit.next();
             if (row.getRowNum() >= startRowNum) {
@@ -136,7 +140,8 @@ public class ReadEleSheet {
                 if (Cell.CELL_TYPE_STRING == cell.getCellType()) {
                     colList.add(cell.getStringCellValue());
                 } else if (Cell.CELL_TYPE_FORMULA == cell.getCellType()) {
-                    colList.add(cell.getCellFormula());
+                   // colList.add(cell.getCellFormula());
+                    colList.add(cell.getNumericCellValue());
                 } else if (Cell.CELL_TYPE_NUMERIC == cell.getCellType()) {
                     colList.add(cell.getNumericCellValue());
                 } else {
@@ -148,10 +153,10 @@ public class ReadEleSheet {
         return colList;
     }
 
-    public static ArrayList getDataList(Workbook wb, String sheetName) {
+    public static ArrayList getDataList(Workbook wb, String sheetName,String startLabel, String startLabelType) {
         ArrayList dataList = new ArrayList();
         Sheet sheet = wb.getSheet(sheetName);
-        int startColNum = getLabelColNum(wb, sheetName, "element", "Physical label");
+        int startColNum = getLabelColNum(wb, sheetName, startLabel, startLabelType);
         int totalColNum = getColNum(wb, sheetName);
         int startRowNum = getLabelRowNum(wb, sheetName, "Unit") + 1;
         for (Iterator<Row> rit = sheet.rowIterator(); rit.hasNext();) {
@@ -177,7 +182,9 @@ public class ReadEleSheet {
                                     o = cell.getBooleanCellValue();
                                     break;
                                 case Cell.CELL_TYPE_FORMULA:
-                                    o = cell.getCellFormula();
+                                   // o = cell.getCellFormula();
+                                    o=cell.getNumericCellValue();
+                                   // System.out.println("*******"+o);
                                     break;
                                 case Cell.CELL_TYPE_BLANK:
                                     o = "";
