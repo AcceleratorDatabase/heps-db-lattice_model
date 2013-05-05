@@ -4,7 +4,6 @@
  */
 package edu.msu.frib.xal.db2xal;
 
-import static edu.msu.frib.xal.db2xal.Db2Xal.emf;
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
@@ -25,6 +24,7 @@ import org.openepics.model.api.BeamlineSequenceAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ElementPropAPI;
 import org.openepics.model.api.GoldModelAPI;
+import org.openepics.model.api.ModelAPI;
 import org.openepics.model.api.ModelDB;
 import org.openepics.model.api.ParticleTypeAPI;
 import org.openepics.model.api.RfGapAPI;
@@ -34,6 +34,7 @@ import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
 import org.openepics.model.entity.ElementTypeProp;
+import org.openepics.model.entity.Model;
 import org.openepics.model.entity.ParticleType;
 import org.openepics.model.entity.RfGap;
 
@@ -51,6 +52,10 @@ public class Db2OpenXAL {
 
     @PersistenceContext
     public void write2ModelParam() {
+        // get all model initial conditions
+        ModelAPI mapi = new ModelAPI();
+        List<Model> mList = mapi.getAllModelInitialConditions();
+        
         // write the header
         StringBuilder sb = new StringBuilder("<?xml version = '1.0' encoding = 'UTF-8'?>\n"
                 + "<!DOCTYPE tablegroup [\n"
@@ -107,6 +112,19 @@ public class Db2OpenXAL {
         sb.append("     <record name=\"default\" current=\"0.0\" bunchFreq=\"0.0\" phase=\"(0,0,0)\" charge=\"4.96894E-11\"/>\n");
         
         // TODO fill in
+        for (int i=0; i<mList.size(); i++) {
+            sb.append("     <record name=\"");
+            sb.append(mList.get(i).getModelName());
+            sb.append("\" current=\"");
+            
+            sb.append("\" bunchFreq=\"");
+            
+            sb.append("\" phase=\"");
+            
+            sb.append("\" charge=\"");
+            
+            sb.append("\"/>\n");
+        }
         
         sb.append("  </table>\n");
 
