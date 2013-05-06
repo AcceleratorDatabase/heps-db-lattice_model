@@ -81,8 +81,8 @@ public class SeqMap2DB {
                    
                     new BlsequenceLatticeAPI().setBlsequenceLattice(bs, lattice);
                    
-                    new ElementAPI().setElement(first_ele_name, first_ele_s, sequence_name);
-                    new ElementAPI().setElement(last_ele_name, last_ele_s, sequence_name);
+                    new ElementAPI().setElement(first_ele_name, first_ele_s, sequence_name,"MARK");
+                    new ElementAPI().setElement(last_ele_name, last_ele_s, sequence_name,"MARK");
 
                 }
               //  em.getTransaction().commit();

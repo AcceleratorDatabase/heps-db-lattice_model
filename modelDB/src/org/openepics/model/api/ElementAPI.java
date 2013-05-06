@@ -16,6 +16,7 @@ import javax.persistence.Query;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
+import org.openepics.model.entity.ElementType;
 import org.openepics.model.entity.RfGap;
 
 /**
@@ -104,7 +105,7 @@ public class ElementAPI {
         }
     }
     
-    public void setElement(String ele_name,double s,String seq_name){
+    public void setElement(String ele_name,double s,String seq_name,String ele_type_name){
        if (getElementByName(ele_name) == null) {
             Element e = new Element();
             Date date = new Date();
@@ -112,6 +113,8 @@ public class ElementAPI {
             e.setCreatedBy(System.getProperty("user.name")); 
             e.setS(s);
             e.setElementName(ele_name);
+            ElementType et=new ElementTypeAPI().getElementTypeByType(ele_type_name);
+            e.setElementTypeId(et);
             // find out the beamline sequence id
             BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
             BeamlineSequence bls = beamlineSequenceAPI.getSequenceByName(seq_name);
