@@ -20,6 +20,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
+import javax.persistence.Query;
+import org.openepics.model.api.BeamParameterAPI;
 import org.openepics.model.api.BeamlineSequenceAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ElementPropAPI;
@@ -111,20 +113,39 @@ public class Db2OpenXAL {
         sb.append("     </schema>\n");
         sb.append("     <record name=\"default\" current=\"0.0\" bunchFreq=\"0.0\" phase=\"(0,0,0)\" charge=\"4.96894E-11\"/>\n");
         
-        // TODO fill in
+        // find beam parameter properties for the beam
         for (int i=0; i<mList.size(); i++) {
-            sb.append("     <record name=\"");
-            sb.append(mList.get(i).getModelName());
-            sb.append("\" current=\"");
-            
-            sb.append("\" bunchFreq=\"");
-            
-            sb.append("\" phase=\"");
-            
-            sb.append("\" charge=\"");
-            
-            sb.append("\"/>\n");
+            // get beam parameters for this model
+            BeamParameterAPI bpa = new BeamParameterAPI();
+            List<BeamParameter> bpaList = bpa.getAllBeamParametersForModel(mList.get(i));
+            Query q;
+            if (bpaList.size() > 0) {
+                q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp JOIN bpp.beamParameterId pid WHERE pid.modelId=:modelId")
+                    .setParameter("modelId", mList.get(i));
+                List<BeamParameterProp> bppList = q.getResultList();
+                
+                sb.append("     <record name=\"");
+                sb.append(mList.get(i).getModelName());
+                // loop over all beam parameter properties
+                for (int j=0; j<bppList.size(); j++) {
+                    if(bppList.get(j).getPropertyName().equals("current")) {
+                            sb.append("\" current=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble()); 
+                    } else if (bppList.get(j).getPropertyName().equals("charge")) {
+                            sb.append("\" charge=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                    } else if (bppList.get(j).getPropertyName().equals("bunchFreq")) {
+                            sb.append("\" bunchFreq=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                    } else if (bppList.get(j).getPropertyName().equals("phase")) {
+                            sb.append("\" phase=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                    }            
+                }
+                sb.append("\"/>\n");
+            }       
         }
+        
         
         sb.append("  </table>\n");
 
@@ -599,8 +620,8 @@ public class Db2OpenXAL {
 
         // TODO get the accelerator name to override the default one (accName)
 
-        x.write2IMPL();
-//        x.write2ModelParam();
-        x.write2XDXF();
+//        x.write2IMPL();
+        x.write2ModelParam();
+//        x.write2XDXF();
     }
 }
