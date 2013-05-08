@@ -42,6 +42,15 @@ public class BeamParameterAPI {
     public void setBeamParametersForElement(String elm) {
         // TODO fill in code
     }
+    
+    public List<BeamParameter> getAllBeamParametersForModel(Model model) {
+        List<BeamParameter> bpList = null;
+        
+        Query q;
+        q = em.createQuery("SELECT bp FROM BeamParameter bp WHERE bp.modelId=:modelId").setParameter("modelId", model);
+        bpList = q.getResultList();
+        return bpList;
+    }
 
     /**
      * get all beam parameters for the specified element
