@@ -11,6 +11,6 @@ package edu.msu.frib.xal.exl2DB;
 public class Test {
 
     public static void main(String[] args) {
-        Excel2DB.exl2DB("E:\\xal\\source_code\\code\\modelDB\\data\\lattice_model_template.xlsx", "frib");
+       Excel2DB.exl2DB("E:\\xal\\source_code\\code\\modelDB\\data\\lattice_model_template.xlsx", "frib");  
     }
 }

@@ -13,9 +13,6 @@ import edu.msu.frib.xal.exl2DB.lat_mod2DB.ReadSheet;
 import edu.msu.frib.xal.exl2DB.lat_mod2DB.RfMap2DB;
 import edu.msu.frib.xal.exl2DB.lat_mod2DB.SeqData2Map;
 import edu.msu.frib.xal.exl2DB.lat_mod2DB.SeqMap2DB;
-import java.sql.SQLException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.apache.poi.ss.usermodel.Workbook;
 
 /**

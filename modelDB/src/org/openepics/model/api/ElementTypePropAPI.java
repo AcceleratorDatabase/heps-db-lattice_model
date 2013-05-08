@@ -67,5 +67,16 @@ public class ElementTypePropAPI {
             return eletpList.get(0);
         }
     }
+    
+    public ElementTypeProp getElementTypePropByElementType(String ele_type_name){
+       Query q;
+       q=em.createQuery("SELECT etp FROM ElementTypeProp etp WHERE etp.elementTypeId.elementType=:eleTypeName").setParameter("eleTypeName", ele_type_name);
+       List<ElementTypeProp> eletpList = q.getResultList();
+        if (eletpList.isEmpty()) {
+            return null;
+        } else {
+            return eletpList.get(0);
+        }
+    }
 
 }
