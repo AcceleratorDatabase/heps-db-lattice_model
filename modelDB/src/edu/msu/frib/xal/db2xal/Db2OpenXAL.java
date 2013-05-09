@@ -25,7 +25,6 @@ import org.openepics.model.api.BeamParameterAPI;
 import org.openepics.model.api.BeamlineSequenceAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ElementPropAPI;
-import org.openepics.model.api.GoldModelAPI;
 import org.openepics.model.api.ModelAPI;
 import org.openepics.model.api.ModelDB;
 import org.openepics.model.api.ParticleTypeAPI;
@@ -275,15 +274,19 @@ public class Db2OpenXAL {
                 sb.append("\" coordinate=\"x");
                 // loop over all beam parameter properties
                 for (int j=0; j<bppList.size(); j++) {
-                    if(bppList.get(j).getPropertyName().equals("x_alpha")) {
-                        sb.append("\" alpha=\"");
-                        sb.append(bppList.get(j).getBeamParameterDouble()); 
-                    } else if (bppList.get(j).getPropertyName().equals("x_beta")) {
-                        sb.append("\" beta=\"");
-                        sb.append(bppList.get(j).getBeamParameterDouble());                         
-                    } else if (bppList.get(j).getPropertyName().equals("x_emittance")) {
-                        sb.append("\" emittance=\"");
-                        sb.append(bppList.get(j).getBeamParameterDouble());                        
+                    switch (bppList.get(j).getPropertyName()) {
+                        case "x_alpha":
+                            sb.append("\" alpha=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "x_beta":
+                            sb.append("\" beta=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;                        
+                        case "x_emittance":
+                            sb.append("\" emittance=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
                     }
                 }
                 sb.append("\"/>\n");
@@ -294,15 +297,19 @@ public class Db2OpenXAL {
                 sb.append("\" coordinate=\"y");
                 // loop over all beam parameter properties
                 for (int j=0; j<bppList.size(); j++) {
-                    if(bppList.get(j).getPropertyName().equals("y_alpha")) {
-                        sb.append("\" alpha=\"");
-                        sb.append(bppList.get(j).getBeamParameterDouble()); 
-                    } else if (bppList.get(j).getPropertyName().equals("y_beta")) {
-                        sb.append("\" beta=\"");
-                        sb.append(bppList.get(j).getBeamParameterDouble());                         
-                    } else if (bppList.get(j).getPropertyName().equals("y_emittance")) {
-                        sb.append("\" emittance=\"");
-                        sb.append(bppList.get(j).getBeamParameterDouble());                        
+                    switch (bppList.get(j).getPropertyName()) {
+                        case "y_alpha":
+                            sb.append("\" alpha=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "y_beta":
+                            sb.append("\" beta=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;                        
+                        case "y_emittance":
+                            sb.append("\" emittance=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
                     }
                 }
                 sb.append("\"/>\n");
@@ -313,15 +320,19 @@ public class Db2OpenXAL {
                 sb.append("\" coordinate=\"z");
                 // loop over all beam parameter properties
                 for (int j=0; j<bppList.size(); j++) {
-                    if(bppList.get(j).getPropertyName().equals("z_alpha")) {
-                        sb.append("\" alpha=\"");
-                        sb.append(bppList.get(j).getBeamParameterDouble()); 
-                    } else if (bppList.get(j).getPropertyName().equals("z_beta")) {
-                        sb.append("\" beta=\"");
-                        sb.append(bppList.get(j).getBeamParameterDouble());                         
-                    } else if (bppList.get(j).getPropertyName().equals("z_emittance")) {
-                        sb.append("\" emittance=\"");
-                        sb.append(bppList.get(j).getBeamParameterDouble());                        
+                    switch (bppList.get(j).getPropertyName()) {
+                        case "z_alpha":
+                            sb.append("\" alpha=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "z_beta":
+                            sb.append("\" beta=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;                        
+                        case "z_emittance":
+                            sb.append("\" emittance=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
                     }
                 }
                 sb.append("\"/>\n");
@@ -352,11 +363,30 @@ public class Db2OpenXAL {
                     .setParameter("modelId", mList.get(i));
                 List<BeamParameterProp> bppList = q.getResultList();
 
-                // for x coordinate
                 sb.append("     <record name=\"");
                 sb.append(mList.get(i).getModelName());
-
                 
+                sb.append("\" species=\"");
+                // get the energy from beam parameter properties
+                for (int j=0; j<bppList.size(); j++) {
+                    switch (bppList.get(j).getPropertyName()) {
+                        case "W":
+                            sb.append("\" W=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;                            
+                    }
+                }
+                
+//                q = em.createQuery("SELECT e FROM Element e JOIN e.beamParameterCollection bpc WHERE bpc.modelId=:modelId")
+//                    .setParameter("modelId", mList.get(i));
+//                List<Element> eList = q.getResultList();
+
+                sb.append("\" species=\"");
+                // get position
+                sb.append("\" s=\"");
+                sb.append("0");      
+//                sb.append(eList.get(0).getPos());
+                                
                 sb.append("\"/>\n");
             }
         }
