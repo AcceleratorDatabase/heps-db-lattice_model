@@ -39,8 +39,8 @@ public class ParticleTypeAPI {
         pt.setParticleMass(particle_mass);
         pt.setParticleCharge(paritcle_charge);
         
-        em.getTransaction().begin();
-        em.persist(pt);
+        em.getTransaction().begin();       
+        em.persist(pt);    
         em.getTransaction().commit();
         
         return pt;

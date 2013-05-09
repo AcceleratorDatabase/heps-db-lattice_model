@@ -42,10 +42,10 @@ public class BeamParameterAPI {
     public void setBeamParametersForElement(String elm) {
         // TODO fill in code
     }
-    
+
     public List<BeamParameter> getAllBeamParametersForModel(Model model) {
         List<BeamParameter> bpList = null;
-        
+
         Query q;
         q = em.createQuery("SELECT bp FROM BeamParameter bp WHERE bp.modelId=:modelId").setParameter("modelId", model);
         bpList = q.getResultList();
@@ -112,9 +112,10 @@ public class BeamParameterAPI {
         bp.setElementId(ele);
         bp.setModelId(model);
         bp.setParticleType(pt);
-        em.getTransaction().begin();
-        em.persist(bp);
+        em.getTransaction().begin();       
+        em.persist(bp);     
         em.getTransaction().commit();
+       
         return bp;
     }
 
