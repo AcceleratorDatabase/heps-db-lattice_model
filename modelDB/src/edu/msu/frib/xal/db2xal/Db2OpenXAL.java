@@ -366,7 +366,13 @@ public class Db2OpenXAL {
                 sb.append("     <record name=\"");
                 sb.append(mList.get(i).getModelName());
                 
+                q = em.createQuery("SELECT pt FROM ParticleType pt JOIN pt.beamParameterCollection bp WHERE bp.modelId=:modelId")
+                    .setParameter("modelId", mList.get(i));
+                List<ParticleType> ptList = q.getResultList();
                 sb.append("\" species=\"");
+                if (ptList.size() > 0)
+                    sb.append(ptList.get(0).getParticleName());
+                
                 // get the energy from beam parameter properties
                 for (int j=0; j<bppList.size(); j++) {
                     switch (bppList.get(j).getPropertyName()) {
@@ -381,8 +387,7 @@ public class Db2OpenXAL {
 //                    .setParameter("modelId", mList.get(i));
 //                List<Element> eList = q.getResultList();
 
-                sb.append("\" species=\"");
-                // get position
+                // set position, hard-wired to 0 instead of getting from DB for now
                 sb.append("\" s=\"");
                 sb.append("0");      
 //                sb.append(eList.get(0).getPos());
