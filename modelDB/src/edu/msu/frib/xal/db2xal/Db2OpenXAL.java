@@ -20,10 +20,11 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
+import javax.persistence.Query;
+import org.openepics.model.api.BeamParameterAPI;
 import org.openepics.model.api.BeamlineSequenceAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ElementPropAPI;
-import org.openepics.model.api.GoldModelAPI;
 import org.openepics.model.api.ModelAPI;
 import org.openepics.model.api.ModelDB;
 import org.openepics.model.api.ParticleTypeAPI;
@@ -111,20 +112,44 @@ public class Db2OpenXAL {
         sb.append("     </schema>\n");
         sb.append("     <record name=\"default\" current=\"0.0\" bunchFreq=\"0.0\" phase=\"(0,0,0)\" charge=\"4.96894E-11\"/>\n");
         
-        // TODO fill in
+        // find beam parameter properties for the beam
         for (int i=0; i<mList.size(); i++) {
-            sb.append("     <record name=\"");
-            sb.append(mList.get(i).getModelName());
-            sb.append("\" current=\"");
-            
-            sb.append("\" bunchFreq=\"");
-            
-            sb.append("\" phase=\"");
-            
-            sb.append("\" charge=\"");
-            
-            sb.append("\"/>\n");
+            // get beam parameters for this model
+            BeamParameterAPI bpa = new BeamParameterAPI();
+            List<BeamParameter> bpaList = bpa.getAllBeamParametersForModel(mList.get(i));
+            Query q;
+            if (bpaList.size() > 0) {
+                q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp JOIN bpp.beamParameterId pid WHERE pid.modelId=:modelId")
+                    .setParameter("modelId", mList.get(i));
+                List<BeamParameterProp> bppList = q.getResultList();
+                
+                sb.append("     <record name=\"");
+                sb.append(mList.get(i).getModelName());
+                // loop over all beam parameter properties
+                for (int j=0; j<bppList.size(); j++) {
+                    switch (bppList.get(j).getPropertyName()) {
+                        case "current":
+                            sb.append("\" current=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "charge":
+                            sb.append("\" charge=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "bunchFreq":
+                            sb.append("\" bunchFreq=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "phase":
+                            sb.append("\" phase=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;            
+                    }
+                }
+                sb.append("\"/>\n");
+            }       
         }
+        
         
         sb.append("  </table>\n");
 
@@ -232,7 +257,87 @@ public class Db2OpenXAL {
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"emittance\" type=\"java.lang.Double\"/>\n");
         sb.append("     </schema>\n");
 
-        // TODO fill in
+        // fill in twiss parameters from beam parameter properties
+        for (int i=0; i<mList.size(); i++) {
+            // get beam parameters for this model
+            BeamParameterAPI bpa = new BeamParameterAPI();
+            List<BeamParameter> bpaList = bpa.getAllBeamParametersForModel(mList.get(i));
+            Query q;
+            if (bpaList.size() > 0) {
+                q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp JOIN bpp.beamParameterId pid WHERE pid.modelId=:modelId")
+                    .setParameter("modelId", mList.get(i));
+                List<BeamParameterProp> bppList = q.getResultList();
+
+                // for x coordinate
+                sb.append("     <record name=\"");
+                sb.append(mList.get(i).getModelName());
+                sb.append("\" coordinate=\"x");
+                // loop over all beam parameter properties
+                for (int j=0; j<bppList.size(); j++) {
+                    switch (bppList.get(j).getPropertyName()) {
+                        case "x_alpha":
+                            sb.append("\" alpha=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "x_beta":
+                            sb.append("\" beta=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;                        
+                        case "x_emittance":
+                            sb.append("\" emittance=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                    }
+                }
+                sb.append("\"/>\n");
+
+                // for y coordinate
+                sb.append("     <record name=\"");
+                sb.append(mList.get(i).getModelName());
+                sb.append("\" coordinate=\"y");
+                // loop over all beam parameter properties
+                for (int j=0; j<bppList.size(); j++) {
+                    switch (bppList.get(j).getPropertyName()) {
+                        case "y_alpha":
+                            sb.append("\" alpha=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "y_beta":
+                            sb.append("\" beta=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;                        
+                        case "y_emittance":
+                            sb.append("\" emittance=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                    }
+                }
+                sb.append("\"/>\n");
+
+                // for x coordinate
+                sb.append("     <record name=\"");
+                sb.append(mList.get(i).getModelName());
+                sb.append("\" coordinate=\"z");
+                // loop over all beam parameter properties
+                for (int j=0; j<bppList.size(); j++) {
+                    switch (bppList.get(j).getPropertyName()) {
+                        case "z_alpha":
+                            sb.append("\" alpha=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "z_beta":
+                            sb.append("\" beta=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;                        
+                        case "z_emittance":
+                            sb.append("\" emittance=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                    }
+                }
+                sb.append("\"/>\n");
+            }
+        }
         
         sb.append("  </table>\n");
         
@@ -248,6 +353,48 @@ public class Db2OpenXAL {
         sb.append("     </schema>\n");
         
         // TODO fill in
+        for (int i=0; i<mList.size(); i++) {
+            // get beam parameters for this model
+            BeamParameterAPI bpa = new BeamParameterAPI();
+            List<BeamParameter> bpaList = bpa.getAllBeamParametersForModel(mList.get(i));
+            Query q;
+            if (bpaList.size() > 0) {
+                q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp JOIN bpp.beamParameterId pid WHERE pid.modelId=:modelId")
+                    .setParameter("modelId", mList.get(i));
+                List<BeamParameterProp> bppList = q.getResultList();
+
+                sb.append("     <record name=\"");
+                sb.append(mList.get(i).getModelName());
+                
+                q = em.createQuery("SELECT pt FROM ParticleType pt JOIN pt.beamParameterCollection bp WHERE bp.modelId=:modelId")
+                    .setParameter("modelId", mList.get(i));
+                List<ParticleType> ptList = q.getResultList();
+                sb.append("\" species=\"");
+                if (ptList.size() > 0)
+                    sb.append(ptList.get(0).getParticleName());
+                
+                // get the energy from beam parameter properties
+                for (int j=0; j<bppList.size(); j++) {
+                    switch (bppList.get(j).getPropertyName()) {
+                        case "W":
+                            sb.append("\" W=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;                            
+                    }
+                }
+                
+//                q = em.createQuery("SELECT e FROM Element e JOIN e.beamParameterCollection bpc WHERE bpc.modelId=:modelId")
+//                    .setParameter("modelId", mList.get(i));
+//                List<Element> eList = q.getResultList();
+
+                // set position, hard-wired to 0 instead of getting from DB for now
+                sb.append("\" s=\"");
+                sb.append("0");      
+//                sb.append(eList.get(0).getPos());
+                                
+                sb.append("\"/>\n");
+            }
+        }
         
         sb.append("  </table>\n");
         // close the tablegroup
@@ -599,8 +746,8 @@ public class Db2OpenXAL {
 
         // TODO get the accelerator name to override the default one (accName)
 
-        x.write2IMPL();
-//        x.write2ModelParam();
-        x.write2XDXF();
+//        x.write2IMPL();
+        x.write2ModelParam();
+//        x.write2XDXF();
     }
 }
