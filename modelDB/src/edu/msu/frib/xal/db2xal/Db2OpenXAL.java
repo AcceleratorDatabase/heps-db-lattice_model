@@ -142,7 +142,7 @@ public class Db2OpenXAL {
                             break;
                         case "phase":
                             sb.append("\" phase=\"");
-                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            sb.append(bppList.get(j).getBeamParameterString());
                             break;            
                     }
                 }
