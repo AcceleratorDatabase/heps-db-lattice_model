@@ -35,16 +35,16 @@ public class BeamEncapData2DB {
         if (particleList.size() == encapDataList.size() && particleList.size() == modelNameList.size()) {
             for (int i = 0; i < particleList.size(); i++) {
                 String model_name = modelNameList.get(i).toString();
-                new ModelAPI().setModelForInit(model_name,latticeName);
+                new ModelAPI().setModelForInit(model_name, latticeName);
                 BeamlineSequence beamline_sequence = new BeamlineSequenceAPI().getSequenceByName(model_name);
-                Element e=null;
+                Element e = null;
                 if (beamline_sequence == null) {
                     System.out.println("The Beamline Sequence " + model_name + " doesn't exist!");
                 } else {
-                    String first_ele_name = beamline_sequence.getFirstElementName();                   
+                    String first_ele_name = beamline_sequence.getFirstElementName();
                     e = new ElementAPI().getElementByName(first_ele_name);
-                    if(e==null){
-                       System.out.println("The element "+first_ele_name+" doesn't exist");
+                    if (e == null) {
+                        System.out.println("The element " + first_ele_name + " doesn't exist");
                     }
                 }
                 Map particleMap = (Map) particleList.get(i);
@@ -54,8 +54,8 @@ public class BeamEncapData2DB {
 
                 ParticleType particleType = new ParticleTypeAPI().getParticleType(particle_name, particle_mass, particle_charge);
                 if (particleType == null) {
-                    new ParticleTypeAPI().setParticleType(particle_name, particle_mass, particle_charge);
-                    particleType = new ParticleTypeAPI().getParticleType(particle_name, particle_mass, particle_charge);
+                    particleType = new ParticleTypeAPI().setParticleType(particle_name, particle_mass, particle_charge);
+                    // particleType = new ParticleTypeAPI().getParticleType(particle_name, particle_mass, particle_charge);
                 }
 
                 ArrayList rowClsList = (ArrayList) encapDataList.get(i);
@@ -74,6 +74,4 @@ public class BeamEncapData2DB {
             System.out.println("There is something wrong!");
         }
     }
-
-  
 }

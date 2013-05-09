@@ -32,7 +32,7 @@ public class ParticleTypeAPI {
      * @param particle_mass particle mass in Mev/c^2
      * @param particle_charge particle charge in e.u.
      */
-    public void setParticleType(String particle_name,double particle_mass,int paritcle_charge){
+    public ParticleType setParticleType(String particle_name,double particle_mass,int paritcle_charge){
         ParticleType pt=new ParticleType();
        
         pt.setParticleName(particle_name);
@@ -42,6 +42,8 @@ public class ParticleTypeAPI {
         em.getTransaction().begin();
         em.persist(pt);
         em.getTransaction().commit();
+        
+        return pt;
     }
     
     /**

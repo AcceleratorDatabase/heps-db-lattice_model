@@ -4,6 +4,7 @@
  */
 package org.openepics.model.api;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -104,16 +105,25 @@ public class ElementAPI {
             e.setBeamlineSequenceId(bls);
         }
     }
-    
-    public void setElement(String ele_name,double s,String seq_name,String ele_type_name){
-       if (getElementByName(ele_name) == null) {
+
+    public void setElement(String ele_name, double s, double len, double dx, double dy, double dz, double pitch, double yaw, double roll,
+            double pos, String seq_name, String ele_type_name) {
+        if (getElementByName(ele_name) == null) {
             Element e = new Element();
             Date date = new Date();
             e.setInsertDate(date);
-            e.setCreatedBy(System.getProperty("user.name")); 
+            e.setCreatedBy(System.getProperty("user.name"));
             e.setS(s);
+            e.setLen(len);
+            e.setDx(dx);
+            e.setDy(dy);
+            e.setDz(dz);
+            e.setPitch(pitch);
+            e.setYaw(yaw);
+            e.setRoll(roll);
+            e.setPos(pos);
             e.setElementName(ele_name);
-            ElementType et=new ElementTypeAPI().getElementTypeByType(ele_type_name);
+            ElementType et = new ElementTypeAPI().getElementTypeByType(ele_type_name);
             e.setElementTypeId(et);
             // find out the beamline sequence id
             BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
@@ -140,7 +150,7 @@ public class ElementAPI {
                 ElementProp ep = (ElementProp) it1.next();
                 em.remove(em.merge(ep));
             }
-            
+
             RfGapAPI rfGapAPI = new RfGapAPI();
             List<RfGap> rfList = rfGapAPI.getAllRfgapsForCavity(name);
             Iterator it2 = rfList.iterator();
@@ -153,7 +163,7 @@ public class ElementAPI {
             System.out.println("The element " + name + " doesn't exist!");
         }
         em.getTransaction().commit();
-        
+
     }
 
     public void updateElement(String old_name, String new_name, Object order, double s,
@@ -169,7 +179,7 @@ public class ElementAPI {
             e.setCreatedBy(System.getProperty("user.name"));
             if (order != null) {
                 e.setElementOrder(Integer.parseInt(order.toString()));
-            }else{
+            } else {
                 e.setElementOrder(null);
             }
             e.setS(s);
@@ -189,22 +199,26 @@ public class ElementAPI {
 
             em.merge(e);
             em.getTransaction().commit();
-         
-        }else{
-            System.out.println("The element "+old_name+" doesn't exist!");
+
+        } else {
+            System.out.println("The element " + old_name + " doesn't exist!");
         }
     }
-    
-    public int getMaxId(){
+
+    public int getMaxId() {
         Query q;
         q = em.createQuery("SELECT MAX(e.elementId) FROM Element e");
         List<Integer> idList = q.getResultList();
-        if(idList.get(0)==null) {
+        if (idList.get(0) == null) {
             return 0;
-        }
-        else {
+        } else {
             return idList.get(0);
         }
-        
+    }
+
+    public ArrayList<Element> getAllElementsWithNoOrder() {
+        Query q;
+        //  q=em.createNamedQuery("Element.f")
+        return null;
     }
 }

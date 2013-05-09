@@ -52,6 +52,8 @@ public class SeqMap2DB {
                     String first_ele_name = dataMap.get("first_element_name").toString();
                     String last_ele_name = dataMap.get("last_element_name").toString();
                     String pre_seq1 = dataMap.get("predecessor_sequence").toString();
+                    int bl_seq_order = (int) Double.parseDouble(dataMap.get("beamline_sequence_order").toString());
+
                     String pre_seq = pre_seq1;
                     if ("".equals(pre_seq1) || pre_seq == null || "null".equals(pre_seq)) {
                         pre_seq = null;
@@ -78,14 +80,13 @@ public class SeqMap2DB {
                         bs.setSequenceLength(seq_length);
                         bs.setSequenceDescription(seq_des);
                     }
-                   
-                    new BlsequenceLatticeAPI().setBlsequenceLattice(bs, lattice);
-                   
-                    new ElementAPI().setElement(first_ele_name, first_ele_s, sequence_name,"MARK");
-                    new ElementAPI().setElement(last_ele_name, last_ele_s, sequence_name,"MARK");
+
+                    new BlsequenceLatticeAPI().setBlsequenceLattice(bs, lattice, bl_seq_order);
+                    new ElementAPI().setElement(first_ele_name, first_ele_s, 0, 0, 0, 0, 0, 0, 0, 0, sequence_name, "marker");
+                    new ElementAPI().setElement(last_ele_name, last_ele_s, 0, 0, 0, 0, 0, 0, 0, 0, sequence_name, "marker");
 
                 }
-              //  em.getTransaction().commit();
+                //  em.getTransaction().commit();
             }
         }
 
