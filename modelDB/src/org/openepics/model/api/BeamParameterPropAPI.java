@@ -55,6 +55,12 @@ public class BeamParameterPropAPI {
         return null;
     }
 
+    public void setBeamParameterPropFor(String elem_name, int model_id, String prop_name, Object prop_val) {
+        // TODO
+        // determine object type and insert accordingly
+        
+    }
+    
     /**
      * Set beam parameter property for the specified element.
      *
