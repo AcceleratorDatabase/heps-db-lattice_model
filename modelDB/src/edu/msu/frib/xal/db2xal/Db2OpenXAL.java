@@ -746,8 +746,8 @@ public class Db2OpenXAL {
 
         // TODO get the accelerator name to override the default one (accName)
 
-//        x.write2IMPL();
+        x.write2IMPL();
         x.write2ModelParam();
-//        x.write2XDXF();
+        x.write2XDXF();
     }
 }

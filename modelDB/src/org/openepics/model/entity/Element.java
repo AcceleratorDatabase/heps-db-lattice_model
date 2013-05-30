@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author paul
+ * @author chu
  */
 @Entity
 @Table(name = "element")
@@ -92,13 +92,7 @@ public class Element implements Serializable {
     @ManyToOne
     private BeamlineSequence beamlineSequenceId;
     @OneToMany(mappedBy = "elementId")
-    private Collection<ElementInstallDevice> elementInstallDeviceCollection;
-    @OneToMany(mappedBy = "elementId")
-    private Collection<BeamParameter> beamParameterCollection;
-    @OneToMany(mappedBy = "elementId")
     private Collection<ElementProp> elementPropCollection;
-    @OneToMany(mappedBy = "cavityId")
-    private Collection<RfGap> rfGapCollection;
 
     public Element() {
     }
@@ -236,39 +230,12 @@ public class Element implements Serializable {
     }
 
     @XmlTransient
-    public Collection<ElementInstallDevice> getElementInstallDeviceCollection() {
-        return elementInstallDeviceCollection;
-    }
-
-    public void setElementInstallDeviceCollection(Collection<ElementInstallDevice> elementInstallDeviceCollection) {
-        this.elementInstallDeviceCollection = elementInstallDeviceCollection;
-    }
-
-    @XmlTransient
-    public Collection<BeamParameter> getBeamParameterCollection() {
-        return beamParameterCollection;
-    }
-
-    public void setBeamParameterCollection(Collection<BeamParameter> beamParameterCollection) {
-        this.beamParameterCollection = beamParameterCollection;
-    }
-
-    @XmlTransient
     public Collection<ElementProp> getElementPropCollection() {
         return elementPropCollection;
     }
 
     public void setElementPropCollection(Collection<ElementProp> elementPropCollection) {
         this.elementPropCollection = elementPropCollection;
-    }
-
-    @XmlTransient
-    public Collection<RfGap> getRfGapCollection() {
-        return rfGapCollection;
-    }
-
-    public void setRfGapCollection(Collection<RfGap> rfGapCollection) {
-        this.rfGapCollection = rfGapCollection;
     }
 
     @Override
