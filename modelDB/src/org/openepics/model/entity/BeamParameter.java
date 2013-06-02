@@ -5,6 +5,7 @@
 package org.openepics.model.entity;
 
 import java.io.Serializable;
+import java.util.Collection;
 import javax.persistence.Basic;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -15,12 +16,14 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
+import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author chu
+ * @author lv
  */
 @Entity
 @Table(name = "beam_parameter")
@@ -44,6 +47,8 @@ public class BeamParameter implements Serializable {
     @JoinColumn(name = "particle_type", referencedColumnName = "particle_type_id")
     @ManyToOne
     private ParticleType particleType;
+    @OneToMany(mappedBy = "beamParameterId")
+    private Collection<BeamParameterProp> beamParameterPropCollection;
 
     public BeamParameter() {
     }
@@ -82,6 +87,15 @@ public class BeamParameter implements Serializable {
 
     public void setParticleType(ParticleType particleType) {
         this.particleType = particleType;
+    }
+
+    @XmlTransient
+    public Collection<BeamParameterProp> getBeamParameterPropCollection() {
+        return beamParameterPropCollection;
+    }
+
+    public void setBeamParameterPropCollection(Collection<BeamParameterProp> beamParameterPropCollection) {
+        this.beamParameterPropCollection = beamParameterPropCollection;
     }
 
     @Override

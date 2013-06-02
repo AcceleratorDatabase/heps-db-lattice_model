@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author paul
+ * @author lv
  */
 @Entity
 @Table(name = "beam_parameter_prop")
@@ -30,6 +30,7 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "BeamParameterProp.findAll", query = "SELECT b FROM BeamParameterProp b"),
     @NamedQuery(name = "BeamParameterProp.findByBeamParameterPropId", query = "SELECT b FROM BeamParameterProp b WHERE b.beamParameterPropId = :beamParameterPropId"),
     @NamedQuery(name = "BeamParameterProp.findByPropertyName", query = "SELECT b FROM BeamParameterProp b WHERE b.propertyName = :propertyName"),
+    @NamedQuery(name = "BeamParameterProp.findByPropCategory", query = "SELECT b FROM BeamParameterProp b WHERE b.propCategory = :propCategory"),
     @NamedQuery(name = "BeamParameterProp.findByPropertyDatatype", query = "SELECT b FROM BeamParameterProp b WHERE b.propertyDatatype = :propertyDatatype"),
     @NamedQuery(name = "BeamParameterProp.findByDescription", query = "SELECT b FROM BeamParameterProp b WHERE b.description = :description"),
     @NamedQuery(name = "BeamParameterProp.findByBeamParameterInt", query = "SELECT b FROM BeamParameterProp b WHERE b.beamParameterInt = :beamParameterInt"),
@@ -37,9 +38,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "BeamParameterProp.findByBeamParameterString", query = "SELECT b FROM BeamParameterProp b WHERE b.beamParameterString = :beamParameterString"),
     @NamedQuery(name = "BeamParameterProp.findByTrnsferMatrix", query = "SELECT b FROM BeamParameterProp b WHERE b.trnsferMatrix = :trnsferMatrix")})
 public class BeamParameterProp implements Serializable {
-    @Size(max = 45)
-    @Column(name = "prop_category")
-    private String propCategory;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -49,6 +47,9 @@ public class BeamParameterProp implements Serializable {
     @Size(max = 45)
     @Column(name = "property_name")
     private String propertyName;
+    @Size(max = 45)
+    @Column(name = "prop_category")
+    private String propCategory;
     @Size(max = 45)
     @Column(name = "property_datatype")
     private String propertyDatatype;
@@ -91,6 +92,14 @@ public class BeamParameterProp implements Serializable {
 
     public void setPropertyName(String propertyName) {
         this.propertyName = propertyName;
+    }
+
+    public String getPropCategory() {
+        return propCategory;
+    }
+
+    public void setPropCategory(String propCategory) {
+        this.propCategory = propCategory;
     }
 
     public String getPropertyDatatype() {
@@ -172,14 +181,6 @@ public class BeamParameterProp implements Serializable {
     @Override
     public String toString() {
         return "org.openepics.model.entity.BeamParameterProp[ beamParameterPropId=" + beamParameterPropId + " ]";
-    }
-
-    public String getPropCategory() {
-        return propCategory;
-    }
-
-    public void setPropCategory(String propCategory) {
-        this.propCategory = propCategory;
     }
     
 }
