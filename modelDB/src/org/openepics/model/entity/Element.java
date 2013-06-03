@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author chu
+ * @author lv
  */
 @Entity
 @Table(name = "element")
@@ -36,7 +36,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Element.findAll", query = "SELECT e FROM Element e"),
     @NamedQuery(name = "Element.findByElementId", query = "SELECT e FROM Element e WHERE e.elementId = :elementId"),
     @NamedQuery(name = "Element.findByElementName", query = "SELECT e FROM Element e WHERE e.elementName = :elementName"),
-    @NamedQuery(name = "Element.findByElementOrder", query = "SELECT e FROM Element e WHERE e.elementOrder = :elementOrder"),
     @NamedQuery(name = "Element.findByInsertDate", query = "SELECT e FROM Element e WHERE e.insertDate = :insertDate"),
     @NamedQuery(name = "Element.findByCreatedBy", query = "SELECT e FROM Element e WHERE e.createdBy = :createdBy"),
     @NamedQuery(name = "Element.findByS", query = "SELECT e FROM Element e WHERE e.s = :s"),
@@ -49,6 +48,7 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Element.findByRoll", query = "SELECT e FROM Element e WHERE e.roll = :roll"),
     @NamedQuery(name = "Element.findByPos", query = "SELECT e FROM Element e WHERE e.pos = :pos")})
 public class Element implements Serializable {
+
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -58,8 +58,6 @@ public class Element implements Serializable {
     @Size(max = 45)
     @Column(name = "element_name")
     private String elementName;
-    @Column(name = "element_order")
-    private Integer elementOrder;
     @Column(name = "insert_date")
     @Temporal(TemporalType.TIMESTAMP)
     private Date insertDate;
@@ -92,7 +90,13 @@ public class Element implements Serializable {
     @ManyToOne
     private BeamlineSequence beamlineSequenceId;
     @OneToMany(mappedBy = "elementId")
+    private Collection<ElementInstallDevice> elementInstallDeviceCollection;
+    @OneToMany(mappedBy = "elementId")
+    private Collection<BeamParameter> beamParameterCollection;
+    @OneToMany(mappedBy = "elementId")
     private Collection<ElementProp> elementPropCollection;
+    @OneToMany(mappedBy = "cavityId")
+    private Collection<RfGap> rfGapCollection;
 
     public Element() {
     }
@@ -115,14 +119,6 @@ public class Element implements Serializable {
 
     public void setElementName(String elementName) {
         this.elementName = elementName;
-    }
-
-    public Integer getElementOrder() {
-        return elementOrder;
-    }
-
-    public void setElementOrder(Integer elementOrder) {
-        this.elementOrder = elementOrder;
     }
 
     public Date getInsertDate() {
@@ -230,12 +226,39 @@ public class Element implements Serializable {
     }
 
     @XmlTransient
+    public Collection<ElementInstallDevice> getElementInstallDeviceCollection() {
+        return elementInstallDeviceCollection;
+    }
+
+    public void setElementInstallDeviceCollection(Collection<ElementInstallDevice> elementInstallDeviceCollection) {
+        this.elementInstallDeviceCollection = elementInstallDeviceCollection;
+    }
+
+    @XmlTransient
+    public Collection<BeamParameter> getBeamParameterCollection() {
+        return beamParameterCollection;
+    }
+
+    public void setBeamParameterCollection(Collection<BeamParameter> beamParameterCollection) {
+        this.beamParameterCollection = beamParameterCollection;
+    }
+
+    @XmlTransient
     public Collection<ElementProp> getElementPropCollection() {
         return elementPropCollection;
     }
 
     public void setElementPropCollection(Collection<ElementProp> elementPropCollection) {
         this.elementPropCollection = elementPropCollection;
+    }
+
+    @XmlTransient
+    public Collection<RfGap> getRfGapCollection() {
+        return rfGapCollection;
+    }
+
+    public void setRfGapCollection(Collection<RfGap> rfGapCollection) {
+        this.rfGapCollection = rfGapCollection;
     }
 
     @Override
@@ -262,5 +285,4 @@ public class Element implements Serializable {
     public String toString() {
         return "org.openepics.model.entity.Element[ elementId=" + elementId + " ]";
     }
-    
 }

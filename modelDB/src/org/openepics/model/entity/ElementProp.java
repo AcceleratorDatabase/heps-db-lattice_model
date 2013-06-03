@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author chu
+ * @author lv
  */
 @Entity
 @Table(name = "element_prop")
@@ -37,8 +37,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ElementProp.findByElementPropName", query = "SELECT e FROM ElementProp e WHERE e.elementPropName = :elementPropName"),
     @NamedQuery(name = "ElementProp.findByElementPropDatatype", query = "SELECT e FROM ElementProp e WHERE e.elementPropDatatype = :elementPropDatatype")})
 public class ElementProp implements Serializable {
-    @Column(name = "element_order")
-    private Integer elementOrder;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -192,14 +190,6 @@ public class ElementProp implements Serializable {
     @Override
     public String toString() {
         return "org.openepics.model.entity.ElementProp[ elementPropId=" + elementPropId + " ]";
-    }
-
-    public Integer getElementOrder() {
-        return elementOrder;
-    }
-
-    public void setElementOrder(Integer elementOrder) {
-        this.elementOrder = elementOrder;
     }
     
 }

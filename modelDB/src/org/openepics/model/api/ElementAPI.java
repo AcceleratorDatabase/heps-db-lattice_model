@@ -5,6 +5,7 @@
 package org.openepics.model.api;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -18,6 +19,7 @@ import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
 import org.openepics.model.entity.ElementType;
+import org.openepics.model.entity.Lattice;
 import org.openepics.model.entity.RfGap;
 
 /**
@@ -63,6 +65,34 @@ public class ElementAPI {
         }
     }
 
+    public Element getElementByNameAndLattice(String ele_name, String lattice_name) {
+        /*Query q;
+         q = em.createNamedQuery("Element.findByElementName").setParameter("elementName", ele_name);
+         List<Element> eList = q.getResultList();
+         if (eList.isEmpty()) {
+         return null;
+         } else {
+         for (int i = 0; i < eList.size(); i++) {
+         Element e = eList.get(i);
+         System.out.println(e);
+         Query q1;
+         q1 = em.createQuery("SELECT ep FROM ElementProp ep WHERE ep.elementId.elementName=:elementName").setParameter("elementName", ele_name);
+         List epList = q1.setMaxResults(2).getResultList();
+         if (epList.isEmpty()) {
+         return null;
+         } else {
+         ElementProp ep = (ElementProp) epList.get(0);
+         System.out.println(ep);
+         if (lattice_name.equals(ep.getLatticeId().getLatticeName())) {
+         return e;
+         }
+
+         }
+         }
+         }*/
+        return null;
+    }
+
     /**
      * Insert a new element into database
      *
@@ -79,7 +109,7 @@ public class ElementAPI {
      * @param pos distance from start of the sequence
      * @param sequence_name the sequence name the element resided in
      */
-    public void setElement(String name, int order, double s,
+    public void setElement(String name, double s,
             double len, double dx, double dy, double dz, double pitch, double yaw, double roll,
             double pos, String sequence_name) {
         // first, check if this element has already in the DB
@@ -88,7 +118,7 @@ public class ElementAPI {
             Date date = new Date();
             e.setInsertDate(date);
             e.setCreatedBy(System.getProperty("user.name"));
-            e.setElementOrder(order);
+            // e.setElementOrder(order);
             e.setS(s);
             e.setLen(len);
             e.setDx(dx);
@@ -107,12 +137,11 @@ public class ElementAPI {
     }
 
     public void setElement(String ele_name, double s, double len, double dx, double dy, double dz, double pitch, double yaw, double roll,
-            double pos, String seq_name, String ele_type_name) {
+            double pos, String created_by, Date create_date, String seq_name, String ele_type_name) {
         if (getElementByName(ele_name) == null) {
             Element e = new Element();
-            Date date = new Date();
-            e.setInsertDate(date);
-            e.setCreatedBy(System.getProperty("user.name"));
+            e.setInsertDate(create_date);
+            e.setCreatedBy(created_by);
             e.setS(s);
             e.setLen(len);
             e.setDx(dx);
@@ -166,7 +195,7 @@ public class ElementAPI {
 
     }
 
-    public void updateElement(String old_name, String new_name, Object order, double s,
+    public void updateElement(String old_name, String new_name, double s,
             double len, double dx, double dy, double dz, double pitch, double yaw, double roll,
             double pos, String sequence_name) {
 
@@ -177,11 +206,11 @@ public class ElementAPI {
             Date date = new Date();
             e.setInsertDate(date);
             e.setCreatedBy(System.getProperty("user.name"));
-            if (order != null) {
-                e.setElementOrder(Integer.parseInt(order.toString()));
-            } else {
-                e.setElementOrder(null);
-            }
+            /* if (order != null) {
+             e.setElementOrder(Integer.parseInt(order.toString()));
+             } else {
+             e.setElementOrder(null);
+             }*/
             e.setS(s);
             e.setLen(len);
             e.setDx(dx);
@@ -216,9 +245,19 @@ public class ElementAPI {
         }
     }
 
-    public ArrayList<Element> getAllElementsWithNoOrder() {
+    public ArrayList<Element> getAllElementsForLattice(String latticeName) {
         Query q;
-        //  q=em.createNamedQuery("Element.f")
-        return null;
+        ArrayList<Element> eList = new ArrayList();
+        List<BeamlineSequence> blsList = new BlsequenceLatticeAPI().getSequencesForLattice(latticeName);
+        Iterator it = blsList.iterator();
+        while (it.hasNext()) {
+            BeamlineSequence bls = (BeamlineSequence) it.next();
+            q = em.createQuery("SELECT e FROM Element e WHERE e.beamlineSequenceId=:beamlineSequence")
+                    .setParameter("beamlineSequence", bls);
+
+            List<Element> eList1 = q.getResultList();
+            eList.addAll(eList1);
+        }
+        return eList;
     }
 }

@@ -10,12 +10,13 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import org.apache.poi.hpsf.MarkUnsupportedException;
+import org.apache.poi.hpsf.NoPropertySetStreamException;
 import org.apache.poi.hpsf.PropertySetFactory;
 import org.apache.poi.hpsf.SummaryInformation;
 import org.apache.poi.poifs.eventfilesystem.POIFSReader;
 import org.apache.poi.poifs.eventfilesystem.POIFSReaderEvent;
 import org.apache.poi.poifs.eventfilesystem.POIFSReaderListener;
-
 import org.apache.poi.ss.usermodel.Workbook;
 
 /**
@@ -24,6 +25,8 @@ import org.apache.poi.ss.usermodel.Workbook;
  * @author chu
  */
 public class ReadExl {
+
+    private SummaryInformation si;
 
     public static Workbook getWorkbook(String filePath) {
         if (filePath == null || "".equals(filePath)) {
@@ -35,8 +38,15 @@ public class ReadExl {
             return wb;
         }
     }
+    
+    public String getFileName(String filePath){
+       int startIndex=filePath.lastIndexOf("\\");
+       int lastIndex=filePath.indexOf(".");
+       String fileName=filePath.substring(startIndex+1, lastIndex);
+       return fileName;
+    }
 
-    public static void getProperty(String filePath) {
+    public void getPropertys(String filePath) {
         try {
             final String filename = filePath;
             POIFSReader r = new POIFSReader();
@@ -51,24 +61,35 @@ public class ReadExl {
 
     }
 
-    static class MyPOIFSReaderListener implements POIFSReaderListener {
+    class MyPOIFSReaderListener implements POIFSReaderListener {
 
+        @Override
         public void processPOIFSReaderEvent(POIFSReaderEvent event) {
-            SummaryInformation si = null;
+            //SummaryInformation si = null;
             try {
                 si = (SummaryInformation) PropertySetFactory.create(event.getStream());
-            } catch (Exception ex) {
+            } catch (NoPropertySetStreamException | MarkUnsupportedException | IOException ex) {
                 throw new RuntimeException("Property set stream \""
                         + event.getPath() + event.getName() + "\": " + ex);
             }
-            final String title = si.getTitle();
+            /*final String title = si.getTitle();
             if (title != null) {
                 System.out.println("Title: \"" + title + "\"");
             } else {
                 System.out.println("Document has no title.");
             }
-            System.out.println(si.getAuthor());
-            
+            System.out.println(si.getAuthor());*/
         }
+    }
+
+    public SummaryInformation getSummaryInformation(String filePath) {
+        if(si==null){
+           this.getPropertys(filePath);
+        }
+        return si;
+    }
+    
+    public void setSummaryInformation(String filePath){
+       this.getPropertys(filePath);
     }
 }

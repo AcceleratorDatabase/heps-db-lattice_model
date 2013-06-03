@@ -1,6 +1,6 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
 
 CREATE SCHEMA IF NOT EXISTS `discs_model` DEFAULT CHARACTER SET utf8 ;
 USE `discs_model` ;
@@ -359,7 +359,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_prop` (
   `element_prop_name` VARCHAR(45) NULL DEFAULT NULL ,
   `element_prop_datatype` VARCHAR(45) NULL DEFAULT NULL ,
   `lattice_id` INT(11) NULL DEFAULT NULL ,
-  `element_order` INT NULL DEFAULT NULL ,
   PRIMARY KEY (`element_prop_id`) ,
   INDEX `FK_element_id_idx` (`element_id` ASC) ,
   INDEX `FK_element_prop_type` (`element_type_prop_id` ASC) ,

@@ -179,20 +179,22 @@ public class ModelAPI {
 
         m.setModelName(model_name);
         m.setModelDesc(model_desc);
-        m.setCreatedBy(System.getProperty("user.name"));
-        m.setCreateDate(new Date());
+        m.setUpdatedBy(System.getProperty("user.name"));
+        m.setUpdateDate(new Date());   
         em.getTransaction().begin();
         em.persist(m);
         em.getTransaction().commit();
     }
 
-    public void setModelForInit(String model_name, String lattice_name) {
+    public void setModelForInit(String model_name, String lattice_name,String created_by,Date create_date) {
         Model m = new Model();
         Lattice l=new LatticeAPI().getLatticeByName(lattice_name);
         m.setLatticeId(l);
         m.setModelName(model_name);
-        m.setCreatedBy(System.getProperty("user.name"));
-        m.setCreateDate(new Date());
+        m.setUpdatedBy(System.getProperty("user.name"));
+        m.setUpdateDate(new Date());  
+        m.setCreatedBy(created_by);
+        m.setCreateDate(create_date);
         m.setInitialConditionInd(1);
         em.getTransaction().begin();
         em.persist(m);

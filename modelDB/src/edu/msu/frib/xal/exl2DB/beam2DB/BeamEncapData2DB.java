@@ -6,6 +6,7 @@ package edu.msu.frib.xal.exl2DB.beam2DB;
 
 import edu.msu.frib.xal.exl2DB.lat_mod2DB.ReadComSheet;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -28,14 +29,14 @@ import org.openepics.model.entity.ParticleType;
  */
 public class BeamEncapData2DB {
 
-    public static void instDB(Workbook wb, String sheetName, String latticeName) {
+    public static void instDB(Workbook wb, String sheetName, String latticeName, String created_by, Date create_date) {
         ArrayList particleList = ReadBeamSheet.getParticleList(wb, sheetName);
         ArrayList encapDataList = BeamDataEncap.getEncapData(wb, sheetName);
         ArrayList modelNameList = ReadComSheet.getColList(wb, sheetName, "model/name", "DB label");
         if (particleList.size() == encapDataList.size() && particleList.size() == modelNameList.size()) {
             for (int i = 0; i < particleList.size(); i++) {
                 String model_name = modelNameList.get(i).toString();
-                new ModelAPI().setModelForInit(model_name, latticeName);
+                new ModelAPI().setModelForInit(model_name, latticeName,created_by, create_date);
                 BeamlineSequence beamline_sequence = new BeamlineSequenceAPI().getSequenceByName(model_name);
                 Element e = null;
                 if (beamline_sequence == null) {

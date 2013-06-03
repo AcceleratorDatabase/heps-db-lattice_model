@@ -1,8 +1,8 @@
 package edu.msu.frib.xal.exl2DB.tools;
 
-import java.sql.Connection;
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -25,7 +25,14 @@ public class DBTools {
 
         try {
             Class.forName(driver1);
-            conn = DriverManager.getConnection(url1, user, password);
+            conn = (Connection) DriverManager.getConnection(url1, user, password);
+            boolean rbsign=conn.getRewriteBatchedStatements();          
+            if(!rbsign){
+               url1=url1+"?rewriteBatchedStatements=true";
+               closeConnection(conn);
+               conn=(Connection) DriverManager.getConnection(url1, user, password);
+            }
+
         } catch (ClassNotFoundException ce) {
             ce.printStackTrace();
         } catch (SQLException se) {
@@ -42,7 +49,13 @@ public class DBTools {
         String url = properties.get("javax.persistence.jdbc.url") + "?rewriteBatchedStatements=true";
         try {
             Class.forName(driver);
-            conn = DriverManager.getConnection(url, user, password);
+            conn = (Connection) DriverManager.getConnection(url, user, password);
+            boolean rbsign=conn.getRewriteBatchedStatements();          
+            if(!rbsign){
+               url=url+"?rewriteBatchedStatements=true";
+               closeConnection(conn);
+               conn=(Connection) DriverManager.getConnection(url, user, password);
+            }
         } catch (ClassNotFoundException ce) {
             ce.printStackTrace();
         } catch (SQLException se) {
@@ -54,13 +67,21 @@ public class DBTools {
     public static Connection getConnection() {
         Connection conn = null;
         Map properties = ReadPersistenceXML.getPropMap();
-        String driver = (String) properties.get("javax.persistence.jdbc.driver");
-        String url = properties.get("javax.persistence.jdbc.url") + "?rewriteBatchedStatements=true";
+        String driver = (String) properties.get("javax.persistence.jdbc.driver");       
+       // String url = properties.get("javax.persistence.jdbc.url") + "?rewriteBatchedStatements=true";
+        String url = (String) properties.get("javax.persistence.jdbc.url");
         String user = (String) properties.get("javax.persistence.jdbc.user");
         String password = (String) properties.get("javax.persistence.jdbc.password");
         try {
             Class.forName(driver);
-            conn = DriverManager.getConnection(url, user, password);
+            conn = (Connection) DriverManager.getConnection(url, user, password);
+            boolean rbsign=conn.getRewriteBatchedStatements();          
+            if(!rbsign){
+               url=url+"?rewriteBatchedStatements=true";
+               closeConnection(conn);
+               conn=(Connection) DriverManager.getConnection(url, user, password);
+            }
+ //           System.out.println(conn.getRewriteBatchedStatements());
         } catch (ClassNotFoundException ce) {
             ce.printStackTrace();
         } catch (SQLException se) {

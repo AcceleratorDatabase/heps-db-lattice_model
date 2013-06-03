@@ -28,46 +28,50 @@ public class LatticeAPI {
     static EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
-
     /**
-     * 
+     *
      */
-    public int setLattice(String lattice_name) {
-        Lattice l=new Lattice();
-        Date date=new Date();
+    public int setLattice(String lattice_name, String created_by, Date create_date) {
+        Lattice l = new Lattice();
+
+        Date date = new Date();
         l.setLatticeName(lattice_name);
-        l.setCreatedBy(System.getProperty("user.name"));
-        l.setCreateDate(date);
-        
+        l.setUpdatedBy(System.getProperty("user.name"));
+        l.setUpdateDate(date);
+        l.setCreatedBy(created_by);
+        l.setCreateDate(create_date);
+
         em.getTransaction().begin();
         em.persist(l);
         em.getTransaction().commit();
-        
+
         return l.getLatticeId();
     }
 
     /**
-     * 
+     *
      */
-    public int setLattice(String lattice_name,String lattice_description) {
-        Lattice l=new Lattice();
-        Date date=new Date();
+    public int setLattice(String lattice_name, String lattice_description, String created_by, Date create_date) {
+        Lattice l = new Lattice();
+        Date date = new Date();
         l.setLatticeName(lattice_name);
         l.setLatticeDescription(lattice_description);
-        l.setCreatedBy(System.getProperty("user.name"));
-        l.setCreateDate(date);
-        
+        l.setUpdatedBy(System.getProperty("user.name"));
+        l.setUpdateDate(date);
+        l.setCreatedBy(created_by);
+        l.setCreateDate(create_date);
+
         em.getTransaction().begin();
         em.persist(l);
         em.getTransaction().commit();
-        
+
         return l.getLatticeId();
     }
 
     /**
-     * 
+     *
      * @param latticeName
-     * @return 
+     * @return
      */
     public Lattice getLatticeByName(String latticeName) {
         Query q;
@@ -81,9 +85,9 @@ public class LatticeAPI {
     }
 
     /**
-     * 
+     *
      * @param latticeName
-     * @return 
+     * @return
      */
     public List<ElementProp> getAllPropertiesForLattice(String latticeName) {
         Query q;
@@ -94,8 +98,8 @@ public class LatticeAPI {
     }
 
     /**
-     * 
-     * @param name 
+     *
+     * @param name
      */
     public void deleteLatticeByName(String name) {
         Lattice l = getLatticeByName(name);
@@ -114,5 +118,4 @@ public class LatticeAPI {
             System.out.println("The lattice " + name + " doesn't exist!");
         }
     }
-  
 }

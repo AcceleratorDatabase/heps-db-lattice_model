@@ -5,6 +5,7 @@
 package edu.msu.frib.xal.exl2DB.lat_mod2DB;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.Iterator;
 import java.util.Map;
 import javax.persistence.EntityManager;
@@ -17,6 +18,7 @@ import org.openepics.model.api.BlsequenceLatticeAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.LatticeAPI;
 import org.openepics.model.entity.BeamlineSequence;
+import org.openepics.model.entity.Element;
 import org.openepics.model.entity.Lattice;
 
 /**
@@ -31,7 +33,7 @@ public class SeqMap2DB {
     static EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
-    public void instDB(ArrayList mapData, String latticeName) {
+    public void instDB(ArrayList mapData, String latticeName, String created_by, Date create_date) {
         if (latticeName == null || "".equals(latticeName)) {
             System.out.println("Please insert the Lattice name!");
         } else {
@@ -42,7 +44,7 @@ public class SeqMap2DB {
             } else {
                 em.getTransaction().begin();
 
-                int lattice_id = new LatticeAPI().setLattice(latticeName);
+                int lattice_id = new LatticeAPI().setLattice(latticeName, created_by, create_date);
                 Lattice lattice = em.find(Lattice.class, lattice_id);
 
                 Iterator it = mapData.iterator();
@@ -82,14 +84,21 @@ public class SeqMap2DB {
                     }
 
                     new BlsequenceLatticeAPI().setBlsequenceLattice(bs, lattice, bl_seq_order);
-                    new ElementAPI().setElement(first_ele_name, first_ele_s, 0, 0, 0, 0, 0, 0, 0, 0, sequence_name, "marker");
-                    new ElementAPI().setElement(last_ele_name, last_ele_s, 0, 0, 0, 0, 0, 0, 0, seq_length, sequence_name, "marker");
-
+                    Element first_ele = new ElementAPI().getElementByName(first_ele_name);
+                    Element last_ele = new ElementAPI().getElementByName(last_ele_name);
+                    if (first_ele != null) {
+                        System.out.println("Warning:The element " + first_ele_name + " is already in the database! Please don't insert repeatedly!");
+                    } else {
+                        new ElementAPI().setElement(first_ele_name, first_ele_s, 0, 0, 0, 0, 0, 0, 0, 0, created_by, create_date,sequence_name, "marker");
+                    }
+                    if (last_ele != null) {
+                        System.out.println("Warning:The element " + last_ele_name + " is already in the database! Please don't insert repeatedly!");
+                    } else {
+                          new ElementAPI().setElement(last_ele_name, last_ele_s, 0, 0, 0, 0, 0, 0, 0, seq_length, created_by, create_date,sequence_name, "marker");
+                    }                 
                 }
                 //  em.getTransaction().commit();
             }
         }
-
-
     }
 }
