@@ -37,6 +37,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "ModelLine.findByStartMarker", query = "SELECT m FROM ModelLine m WHERE m.startMarker = :startMarker"),
     @NamedQuery(name = "ModelLine.findByEndMarker", query = "SELECT m FROM ModelLine m WHERE m.endMarker = :endMarker")})
 public class ModelLine implements Serializable {
+    @OneToMany(mappedBy = "modelLineId")
+    private Collection<Lattice> latticeCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -158,6 +160,15 @@ public class ModelLine implements Serializable {
     @Override
     public String toString() {
         return "org.openepics.model.entity.ModelLine[ modelLineId=" + modelLineId + " ]";
+    }
+
+    @XmlTransient
+    public Collection<Lattice> getLatticeCollection() {
+        return latticeCollection;
+    }
+
+    public void setLatticeCollection(Collection<Lattice> latticeCollection) {
+        this.latticeCollection = latticeCollection;
     }
     
 }

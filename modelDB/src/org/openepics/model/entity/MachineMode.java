@@ -33,6 +33,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "MachineMode.findByMachineModeName", query = "SELECT m FROM MachineMode m WHERE m.machineModeName = :machineModeName"),
     @NamedQuery(name = "MachineMode.findByMachineModeDescription", query = "SELECT m FROM MachineMode m WHERE m.machineModeDescription = :machineModeDescription")})
 public class MachineMode implements Serializable {
+    @OneToMany(mappedBy = "machineModeId")
+    private Collection<Lattice> latticeCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -111,6 +113,15 @@ public class MachineMode implements Serializable {
     @Override
     public String toString() {
         return "org.openepics.model.entity.MachineMode[ machineModeId=" + machineModeId + " ]";
+    }
+
+    @XmlTransient
+    public Collection<Lattice> getLatticeCollection() {
+        return latticeCollection;
+    }
+
+    public void setLatticeCollection(Collection<Lattice> latticeCollection) {
+        this.latticeCollection = latticeCollection;
     }
     
 }

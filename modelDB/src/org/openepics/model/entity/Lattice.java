@@ -13,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -40,6 +42,15 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Lattice.findByUpdatedBy", query = "SELECT l FROM Lattice l WHERE l.updatedBy = :updatedBy"),
     @NamedQuery(name = "Lattice.findByUpdateDate", query = "SELECT l FROM Lattice l WHERE l.updateDate = :updateDate")})
 public class Lattice implements Serializable {
+    @JoinColumn(name = "model_geometry_id", referencedColumnName = "model_geometry_id")
+    @ManyToOne
+    private ModelGeometry modelGeometryId;
+    @JoinColumn(name = "machine_mode_id", referencedColumnName = "machine_mode_id")
+    @ManyToOne
+    private MachineMode machineModeId;
+    @JoinColumn(name = "model_line_id", referencedColumnName = "model_line_id")
+    @ManyToOne
+    private ModelLine modelLineId;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -195,6 +206,30 @@ public class Lattice implements Serializable {
     @Override
     public String toString() {
         return "org.openepics.model.entity.Lattice[ latticeId=" + latticeId + " ]";
+    }
+
+    public ModelGeometry getModelGeometryId() {
+        return modelGeometryId;
+    }
+
+    public void setModelGeometryId(ModelGeometry modelGeometryId) {
+        this.modelGeometryId = modelGeometryId;
+    }
+
+    public MachineMode getMachineModeId() {
+        return machineModeId;
+    }
+
+    public void setMachineModeId(MachineMode machineModeId) {
+        this.machineModeId = machineModeId;
+    }
+
+    public ModelLine getModelLineId() {
+        return modelLineId;
+    }
+
+    public void setModelLineId(ModelLine modelLineId) {
+        this.modelLineId = modelLineId;
     }
     
 }
