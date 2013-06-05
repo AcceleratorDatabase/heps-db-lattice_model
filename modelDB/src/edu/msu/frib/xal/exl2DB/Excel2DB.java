@@ -41,7 +41,8 @@ public class Excel2DB {
             } else {
                 SummaryInformation si = r.getSummaryInformation(filePath);
                 String created_by = si.getAuthor();
-                Date create_date = si.getCreateDateTime();
+                Date create_date = si.getLastSaveDateTime();
+                
 
                 DevTpMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device types")));
                 DevModTpMap2BD.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device-model types")));
