@@ -138,9 +138,11 @@ public class ModelAPI {
                 ModelLine ml = new ModelLine();
                 ml.setModelLineName(model_line);
                 em.persist(ml);
-                m.setModelLineId(ml);
+              //  m.setModelLineId(ml);
+                l.setModelLineId(ml);
             } else {
-                m.setModelLineId((ModelLine) q.getResultList().get(0));
+              //  m.setModelLineId((ModelLine) q.getResultList().get(0));
+                l.setModelLineId(mlList.get(0));
             }
 
 
@@ -152,9 +154,11 @@ public class ModelAPI {
                 MachineMode mm = new MachineMode();
                 mm.setMachineModeName(machine_mode);
                 em.persist(mm);
-                m.setMachineModeId(mm);
+               // m.setMachineModeId(mm);
+                l.setMachineModeId(mm);
             } else {
-                m.setMachineModeId(mmList.get(0));
+               // m.setMachineModeId(mmList.get(0));
+                l.setMachineModeId(mmList.get(0));
             }
             em.persist(l);
             m.setLatticeId(l);
