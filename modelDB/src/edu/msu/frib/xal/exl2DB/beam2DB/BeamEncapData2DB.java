@@ -58,7 +58,6 @@ public class BeamEncapData2DB {
                     particleType = new ParticleTypeAPI().setParticleType(particle_name, particle_mass, particle_charge);
                     // particleType = new ParticleTypeAPI().getParticleType(particle_name, particle_mass, particle_charge);
                 }
-
                 ArrayList rowClsList = (ArrayList) encapDataList.get(i);
                 Model model = new ModelAPI().getModelForName(model_name);
                 BeamParameter beamParameter = new BeamParameterAPI().setBeamParameter(e, model, particleType);
