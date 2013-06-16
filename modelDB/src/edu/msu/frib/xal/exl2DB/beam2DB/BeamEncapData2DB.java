@@ -36,7 +36,7 @@ public class BeamEncapData2DB {
         if (particleList.size() == encapDataList.size() && particleList.size() == modelNameList.size()) {
             for (int i = 0; i < particleList.size(); i++) {
                 String model_name = modelNameList.get(i).toString();
-                new ModelAPI().setModelForInit(model_name, latticeName,created_by, create_date);
+                new ModelAPI().setModelForInit(model_name, latticeName, created_by, create_date);
                 BeamlineSequence beamline_sequence = new BeamlineSequenceAPI().getSequenceByName(model_name);
                 Element e = null;
                 if (beamline_sequence == null) {
@@ -60,12 +60,12 @@ public class BeamEncapData2DB {
                 }
 
                 ArrayList rowClsList = (ArrayList) encapDataList.get(i);
+                Model model = new ModelAPI().getModelForName(model_name);
+                BeamParameter beamParameter = new BeamParameterAPI().setBeamParameter(e, model, particleType);
                 Iterator it = rowClsList.iterator();
                 while (it.hasNext()) {
                     BeamCell cellProp = (BeamCell) it.next();
                     if ("beam_parameter_prop".equals(cellProp.getTableName())) {
-                        Model model = new ModelAPI().getModelForName(model_name);
-                        BeamParameter beamParameter = new BeamParameterAPI().setBeamParameter(e, model, particleType);
                         new BeamParameterPropAPI().setBeamParameterProp(beamParameter, cellProp.getCategory(), cellProp.getName(), cellProp.getDatatype(), cellProp.getValue(), null);
                     }
                 }
