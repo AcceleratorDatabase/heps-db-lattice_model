@@ -32,7 +32,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beamline_sequence` (
   `sequence_name` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`beamline_sequence_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 12
+AUTO_INCREMENT = 23
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -45,7 +45,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type` (
   `element_type_description` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`element_type_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 63
+AUTO_INCREMENT = 125
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -78,7 +78,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element` (
     FOREIGN KEY (`element_type_id` )
     REFERENCES `discs_model`.`element_type` (`element_type_id` ))
 ENGINE = InnoDB
-AUTO_INCREMENT = 1310
+AUTO_INCREMENT = 2619
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -156,7 +156,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`lattice` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 2
+AUTO_INCREMENT = 3
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -277,7 +277,27 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`blsequence_lattice` (
     FOREIGN KEY (`beamline_sequence_id` )
     REFERENCES `discs_model`.`beamline_sequence` (`beamline_sequence_id` ))
 ENGINE = InnoDB
-AUTO_INCREMENT = 12
+AUTO_INCREMENT = 23
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `discs_model`.`element_install_device`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `discs_model`.`element_install_device` (
+  `element_install_id` INT(11) NOT NULL ,
+  `element_id` INT(11) NULL DEFAULT NULL ,
+  `install_id` INT(11) NULL DEFAULT NULL ,
+  `slice` INT(11) NULL DEFAULT NULL ,
+  `index` INT(11) NULL DEFAULT NULL ,
+  PRIMARY KEY (`element_install_id`) ,
+  INDEX `FK_element_id` (`element_id` ASC) ,
+  CONSTRAINT `FK_element_id`
+    FOREIGN KEY (`element_id` )
+    REFERENCES `discs_model`.`element` (`element_id` )
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -298,7 +318,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type_prop` (
     FOREIGN KEY (`element_type_id` )
     REFERENCES `discs_model`.`element_type` (`element_type_id` ))
 ENGINE = InnoDB
-AUTO_INCREMENT = 63
+AUTO_INCREMENT = 125
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -331,7 +351,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_prop` (
     FOREIGN KEY (`element_type_prop_id` )
     REFERENCES `discs_model`.`element_type_prop` (`element_type_prop_id` ))
 ENGINE = InnoDB
-AUTO_INCREMENT = 6176
+AUTO_INCREMENT = 12351
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -396,7 +416,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`rf_gap` (
     FOREIGN KEY (`cavity_id` )
     REFERENCES `discs_model`.`element` (`element_id` ))
 ENGINE = InnoDB
-AUTO_INCREMENT = 333
+AUTO_INCREMENT = 665
 DEFAULT CHARACTER SET = latin1;
 
 
