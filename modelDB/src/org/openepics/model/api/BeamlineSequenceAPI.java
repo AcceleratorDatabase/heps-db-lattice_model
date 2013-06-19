@@ -31,7 +31,7 @@ import org.tools.persistence.PersistenceTools;
 public class BeamlineSequenceAPI {
 
     @PersistenceUnit
-    static Map properties=PersistenceTools.setPersistenceParameters("mysql", "localhost:3306", "root", "826529");
+    static Map properties=PersistenceTools.setPersistenceParameters("mysql", "localhost:3306", "paul", "model_test");
     static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU",properties);
     static final EntityManager em = emf.createEntityManager();
 
