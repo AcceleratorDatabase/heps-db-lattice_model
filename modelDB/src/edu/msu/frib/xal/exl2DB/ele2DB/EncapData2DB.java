@@ -57,7 +57,7 @@ public class EncapData2DB {
 
             boolean propStateSign = false;
             boolean eStateSign = false;
-          ;
+           
             try {
                 conn = (Connection) DBTools.getConnection();
                 conn.setAutoCommit(false);
@@ -101,7 +101,8 @@ public class EncapData2DB {
                                 int element_id = 0;
                                 String ele_name = (String) eleNameList.get(t);
                                 ElementAPI elementAPI = new ElementAPI();
-                                Element e = elementAPI.getElementByName(ele_name);
+                                //Element e = elementAPI.getElementByName(ele_name);
+                                Element e=elementAPI.getElementByNameAndType(ele_name, ele_type);
                                 boolean ele_sign = false;      //If true,the element is already in the database
 
                                 // if (e != null && e.getBeamlineSequenceId().getSequenceName().equals(sequence_name)) {

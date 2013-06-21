@@ -65,6 +65,19 @@ public class ElementAPI {
         }
     }
 
+    public Element getElementByNameAndType(String name, String type) {
+        Query q;
+        q = em.createQuery("SELECT e FROM Element e WHERE e.elementName=:elementName "
+                + "AND e.elementTypeId.elementType=:elementType").setParameter("elementName", name)
+                .setParameter("elementType", type);
+        List eList = q.getResultList();
+        if (eList.isEmpty()) {
+            return null;
+        } else {
+            return (Element) eList.get(0);
+        }
+    }
+
     public Element getElementByNameAndLattice(String ele_name, String lattice_name) {
         /*Query q;
          q = em.createNamedQuery("Element.findByElementName").setParameter("elementName", ele_name);
