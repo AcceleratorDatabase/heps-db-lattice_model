@@ -644,8 +644,13 @@ public class Db2OpenXAL {
                     if (!e.getElementTypeId().getElementType().equals("MARK")) {
                         sb.append("         <channelsuite>\n");
                         // for magnets
-                        if (!elementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty() &&
-                               !e.getElementTypeId().getElementType().equals("CAV") ) {
+                        //if (!elementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty() &&
+                        //       !e.getElementTypeId().getElementType().equals("CAV") ) 
+                        if ((!elementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty() ||
+                                e.getElementTypeId().getElementType().equals("DCH") ||
+                                e.getElementTypeId().getElementType().equals("DCV")) &&
+                                !e.getElementTypeId().getElementType().equals("CAV")) 
+                        {
                             sb.append("            <channel handle=\"fieldRB\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":B\" settable=\"false\"/>\n");
@@ -654,7 +659,7 @@ public class Db2OpenXAL {
                             sb.append(":B_Set\" settable=\"true\"/>\n");
                         }
                         // for BPMs
-                        if (!elementPropAPI.getBpmAttributesForElement(e.getElementName()).isEmpty()) {
+                        if (e.getElementTypeId().getElementType().equals("BPM")) {
                             sb.append("            <channel handle=\"xAvg\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":xAvg\" settable=\"false\"/>\n");
@@ -662,6 +667,22 @@ public class Db2OpenXAL {
                             sb.append(e.getElementName());
                             sb.append(":yAvg\" settable=\"false\"/>\n");
                         }
+                        // for RF cavities
+                        if (e.getElementTypeId().getElementType().equals("CAV")) {
+                            sb.append("            <channel handle=\"cavAmpSet\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":ampSet\" settable=\"true\"/>\n");
+                            sb.append("            <channel handle=\"cavPhaseSet\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":phaseSet\" settable=\"true\"/>\n");
+                            sb.append("            <channel handle=\"cavAmpAvg\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":amp\" settable=\"false\"/>\n");
+                            sb.append("            <channel handle=\"cavPhaseAvg\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":phase\" settable=\"false\"/>\n");
+                        }
+                        
 
                         sb.append("         </channelsuite>\n");
 
