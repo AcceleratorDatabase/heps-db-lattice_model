@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "element")
@@ -35,54 +35,53 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Element.findAll", query = "SELECT e FROM Element e"),
     @NamedQuery(name = "Element.findByElementId", query = "SELECT e FROM Element e WHERE e.elementId = :elementId"),
-    @NamedQuery(name = "Element.findByElementName", query = "SELECT e FROM Element e WHERE e.elementName = :elementName"),
-    @NamedQuery(name = "Element.findByInsertDate", query = "SELECT e FROM Element e WHERE e.insertDate = :insertDate"),
     @NamedQuery(name = "Element.findByCreatedBy", query = "SELECT e FROM Element e WHERE e.createdBy = :createdBy"),
-    @NamedQuery(name = "Element.findByS", query = "SELECT e FROM Element e WHERE e.s = :s"),
-    @NamedQuery(name = "Element.findByLen", query = "SELECT e FROM Element e WHERE e.len = :len"),
     @NamedQuery(name = "Element.findByDx", query = "SELECT e FROM Element e WHERE e.dx = :dx"),
     @NamedQuery(name = "Element.findByDy", query = "SELECT e FROM Element e WHERE e.dy = :dy"),
     @NamedQuery(name = "Element.findByDz", query = "SELECT e FROM Element e WHERE e.dz = :dz"),
+    @NamedQuery(name = "Element.findByElementName", query = "SELECT e FROM Element e WHERE e.elementName = :elementName"),
+    @NamedQuery(name = "Element.findByInsertDate", query = "SELECT e FROM Element e WHERE e.insertDate = :insertDate"),
+    @NamedQuery(name = "Element.findByLen", query = "SELECT e FROM Element e WHERE e.len = :len"),
     @NamedQuery(name = "Element.findByPitch", query = "SELECT e FROM Element e WHERE e.pitch = :pitch"),
-    @NamedQuery(name = "Element.findByYaw", query = "SELECT e FROM Element e WHERE e.yaw = :yaw"),
+    @NamedQuery(name = "Element.findByPos", query = "SELECT e FROM Element e WHERE e.pos = :pos"),
     @NamedQuery(name = "Element.findByRoll", query = "SELECT e FROM Element e WHERE e.roll = :roll"),
-    @NamedQuery(name = "Element.findByPos", query = "SELECT e FROM Element e WHERE e.pos = :pos")})
+    @NamedQuery(name = "Element.findByS", query = "SELECT e FROM Element e WHERE e.s = :s"),
+    @NamedQuery(name = "Element.findByYaw", query = "SELECT e FROM Element e WHERE e.yaw = :yaw")})
 public class Element implements Serializable {
-
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "element_id")
     private Integer elementId;
-    @Size(max = 45)
-    @Column(name = "element_name")
-    private String elementName;
-    @Column(name = "insert_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date insertDate;
-    @Size(max = 45)
+    @Size(max = 255)
     @Column(name = "created_by")
     private String createdBy;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "s")
-    private Double s;
-    @Column(name = "len")
-    private Double len;
     @Column(name = "dx")
     private Double dx;
     @Column(name = "dy")
     private Double dy;
     @Column(name = "dz")
     private Double dz;
+    @Size(max = 255)
+    @Column(name = "element_name")
+    private String elementName;
+    @Column(name = "insert_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date insertDate;
+    @Column(name = "len")
+    private Double len;
     @Column(name = "pitch")
     private Double pitch;
-    @Column(name = "yaw")
-    private Double yaw;
-    @Column(name = "roll")
-    private Double roll;
     @Column(name = "pos")
     private Double pos;
+    @Column(name = "roll")
+    private Double roll;
+    @Column(name = "s")
+    private Double s;
+    @Column(name = "yaw")
+    private Double yaw;
     @JoinColumn(name = "element_type_id", referencedColumnName = "element_type_id")
     @ManyToOne
     private ElementType elementTypeId;
@@ -113,44 +112,12 @@ public class Element implements Serializable {
         this.elementId = elementId;
     }
 
-    public String getElementName() {
-        return elementName;
-    }
-
-    public void setElementName(String elementName) {
-        this.elementName = elementName;
-    }
-
-    public Date getInsertDate() {
-        return insertDate;
-    }
-
-    public void setInsertDate(Date insertDate) {
-        this.insertDate = insertDate;
-    }
-
     public String getCreatedBy() {
         return createdBy;
     }
 
     public void setCreatedBy(String createdBy) {
         this.createdBy = createdBy;
-    }
-
-    public Double getS() {
-        return s;
-    }
-
-    public void setS(Double s) {
-        this.s = s;
-    }
-
-    public Double getLen() {
-        return len;
-    }
-
-    public void setLen(Double len) {
-        this.len = len;
     }
 
     public Double getDx() {
@@ -177,6 +144,30 @@ public class Element implements Serializable {
         this.dz = dz;
     }
 
+    public String getElementName() {
+        return elementName;
+    }
+
+    public void setElementName(String elementName) {
+        this.elementName = elementName;
+    }
+
+    public Date getInsertDate() {
+        return insertDate;
+    }
+
+    public void setInsertDate(Date insertDate) {
+        this.insertDate = insertDate;
+    }
+
+    public Double getLen() {
+        return len;
+    }
+
+    public void setLen(Double len) {
+        this.len = len;
+    }
+
     public Double getPitch() {
         return pitch;
     }
@@ -185,12 +176,12 @@ public class Element implements Serializable {
         this.pitch = pitch;
     }
 
-    public Double getYaw() {
-        return yaw;
+    public Double getPos() {
+        return pos;
     }
 
-    public void setYaw(Double yaw) {
-        this.yaw = yaw;
+    public void setPos(Double pos) {
+        this.pos = pos;
     }
 
     public Double getRoll() {
@@ -201,12 +192,20 @@ public class Element implements Serializable {
         this.roll = roll;
     }
 
-    public Double getPos() {
-        return pos;
+    public Double getS() {
+        return s;
     }
 
-    public void setPos(Double pos) {
-        this.pos = pos;
+    public void setS(Double s) {
+        this.s = s;
+    }
+
+    public Double getYaw() {
+        return yaw;
+    }
+
+    public void setYaw(Double yaw) {
+        this.yaw = yaw;
     }
 
     public ElementType getElementTypeId() {
@@ -285,4 +284,5 @@ public class Element implements Serializable {
     public String toString() {
         return "org.openepics.model.entity.Element[ elementId=" + elementId + " ]";
     }
+    
 }

@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "element_type")
@@ -39,7 +39,7 @@ public class ElementType implements Serializable {
     @Basic(optional = false)
     @Column(name = "element_type_id")
     private Integer elementTypeId;
-    @Size(max = 45)
+    @Size(max = 255)
     @Column(name = "element_type")
     private String elementType;
     @Size(max = 255)

@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "beam_parameter_prop")
@@ -29,13 +29,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "BeamParameterProp.findAll", query = "SELECT b FROM BeamParameterProp b"),
     @NamedQuery(name = "BeamParameterProp.findByBeamParameterPropId", query = "SELECT b FROM BeamParameterProp b WHERE b.beamParameterPropId = :beamParameterPropId"),
-    @NamedQuery(name = "BeamParameterProp.findByPropertyName", query = "SELECT b FROM BeamParameterProp b WHERE b.propertyName = :propertyName"),
+    @NamedQuery(name = "BeamParameterProp.findByBeamParameterDouble", query = "SELECT b FROM BeamParameterProp b WHERE b.beamParameterDouble = :beamParameterDouble"),
+    @NamedQuery(name = "BeamParameterProp.findByBeamParameterInt", query = "SELECT b FROM BeamParameterProp b WHERE b.beamParameterInt = :beamParameterInt"),
+    @NamedQuery(name = "BeamParameterProp.findByBeamParameterString", query = "SELECT b FROM BeamParameterProp b WHERE b.beamParameterString = :beamParameterString"),
+    @NamedQuery(name = "BeamParameterProp.findByDescription", query = "SELECT b FROM BeamParameterProp b WHERE b.description = :description"),
     @NamedQuery(name = "BeamParameterProp.findByPropCategory", query = "SELECT b FROM BeamParameterProp b WHERE b.propCategory = :propCategory"),
     @NamedQuery(name = "BeamParameterProp.findByPropertyDatatype", query = "SELECT b FROM BeamParameterProp b WHERE b.propertyDatatype = :propertyDatatype"),
-    @NamedQuery(name = "BeamParameterProp.findByDescription", query = "SELECT b FROM BeamParameterProp b WHERE b.description = :description"),
-    @NamedQuery(name = "BeamParameterProp.findByBeamParameterInt", query = "SELECT b FROM BeamParameterProp b WHERE b.beamParameterInt = :beamParameterInt"),
-    @NamedQuery(name = "BeamParameterProp.findByBeamParameterDouble", query = "SELECT b FROM BeamParameterProp b WHERE b.beamParameterDouble = :beamParameterDouble"),
-    @NamedQuery(name = "BeamParameterProp.findByBeamParameterString", query = "SELECT b FROM BeamParameterProp b WHERE b.beamParameterString = :beamParameterString"),
+    @NamedQuery(name = "BeamParameterProp.findByPropertyName", query = "SELECT b FROM BeamParameterProp b WHERE b.propertyName = :propertyName"),
     @NamedQuery(name = "BeamParameterProp.findByTrnsferMatrix", query = "SELECT b FROM BeamParameterProp b WHERE b.trnsferMatrix = :trnsferMatrix")})
 public class BeamParameterProp implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -44,27 +44,27 @@ public class BeamParameterProp implements Serializable {
     @Basic(optional = false)
     @Column(name = "beam_parameter_prop_id")
     private Integer beamParameterPropId;
-    @Size(max = 45)
-    @Column(name = "property_name")
-    private String propertyName;
-    @Size(max = 45)
-    @Column(name = "prop_category")
-    private String propCategory;
-    @Size(max = 45)
-    @Column(name = "property_datatype")
-    private String propertyDatatype;
-    @Size(max = 45)
-    @Column(name = "description")
-    private String description;
-    @Column(name = "beam_parameter_int")
-    private Integer beamParameterInt;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "beam_parameter_double")
     private Double beamParameterDouble;
-    @Size(max = 45)
+    @Column(name = "beam_parameter_int")
+    private Integer beamParameterInt;
+    @Size(max = 255)
     @Column(name = "beam_parameter_string")
     private String beamParameterString;
-    @Size(max = 2047)
+    @Size(max = 255)
+    @Column(name = "description")
+    private String description;
+    @Size(max = 255)
+    @Column(name = "prop_category")
+    private String propCategory;
+    @Size(max = 255)
+    @Column(name = "property_datatype")
+    private String propertyDatatype;
+    @Size(max = 255)
+    @Column(name = "property_name")
+    private String propertyName;
+    @Size(max = 255)
     @Column(name = "trnsfer_matrix")
     private String trnsferMatrix;
     @JoinColumn(name = "beam_parameter_id", referencedColumnName = "twiss_id")
@@ -86,12 +86,36 @@ public class BeamParameterProp implements Serializable {
         this.beamParameterPropId = beamParameterPropId;
     }
 
-    public String getPropertyName() {
-        return propertyName;
+    public Double getBeamParameterDouble() {
+        return beamParameterDouble;
     }
 
-    public void setPropertyName(String propertyName) {
-        this.propertyName = propertyName;
+    public void setBeamParameterDouble(Double beamParameterDouble) {
+        this.beamParameterDouble = beamParameterDouble;
+    }
+
+    public Integer getBeamParameterInt() {
+        return beamParameterInt;
+    }
+
+    public void setBeamParameterInt(Integer beamParameterInt) {
+        this.beamParameterInt = beamParameterInt;
+    }
+
+    public String getBeamParameterString() {
+        return beamParameterString;
+    }
+
+    public void setBeamParameterString(String beamParameterString) {
+        this.beamParameterString = beamParameterString;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     public String getPropCategory() {
@@ -110,36 +134,12 @@ public class BeamParameterProp implements Serializable {
         this.propertyDatatype = propertyDatatype;
     }
 
-    public String getDescription() {
-        return description;
+    public String getPropertyName() {
+        return propertyName;
     }
 
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getBeamParameterInt() {
-        return beamParameterInt;
-    }
-
-    public void setBeamParameterInt(Integer beamParameterInt) {
-        this.beamParameterInt = beamParameterInt;
-    }
-
-    public Double getBeamParameterDouble() {
-        return beamParameterDouble;
-    }
-
-    public void setBeamParameterDouble(Double beamParameterDouble) {
-        this.beamParameterDouble = beamParameterDouble;
-    }
-
-    public String getBeamParameterString() {
-        return beamParameterString;
-    }
-
-    public void setBeamParameterString(String beamParameterString) {
-        this.beamParameterString = beamParameterString;
+    public void setPropertyName(String propertyName) {
+        this.propertyName = propertyName;
     }
 
     public String getTrnsferMatrix() {

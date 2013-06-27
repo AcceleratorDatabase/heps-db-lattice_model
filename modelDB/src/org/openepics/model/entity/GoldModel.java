@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "gold_model")
@@ -32,11 +32,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "GoldModel.findAll", query = "SELECT g FROM GoldModel g"),
     @NamedQuery(name = "GoldModel.findByGoldModelId", query = "SELECT g FROM GoldModel g WHERE g.goldModelId = :goldModelId"),
-    @NamedQuery(name = "GoldModel.findByCreatedBy", query = "SELECT g FROM GoldModel g WHERE g.createdBy = :createdBy"),
     @NamedQuery(name = "GoldModel.findByCreateDate", query = "SELECT g FROM GoldModel g WHERE g.createDate = :createDate"),
-    @NamedQuery(name = "GoldModel.findByUpdatedBy", query = "SELECT g FROM GoldModel g WHERE g.updatedBy = :updatedBy"),
+    @NamedQuery(name = "GoldModel.findByCreatedBy", query = "SELECT g FROM GoldModel g WHERE g.createdBy = :createdBy"),
+    @NamedQuery(name = "GoldModel.findByGoldStatusInd", query = "SELECT g FROM GoldModel g WHERE g.goldStatusInd = :goldStatusInd"),
     @NamedQuery(name = "GoldModel.findByUpdateDate", query = "SELECT g FROM GoldModel g WHERE g.updateDate = :updateDate"),
-    @NamedQuery(name = "GoldModel.findByGoldStatusInd", query = "SELECT g FROM GoldModel g WHERE g.goldStatusInd = :goldStatusInd")})
+    @NamedQuery(name = "GoldModel.findByUpdatedBy", query = "SELECT g FROM GoldModel g WHERE g.updatedBy = :updatedBy")})
 public class GoldModel implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -44,20 +44,20 @@ public class GoldModel implements Serializable {
     @Basic(optional = false)
     @Column(name = "gold_model_id")
     private Integer goldModelId;
-    @Size(max = 45)
-    @Column(name = "created_by")
-    private String createdBy;
     @Column(name = "create_date")
     @Temporal(TemporalType.DATE)
     private Date createDate;
-    @Size(max = 45)
-    @Column(name = "updated_by")
-    private String updatedBy;
+    @Size(max = 255)
+    @Column(name = "created_by")
+    private String createdBy;
+    @Column(name = "gold_status_ind")
+    private Integer goldStatusInd;
     @Column(name = "update_date")
     @Temporal(TemporalType.DATE)
     private Date updateDate;
-    @Column(name = "gold_status_ind")
-    private Integer goldStatusInd;
+    @Size(max = 255)
+    @Column(name = "updated_by")
+    private String updatedBy;
     @JoinColumn(name = "model_id", referencedColumnName = "model_id")
     @ManyToOne
     private Model modelId;
@@ -77,14 +77,6 @@ public class GoldModel implements Serializable {
         this.goldModelId = goldModelId;
     }
 
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
     public Date getCreateDate() {
         return createDate;
     }
@@ -93,12 +85,20 @@ public class GoldModel implements Serializable {
         this.createDate = createDate;
     }
 
-    public String getUpdatedBy() {
-        return updatedBy;
+    public String getCreatedBy() {
+        return createdBy;
     }
 
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
+    public Integer getGoldStatusInd() {
+        return goldStatusInd;
+    }
+
+    public void setGoldStatusInd(Integer goldStatusInd) {
+        this.goldStatusInd = goldStatusInd;
     }
 
     public Date getUpdateDate() {
@@ -109,12 +109,12 @@ public class GoldModel implements Serializable {
         this.updateDate = updateDate;
     }
 
-    public Integer getGoldStatusInd() {
-        return goldStatusInd;
+    public String getUpdatedBy() {
+        return updatedBy;
     }
 
-    public void setGoldStatusInd(Integer goldStatusInd) {
-        this.goldStatusInd = goldStatusInd;
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     public Model getModelId() {

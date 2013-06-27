@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "machine_mode")
@@ -30,25 +30,23 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "MachineMode.findAll", query = "SELECT m FROM MachineMode m"),
     @NamedQuery(name = "MachineMode.findByMachineModeId", query = "SELECT m FROM MachineMode m WHERE m.machineModeId = :machineModeId"),
-    @NamedQuery(name = "MachineMode.findByMachineModeName", query = "SELECT m FROM MachineMode m WHERE m.machineModeName = :machineModeName"),
-    @NamedQuery(name = "MachineMode.findByMachineModeDescription", query = "SELECT m FROM MachineMode m WHERE m.machineModeDescription = :machineModeDescription")})
+    @NamedQuery(name = "MachineMode.findByMachineModeDescription", query = "SELECT m FROM MachineMode m WHERE m.machineModeDescription = :machineModeDescription"),
+    @NamedQuery(name = "MachineMode.findByMachineModeName", query = "SELECT m FROM MachineMode m WHERE m.machineModeName = :machineModeName")})
 public class MachineMode implements Serializable {
-    @OneToMany(mappedBy = "machineModeId")
-    private Collection<Lattice> latticeCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "machine_mode_id")
     private Integer machineModeId;
-    @Size(max = 45)
-    @Column(name = "machine_mode_name")
-    private String machineModeName;
     @Size(max = 255)
     @Column(name = "machine_mode_description")
     private String machineModeDescription;
+    @Size(max = 255)
+    @Column(name = "machine_mode_name")
+    private String machineModeName;
     @OneToMany(mappedBy = "machineModeId")
-    private Collection<Model> modelCollection;
+    private Collection<Lattice> latticeCollection;
 
     public MachineMode() {
     }
@@ -65,14 +63,6 @@ public class MachineMode implements Serializable {
         this.machineModeId = machineModeId;
     }
 
-    public String getMachineModeName() {
-        return machineModeName;
-    }
-
-    public void setMachineModeName(String machineModeName) {
-        this.machineModeName = machineModeName;
-    }
-
     public String getMachineModeDescription() {
         return machineModeDescription;
     }
@@ -81,13 +71,21 @@ public class MachineMode implements Serializable {
         this.machineModeDescription = machineModeDescription;
     }
 
-    @XmlTransient
-    public Collection<Model> getModelCollection() {
-        return modelCollection;
+    public String getMachineModeName() {
+        return machineModeName;
     }
 
-    public void setModelCollection(Collection<Model> modelCollection) {
-        this.modelCollection = modelCollection;
+    public void setMachineModeName(String machineModeName) {
+        this.machineModeName = machineModeName;
+    }
+
+    @XmlTransient
+    public Collection<Lattice> getLatticeCollection() {
+        return latticeCollection;
+    }
+
+    public void setLatticeCollection(Collection<Lattice> latticeCollection) {
+        this.latticeCollection = latticeCollection;
     }
 
     @Override
@@ -113,15 +111,6 @@ public class MachineMode implements Serializable {
     @Override
     public String toString() {
         return "org.openepics.model.entity.MachineMode[ machineModeId=" + machineModeId + " ]";
-    }
-
-    @XmlTransient
-    public Collection<Lattice> getLatticeCollection() {
-        return latticeCollection;
-    }
-
-    public void setLatticeCollection(Collection<Lattice> latticeCollection) {
-        this.latticeCollection = latticeCollection;
     }
     
 }

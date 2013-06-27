@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "model_code")
@@ -30,8 +30,8 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "ModelCode.findAll", query = "SELECT m FROM ModelCode m"),
     @NamedQuery(name = "ModelCode.findByModelCodeId", query = "SELECT m FROM ModelCode m WHERE m.modelCodeId = :modelCodeId"),
-    @NamedQuery(name = "ModelCode.findByCodeName", query = "SELECT m FROM ModelCode m WHERE m.codeName = :codeName"),
-    @NamedQuery(name = "ModelCode.findByAlgorithm", query = "SELECT m FROM ModelCode m WHERE m.algorithm = :algorithm")})
+    @NamedQuery(name = "ModelCode.findByAlgorithm", query = "SELECT m FROM ModelCode m WHERE m.algorithm = :algorithm"),
+    @NamedQuery(name = "ModelCode.findByCodeName", query = "SELECT m FROM ModelCode m WHERE m.codeName = :codeName")})
 public class ModelCode implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -39,12 +39,12 @@ public class ModelCode implements Serializable {
     @Basic(optional = false)
     @Column(name = "model_code_id")
     private Integer modelCodeId;
-    @Size(max = 45)
-    @Column(name = "code_name")
-    private String codeName;
-    @Size(max = 45)
+    @Size(max = 255)
     @Column(name = "algorithm")
     private String algorithm;
+    @Size(max = 255)
+    @Column(name = "code_name")
+    private String codeName;
     @OneToMany(mappedBy = "modelCodeId")
     private Collection<Model> modelCollection;
 
@@ -63,20 +63,20 @@ public class ModelCode implements Serializable {
         this.modelCodeId = modelCodeId;
     }
 
-    public String getCodeName() {
-        return codeName;
-    }
-
-    public void setCodeName(String codeName) {
-        this.codeName = codeName;
-    }
-
     public String getAlgorithm() {
         return algorithm;
     }
 
     public void setAlgorithm(String algorithm) {
         this.algorithm = algorithm;
+    }
+
+    public String getCodeName() {
+        return codeName;
+    }
+
+    public void setCodeName(String codeName) {
+        this.codeName = codeName;
     }
 
     @XmlTransient

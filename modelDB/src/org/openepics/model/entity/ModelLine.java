@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "model_line")
@@ -30,40 +30,38 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "ModelLine.findAll", query = "SELECT m FROM ModelLine m"),
     @NamedQuery(name = "ModelLine.findByModelLineId", query = "SELECT m FROM ModelLine m WHERE m.modelLineId = :modelLineId"),
-    @NamedQuery(name = "ModelLine.findByModelLineName", query = "SELECT m FROM ModelLine m WHERE m.modelLineName = :modelLineName"),
-    @NamedQuery(name = "ModelLine.findByModelLineDescription", query = "SELECT m FROM ModelLine m WHERE m.modelLineDescription = :modelLineDescription"),
-    @NamedQuery(name = "ModelLine.findByStartPosition", query = "SELECT m FROM ModelLine m WHERE m.startPosition = :startPosition"),
+    @NamedQuery(name = "ModelLine.findByEndMarker", query = "SELECT m FROM ModelLine m WHERE m.endMarker = :endMarker"),
     @NamedQuery(name = "ModelLine.findByEndPosition", query = "SELECT m FROM ModelLine m WHERE m.endPosition = :endPosition"),
+    @NamedQuery(name = "ModelLine.findByModelLineDescription", query = "SELECT m FROM ModelLine m WHERE m.modelLineDescription = :modelLineDescription"),
+    @NamedQuery(name = "ModelLine.findByModelLineName", query = "SELECT m FROM ModelLine m WHERE m.modelLineName = :modelLineName"),
     @NamedQuery(name = "ModelLine.findByStartMarker", query = "SELECT m FROM ModelLine m WHERE m.startMarker = :startMarker"),
-    @NamedQuery(name = "ModelLine.findByEndMarker", query = "SELECT m FROM ModelLine m WHERE m.endMarker = :endMarker")})
+    @NamedQuery(name = "ModelLine.findByStartPosition", query = "SELECT m FROM ModelLine m WHERE m.startPosition = :startPosition")})
 public class ModelLine implements Serializable {
-    @OneToMany(mappedBy = "modelLineId")
-    private Collection<Lattice> latticeCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "model_line_id")
     private Integer modelLineId;
-    @Size(max = 45)
-    @Column(name = "model_line_name")
-    private String modelLineName;
+    @Size(max = 255)
+    @Column(name = "end_marker")
+    private String endMarker;
+    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
+    @Column(name = "end_position")
+    private Double endPosition;
     @Size(max = 255)
     @Column(name = "model_line_description")
     private String modelLineDescription;
-    // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "start_position")
-    private Double startPosition;
-    @Column(name = "end_position")
-    private Double endPosition;
-    @Size(max = 45)
+    @Size(max = 255)
+    @Column(name = "model_line_name")
+    private String modelLineName;
+    @Size(max = 255)
     @Column(name = "start_marker")
     private String startMarker;
-    @Size(max = 45)
-    @Column(name = "end_marker")
-    private String endMarker;
+    @Column(name = "start_position")
+    private Double startPosition;
     @OneToMany(mappedBy = "modelLineId")
-    private Collection<Model> modelCollection;
+    private Collection<Lattice> latticeCollection;
 
     public ModelLine() {
     }
@@ -80,28 +78,12 @@ public class ModelLine implements Serializable {
         this.modelLineId = modelLineId;
     }
 
-    public String getModelLineName() {
-        return modelLineName;
+    public String getEndMarker() {
+        return endMarker;
     }
 
-    public void setModelLineName(String modelLineName) {
-        this.modelLineName = modelLineName;
-    }
-
-    public String getModelLineDescription() {
-        return modelLineDescription;
-    }
-
-    public void setModelLineDescription(String modelLineDescription) {
-        this.modelLineDescription = modelLineDescription;
-    }
-
-    public Double getStartPosition() {
-        return startPosition;
-    }
-
-    public void setStartPosition(Double startPosition) {
-        this.startPosition = startPosition;
+    public void setEndMarker(String endMarker) {
+        this.endMarker = endMarker;
     }
 
     public Double getEndPosition() {
@@ -112,6 +94,22 @@ public class ModelLine implements Serializable {
         this.endPosition = endPosition;
     }
 
+    public String getModelLineDescription() {
+        return modelLineDescription;
+    }
+
+    public void setModelLineDescription(String modelLineDescription) {
+        this.modelLineDescription = modelLineDescription;
+    }
+
+    public String getModelLineName() {
+        return modelLineName;
+    }
+
+    public void setModelLineName(String modelLineName) {
+        this.modelLineName = modelLineName;
+    }
+
     public String getStartMarker() {
         return startMarker;
     }
@@ -120,21 +118,21 @@ public class ModelLine implements Serializable {
         this.startMarker = startMarker;
     }
 
-    public String getEndMarker() {
-        return endMarker;
+    public Double getStartPosition() {
+        return startPosition;
     }
 
-    public void setEndMarker(String endMarker) {
-        this.endMarker = endMarker;
+    public void setStartPosition(Double startPosition) {
+        this.startPosition = startPosition;
     }
 
     @XmlTransient
-    public Collection<Model> getModelCollection() {
-        return modelCollection;
+    public Collection<Lattice> getLatticeCollection() {
+        return latticeCollection;
     }
 
-    public void setModelCollection(Collection<Model> modelCollection) {
-        this.modelCollection = modelCollection;
+    public void setLatticeCollection(Collection<Lattice> latticeCollection) {
+        this.latticeCollection = latticeCollection;
     }
 
     @Override
@@ -160,15 +158,6 @@ public class ModelLine implements Serializable {
     @Override
     public String toString() {
         return "org.openepics.model.entity.ModelLine[ modelLineId=" + modelLineId + " ]";
-    }
-
-    @XmlTransient
-    public Collection<Lattice> getLatticeCollection() {
-        return latticeCollection;
-    }
-
-    public void setLatticeCollection(Collection<Lattice> latticeCollection) {
-        this.latticeCollection = latticeCollection;
     }
     
 }

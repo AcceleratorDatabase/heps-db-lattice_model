@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "particle_type")
@@ -30,9 +30,9 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "ParticleType.findAll", query = "SELECT p FROM ParticleType p"),
     @NamedQuery(name = "ParticleType.findByParticleTypeId", query = "SELECT p FROM ParticleType p WHERE p.particleTypeId = :particleTypeId"),
-    @NamedQuery(name = "ParticleType.findByParticleName", query = "SELECT p FROM ParticleType p WHERE p.particleName = :particleName"),
+    @NamedQuery(name = "ParticleType.findByParticleCharge", query = "SELECT p FROM ParticleType p WHERE p.particleCharge = :particleCharge"),
     @NamedQuery(name = "ParticleType.findByParticleMass", query = "SELECT p FROM ParticleType p WHERE p.particleMass = :particleMass"),
-    @NamedQuery(name = "ParticleType.findByParticleCharge", query = "SELECT p FROM ParticleType p WHERE p.particleCharge = :particleCharge")})
+    @NamedQuery(name = "ParticleType.findByParticleName", query = "SELECT p FROM ParticleType p WHERE p.particleName = :particleName")})
 public class ParticleType implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -40,14 +40,14 @@ public class ParticleType implements Serializable {
     @Basic(optional = false)
     @Column(name = "particle_type_id")
     private Integer particleTypeId;
-    @Size(max = 45)
-    @Column(name = "particle_name")
-    private String particleName;
+    @Column(name = "particle_charge")
+    private Integer particleCharge;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "particle_mass")
     private Double particleMass;
-    @Column(name = "particle_charge")
-    private Integer particleCharge;
+    @Size(max = 255)
+    @Column(name = "particle_name")
+    private String particleName;
     @OneToMany(mappedBy = "particleType")
     private Collection<BeamParameter> beamParameterCollection;
 
@@ -66,12 +66,12 @@ public class ParticleType implements Serializable {
         this.particleTypeId = particleTypeId;
     }
 
-    public String getParticleName() {
-        return particleName;
+    public Integer getParticleCharge() {
+        return particleCharge;
     }
 
-    public void setParticleName(String particleName) {
-        this.particleName = particleName;
+    public void setParticleCharge(Integer particleCharge) {
+        this.particleCharge = particleCharge;
     }
 
     public Double getParticleMass() {
@@ -82,12 +82,12 @@ public class ParticleType implements Serializable {
         this.particleMass = particleMass;
     }
 
-    public Integer getParticleCharge() {
-        return particleCharge;
+    public String getParticleName() {
+        return particleName;
     }
 
-    public void setParticleCharge(Integer particleCharge) {
-        this.particleCharge = particleCharge;
+    public void setParticleName(String particleName) {
+        this.particleName = particleName;
     }
 
     @XmlTransient

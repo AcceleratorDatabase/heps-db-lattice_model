@@ -27,7 +27,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "model")
@@ -35,22 +35,22 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Model.findAll", query = "SELECT m FROM Model m"),
     @NamedQuery(name = "Model.findByModelId", query = "SELECT m FROM Model m WHERE m.modelId = :modelId"),
-    @NamedQuery(name = "Model.findByModelName", query = "SELECT m FROM Model m WHERE m.modelName = :modelName"),
-    @NamedQuery(name = "Model.findByModelDesc", query = "SELECT m FROM Model m WHERE m.modelDesc = :modelDesc"),
-    @NamedQuery(name = "Model.findByCreatedBy", query = "SELECT m FROM Model m WHERE m.createdBy = :createdBy"),
-    @NamedQuery(name = "Model.findByCreateDate", query = "SELECT m FROM Model m WHERE m.createDate = :createDate"),
-    @NamedQuery(name = "Model.findByUpdatedBy", query = "SELECT m FROM Model m WHERE m.updatedBy = :updatedBy"),
-    @NamedQuery(name = "Model.findByUpdateDate", query = "SELECT m FROM Model m WHERE m.updateDate = :updateDate"),
-    @NamedQuery(name = "Model.findByTuneX", query = "SELECT m FROM Model m WHERE m.tuneX = :tuneX"),
-    @NamedQuery(name = "Model.findByTuneY", query = "SELECT m FROM Model m WHERE m.tuneY = :tuneY"),
     @NamedQuery(name = "Model.findByChromeX0", query = "SELECT m FROM Model m WHERE m.chromeX0 = :chromeX0"),
     @NamedQuery(name = "Model.findByChromeX1", query = "SELECT m FROM Model m WHERE m.chromeX1 = :chromeX1"),
     @NamedQuery(name = "Model.findByChromeX2", query = "SELECT m FROM Model m WHERE m.chromeX2 = :chromeX2"),
     @NamedQuery(name = "Model.findByChromeY0", query = "SELECT m FROM Model m WHERE m.chromeY0 = :chromeY0"),
     @NamedQuery(name = "Model.findByChromeY1", query = "SELECT m FROM Model m WHERE m.chromeY1 = :chromeY1"),
     @NamedQuery(name = "Model.findByChromeY2", query = "SELECT m FROM Model m WHERE m.chromeY2 = :chromeY2"),
+    @NamedQuery(name = "Model.findByCreateDate", query = "SELECT m FROM Model m WHERE m.createDate = :createDate"),
+    @NamedQuery(name = "Model.findByCreatedBy", query = "SELECT m FROM Model m WHERE m.createdBy = :createdBy"),
     @NamedQuery(name = "Model.findByFinalBeamEnergy", query = "SELECT m FROM Model m WHERE m.finalBeamEnergy = :finalBeamEnergy"),
-    @NamedQuery(name = "Model.findByInitialConditionInd", query = "SELECT m FROM Model m WHERE m.initialConditionInd = :initialConditionInd")})
+    @NamedQuery(name = "Model.findByInitialConditionInd", query = "SELECT m FROM Model m WHERE m.initialConditionInd = :initialConditionInd"),
+    @NamedQuery(name = "Model.findByModelDesc", query = "SELECT m FROM Model m WHERE m.modelDesc = :modelDesc"),
+    @NamedQuery(name = "Model.findByModelName", query = "SELECT m FROM Model m WHERE m.modelName = :modelName"),
+    @NamedQuery(name = "Model.findByTuneX", query = "SELECT m FROM Model m WHERE m.tuneX = :tuneX"),
+    @NamedQuery(name = "Model.findByTuneY", query = "SELECT m FROM Model m WHERE m.tuneY = :tuneY"),
+    @NamedQuery(name = "Model.findByUpdateDate", query = "SELECT m FROM Model m WHERE m.updateDate = :updateDate"),
+    @NamedQuery(name = "Model.findByUpdatedBy", query = "SELECT m FROM Model m WHERE m.updatedBy = :updatedBy")})
 public class Model implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -58,29 +58,7 @@ public class Model implements Serializable {
     @Basic(optional = false)
     @Column(name = "model_id")
     private Integer modelId;
-    @Size(max = 255)
-    @Column(name = "model_name")
-    private String modelName;
-    @Size(max = 255)
-    @Column(name = "model_desc")
-    private String modelDesc;
-    @Size(max = 45)
-    @Column(name = "created_by")
-    private String createdBy;
-    @Column(name = "create_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date createDate;
-    @Size(max = 45)
-    @Column(name = "updated_by")
-    private String updatedBy;
-    @Column(name = "update_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date updateDate;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "tune_x")
-    private Double tuneX;
-    @Column(name = "tune_y")
-    private Double tuneY;
     @Column(name = "chrome_x_0")
     private Double chromeX0;
     @Column(name = "chrome_x_1")
@@ -93,22 +71,35 @@ public class Model implements Serializable {
     private Double chromeY1;
     @Column(name = "chrome_y_2")
     private Double chromeY2;
+    @Column(name = "create_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date createDate;
+    @Size(max = 255)
+    @Column(name = "created_by")
+    private String createdBy;
     @Column(name = "final_beam_energy")
     private Double finalBeamEnergy;
     @Column(name = "initial_condition_ind")
     private Integer initialConditionInd;
-    @JoinColumn(name = "model_line_id", referencedColumnName = "model_line_id")
-    @ManyToOne
-    private ModelLine modelLineId;
-    @JoinColumn(name = "model_geometry_id", referencedColumnName = "model_geometry_id")
-    @ManyToOne
-    private ModelGeometry modelGeometryId;
+    @Size(max = 255)
+    @Column(name = "model_desc")
+    private String modelDesc;
+    @Size(max = 255)
+    @Column(name = "model_name")
+    private String modelName;
+    @Column(name = "tune_x")
+    private Double tuneX;
+    @Column(name = "tune_y")
+    private Double tuneY;
+    @Column(name = "update_date")
+    @Temporal(TemporalType.TIMESTAMP)
+    private Date updateDate;
+    @Size(max = 255)
+    @Column(name = "updated_by")
+    private String updatedBy;
     @JoinColumn(name = "model_code_id", referencedColumnName = "model_code_id")
     @ManyToOne
     private ModelCode modelCodeId;
-    @JoinColumn(name = "machine_mode_id", referencedColumnName = "machine_mode_id")
-    @ManyToOne
-    private MachineMode machineModeId;
     @JoinColumn(name = "lattice_id", referencedColumnName = "lattice_id")
     @ManyToOne
     private Lattice latticeId;
@@ -130,70 +121,6 @@ public class Model implements Serializable {
 
     public void setModelId(Integer modelId) {
         this.modelId = modelId;
-    }
-
-    public String getModelName() {
-        return modelName;
-    }
-
-    public void setModelName(String modelName) {
-        this.modelName = modelName;
-    }
-
-    public String getModelDesc() {
-        return modelDesc;
-    }
-
-    public void setModelDesc(String modelDesc) {
-        this.modelDesc = modelDesc;
-    }
-
-    public String getCreatedBy() {
-        return createdBy;
-    }
-
-    public void setCreatedBy(String createdBy) {
-        this.createdBy = createdBy;
-    }
-
-    public Date getCreateDate() {
-        return createDate;
-    }
-
-    public void setCreateDate(Date createDate) {
-        this.createDate = createDate;
-    }
-
-    public String getUpdatedBy() {
-        return updatedBy;
-    }
-
-    public void setUpdatedBy(String updatedBy) {
-        this.updatedBy = updatedBy;
-    }
-
-    public Date getUpdateDate() {
-        return updateDate;
-    }
-
-    public void setUpdateDate(Date updateDate) {
-        this.updateDate = updateDate;
-    }
-
-    public Double getTuneX() {
-        return tuneX;
-    }
-
-    public void setTuneX(Double tuneX) {
-        this.tuneX = tuneX;
-    }
-
-    public Double getTuneY() {
-        return tuneY;
-    }
-
-    public void setTuneY(Double tuneY) {
-        this.tuneY = tuneY;
     }
 
     public Double getChromeX0() {
@@ -244,6 +171,22 @@ public class Model implements Serializable {
         this.chromeY2 = chromeY2;
     }
 
+    public Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(Date createDate) {
+        this.createDate = createDate;
+    }
+
+    public String getCreatedBy() {
+        return createdBy;
+    }
+
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+
     public Double getFinalBeamEnergy() {
         return finalBeamEnergy;
     }
@@ -260,20 +203,52 @@ public class Model implements Serializable {
         this.initialConditionInd = initialConditionInd;
     }
 
-    public ModelLine getModelLineId() {
-        return modelLineId;
+    public String getModelDesc() {
+        return modelDesc;
     }
 
-    public void setModelLineId(ModelLine modelLineId) {
-        this.modelLineId = modelLineId;
+    public void setModelDesc(String modelDesc) {
+        this.modelDesc = modelDesc;
     }
 
-    public ModelGeometry getModelGeometryId() {
-        return modelGeometryId;
+    public String getModelName() {
+        return modelName;
     }
 
-    public void setModelGeometryId(ModelGeometry modelGeometryId) {
-        this.modelGeometryId = modelGeometryId;
+    public void setModelName(String modelName) {
+        this.modelName = modelName;
+    }
+
+    public Double getTuneX() {
+        return tuneX;
+    }
+
+    public void setTuneX(Double tuneX) {
+        this.tuneX = tuneX;
+    }
+
+    public Double getTuneY() {
+        return tuneY;
+    }
+
+    public void setTuneY(Double tuneY) {
+        this.tuneY = tuneY;
+    }
+
+    public Date getUpdateDate() {
+        return updateDate;
+    }
+
+    public void setUpdateDate(Date updateDate) {
+        this.updateDate = updateDate;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
     }
 
     public ModelCode getModelCodeId() {
@@ -282,14 +257,6 @@ public class Model implements Serializable {
 
     public void setModelCodeId(ModelCode modelCodeId) {
         this.modelCodeId = modelCodeId;
-    }
-
-    public MachineMode getMachineModeId() {
-        return machineModeId;
-    }
-
-    public void setMachineModeId(MachineMode machineModeId) {
-        this.machineModeId = machineModeId;
     }
 
     public Lattice getLatticeId() {

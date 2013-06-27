@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "blsequence_lattice")
@@ -38,12 +38,12 @@ public class BlsequenceLattice implements Serializable {
     private Integer blsequenceLatticeId;
     @Column(name = "beamline_order")
     private Integer beamlineOrder;
-    @JoinColumn(name = "lattice_id", referencedColumnName = "lattice_id")
-    @ManyToOne
-    private Lattice latticeId;
     @JoinColumn(name = "beamline_sequence_id", referencedColumnName = "beamline_sequence_id")
     @ManyToOne
     private BeamlineSequence beamlineSequenceId;
+    @JoinColumn(name = "lattice_id", referencedColumnName = "lattice_id")
+    @ManyToOne
+    private Lattice latticeId;
 
     public BlsequenceLattice() {
     }
@@ -68,20 +68,20 @@ public class BlsequenceLattice implements Serializable {
         this.beamlineOrder = beamlineOrder;
     }
 
-    public Lattice getLatticeId() {
-        return latticeId;
-    }
-
-    public void setLatticeId(Lattice latticeId) {
-        this.latticeId = latticeId;
-    }
-
     public BeamlineSequence getBeamlineSequenceId() {
         return beamlineSequenceId;
     }
 
     public void setBeamlineSequenceId(BeamlineSequence beamlineSequenceId) {
         this.beamlineSequenceId = beamlineSequenceId;
+    }
+
+    public Lattice getLatticeId() {
+        return latticeId;
+    }
+
+    public void setLatticeId(Lattice latticeId) {
+        this.latticeId = latticeId;
     }
 
     @Override

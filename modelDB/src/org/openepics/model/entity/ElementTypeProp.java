@@ -24,7 +24,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "element_type_prop")
@@ -32,11 +32,11 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "ElementTypeProp.findAll", query = "SELECT e FROM ElementTypeProp e"),
     @NamedQuery(name = "ElementTypeProp.findByElementTypePropId", query = "SELECT e FROM ElementTypeProp e WHERE e.elementTypePropId = :elementTypePropId"),
-    @NamedQuery(name = "ElementTypeProp.findByElementTypePropName", query = "SELECT e FROM ElementTypeProp e WHERE e.elementTypePropName = :elementTypePropName"),
-    @NamedQuery(name = "ElementTypeProp.findByElementTypePropDescription", query = "SELECT e FROM ElementTypeProp e WHERE e.elementTypePropDescription = :elementTypePropDescription"),
+    @NamedQuery(name = "ElementTypeProp.findByElementTypePropDatatype", query = "SELECT e FROM ElementTypeProp e WHERE e.elementTypePropDatatype = :elementTypePropDatatype"),
     @NamedQuery(name = "ElementTypeProp.findByElementTypePropDefault", query = "SELECT e FROM ElementTypeProp e WHERE e.elementTypePropDefault = :elementTypePropDefault"),
-    @NamedQuery(name = "ElementTypeProp.findByElementTypePropUnit", query = "SELECT e FROM ElementTypeProp e WHERE e.elementTypePropUnit = :elementTypePropUnit"),
-    @NamedQuery(name = "ElementTypeProp.findByElementTypePropDatatype", query = "SELECT e FROM ElementTypeProp e WHERE e.elementTypePropDatatype = :elementTypePropDatatype")})
+    @NamedQuery(name = "ElementTypeProp.findByElementTypePropDescription", query = "SELECT e FROM ElementTypeProp e WHERE e.elementTypePropDescription = :elementTypePropDescription"),
+    @NamedQuery(name = "ElementTypeProp.findByElementTypePropName", query = "SELECT e FROM ElementTypeProp e WHERE e.elementTypePropName = :elementTypePropName"),
+    @NamedQuery(name = "ElementTypeProp.findByElementTypePropUnit", query = "SELECT e FROM ElementTypeProp e WHERE e.elementTypePropUnit = :elementTypePropUnit")})
 public class ElementTypeProp implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -44,21 +44,21 @@ public class ElementTypeProp implements Serializable {
     @Basic(optional = false)
     @Column(name = "element_type_prop_id")
     private Integer elementTypePropId;
-    @Size(max = 45)
-    @Column(name = "element_type_prop_name")
-    private String elementTypePropName;
+    @Size(max = 255)
+    @Column(name = "element_type_prop_datatype")
+    private String elementTypePropDatatype;
+    @Size(max = 255)
+    @Column(name = "element_type_prop_default")
+    private String elementTypePropDefault;
     @Size(max = 255)
     @Column(name = "element_type_prop_description")
     private String elementTypePropDescription;
     @Size(max = 255)
-    @Column(name = "element_type_prop_default")
-    private String elementTypePropDefault;
-    @Size(max = 45)
+    @Column(name = "element_type_prop_name")
+    private String elementTypePropName;
+    @Size(max = 255)
     @Column(name = "element_type_prop_unit")
     private String elementTypePropUnit;
-    @Size(max = 45)
-    @Column(name = "element_type_prop_datatype")
-    private String elementTypePropDatatype;
     @JoinColumn(name = "element_type_id", referencedColumnName = "element_type_id")
     @ManyToOne
     private ElementType elementTypeId;
@@ -80,20 +80,12 @@ public class ElementTypeProp implements Serializable {
         this.elementTypePropId = elementTypePropId;
     }
 
-    public String getElementTypePropName() {
-        return elementTypePropName;
+    public String getElementTypePropDatatype() {
+        return elementTypePropDatatype;
     }
 
-    public void setElementTypePropName(String elementTypePropName) {
-        this.elementTypePropName = elementTypePropName;
-    }
-
-    public String getElementTypePropDescription() {
-        return elementTypePropDescription;
-    }
-
-    public void setElementTypePropDescription(String elementTypePropDescription) {
-        this.elementTypePropDescription = elementTypePropDescription;
+    public void setElementTypePropDatatype(String elementTypePropDatatype) {
+        this.elementTypePropDatatype = elementTypePropDatatype;
     }
 
     public String getElementTypePropDefault() {
@@ -104,20 +96,28 @@ public class ElementTypeProp implements Serializable {
         this.elementTypePropDefault = elementTypePropDefault;
     }
 
+    public String getElementTypePropDescription() {
+        return elementTypePropDescription;
+    }
+
+    public void setElementTypePropDescription(String elementTypePropDescription) {
+        this.elementTypePropDescription = elementTypePropDescription;
+    }
+
+    public String getElementTypePropName() {
+        return elementTypePropName;
+    }
+
+    public void setElementTypePropName(String elementTypePropName) {
+        this.elementTypePropName = elementTypePropName;
+    }
+
     public String getElementTypePropUnit() {
         return elementTypePropUnit;
     }
 
     public void setElementTypePropUnit(String elementTypePropUnit) {
         this.elementTypePropUnit = elementTypePropUnit;
-    }
-
-    public String getElementTypePropDatatype() {
-        return elementTypePropDatatype;
-    }
-
-    public void setElementTypePropDatatype(String elementTypePropDatatype) {
-        this.elementTypePropDatatype = elementTypePropDatatype;
     }
 
     public ElementType getElementTypeId() {

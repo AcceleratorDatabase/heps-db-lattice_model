@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "beamline_sequence")
@@ -30,12 +30,12 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "BeamlineSequence.findAll", query = "SELECT b FROM BeamlineSequence b"),
     @NamedQuery(name = "BeamlineSequence.findByBeamlineSequenceId", query = "SELECT b FROM BeamlineSequence b WHERE b.beamlineSequenceId = :beamlineSequenceId"),
-    @NamedQuery(name = "BeamlineSequence.findBySequenceName", query = "SELECT b FROM BeamlineSequence b WHERE b.sequenceName = :sequenceName"),
     @NamedQuery(name = "BeamlineSequence.findByFirstElementName", query = "SELECT b FROM BeamlineSequence b WHERE b.firstElementName = :firstElementName"),
     @NamedQuery(name = "BeamlineSequence.findByLastElementName", query = "SELECT b FROM BeamlineSequence b WHERE b.lastElementName = :lastElementName"),
     @NamedQuery(name = "BeamlineSequence.findByPredecessorSequence", query = "SELECT b FROM BeamlineSequence b WHERE b.predecessorSequence = :predecessorSequence"),
+    @NamedQuery(name = "BeamlineSequence.findBySequenceDescription", query = "SELECT b FROM BeamlineSequence b WHERE b.sequenceDescription = :sequenceDescription"),
     @NamedQuery(name = "BeamlineSequence.findBySequenceLength", query = "SELECT b FROM BeamlineSequence b WHERE b.sequenceLength = :sequenceLength"),
-    @NamedQuery(name = "BeamlineSequence.findBySequenceDescription", query = "SELECT b FROM BeamlineSequence b WHERE b.sequenceDescription = :sequenceDescription")})
+    @NamedQuery(name = "BeamlineSequence.findBySequenceName", query = "SELECT b FROM BeamlineSequence b WHERE b.sequenceName = :sequenceName")})
 public class BeamlineSequence implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -43,24 +43,24 @@ public class BeamlineSequence implements Serializable {
     @Basic(optional = false)
     @Column(name = "beamline_sequence_id")
     private Integer beamlineSequenceId;
-    @Size(max = 45)
-    @Column(name = "sequence_name")
-    private String sequenceName;
-    @Size(max = 45)
+    @Size(max = 255)
     @Column(name = "first_element_name")
     private String firstElementName;
-    @Size(max = 45)
+    @Size(max = 255)
     @Column(name = "last_element_name")
     private String lastElementName;
     @Size(max = 255)
     @Column(name = "predecessor_sequence")
     private String predecessorSequence;
+    @Size(max = 255)
+    @Column(name = "sequence_description")
+    private String sequenceDescription;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
     @Column(name = "sequence_length")
     private Double sequenceLength;
     @Size(max = 255)
-    @Column(name = "sequence_description")
-    private String sequenceDescription;
+    @Column(name = "sequence_name")
+    private String sequenceName;
     @OneToMany(mappedBy = "beamlineSequenceId")
     private Collection<Element> elementCollection;
     @OneToMany(mappedBy = "beamlineSequenceId")
@@ -79,14 +79,6 @@ public class BeamlineSequence implements Serializable {
 
     public void setBeamlineSequenceId(Integer beamlineSequenceId) {
         this.beamlineSequenceId = beamlineSequenceId;
-    }
-
-    public String getSequenceName() {
-        return sequenceName;
-    }
-
-    public void setSequenceName(String sequenceName) {
-        this.sequenceName = sequenceName;
     }
 
     public String getFirstElementName() {
@@ -113,6 +105,14 @@ public class BeamlineSequence implements Serializable {
         this.predecessorSequence = predecessorSequence;
     }
 
+    public String getSequenceDescription() {
+        return sequenceDescription;
+    }
+
+    public void setSequenceDescription(String sequenceDescription) {
+        this.sequenceDescription = sequenceDescription;
+    }
+
     public Double getSequenceLength() {
         return sequenceLength;
     }
@@ -121,12 +121,12 @@ public class BeamlineSequence implements Serializable {
         this.sequenceLength = sequenceLength;
     }
 
-    public String getSequenceDescription() {
-        return sequenceDescription;
+    public String getSequenceName() {
+        return sequenceName;
     }
 
-    public void setSequenceDescription(String sequenceDescription) {
-        this.sequenceDescription = sequenceDescription;
+    public void setSequenceName(String sequenceName) {
+        this.sequenceName = sequenceName;
     }
 
     @XmlTransient

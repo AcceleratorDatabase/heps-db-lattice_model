@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author paul
+ * @author chu
  */
 @Entity
 @Table(name = "element_install_device")

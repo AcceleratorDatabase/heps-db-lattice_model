@@ -22,7 +22,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "model_geometry")
@@ -30,25 +30,23 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "ModelGeometry.findAll", query = "SELECT m FROM ModelGeometry m"),
     @NamedQuery(name = "ModelGeometry.findByModelGeometryId", query = "SELECT m FROM ModelGeometry m WHERE m.modelGeometryId = :modelGeometryId"),
-    @NamedQuery(name = "ModelGeometry.findByModelGeometryName", query = "SELECT m FROM ModelGeometry m WHERE m.modelGeometryName = :modelGeometryName"),
-    @NamedQuery(name = "ModelGeometry.findByModelGeometryDescription", query = "SELECT m FROM ModelGeometry m WHERE m.modelGeometryDescription = :modelGeometryDescription")})
+    @NamedQuery(name = "ModelGeometry.findByModelGeometryDescription", query = "SELECT m FROM ModelGeometry m WHERE m.modelGeometryDescription = :modelGeometryDescription"),
+    @NamedQuery(name = "ModelGeometry.findByModelGeometryName", query = "SELECT m FROM ModelGeometry m WHERE m.modelGeometryName = :modelGeometryName")})
 public class ModelGeometry implements Serializable {
-    @OneToMany(mappedBy = "modelGeometryId")
-    private Collection<Lattice> latticeCollection;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Basic(optional = false)
     @Column(name = "model_geometry_id")
     private Integer modelGeometryId;
-    @Size(max = 45)
-    @Column(name = "model_geometry_name")
-    private String modelGeometryName;
     @Size(max = 255)
     @Column(name = "model_geometry_description")
     private String modelGeometryDescription;
+    @Size(max = 255)
+    @Column(name = "model_geometry_name")
+    private String modelGeometryName;
     @OneToMany(mappedBy = "modelGeometryId")
-    private Collection<Model> modelCollection;
+    private Collection<Lattice> latticeCollection;
 
     public ModelGeometry() {
     }
@@ -65,14 +63,6 @@ public class ModelGeometry implements Serializable {
         this.modelGeometryId = modelGeometryId;
     }
 
-    public String getModelGeometryName() {
-        return modelGeometryName;
-    }
-
-    public void setModelGeometryName(String modelGeometryName) {
-        this.modelGeometryName = modelGeometryName;
-    }
-
     public String getModelGeometryDescription() {
         return modelGeometryDescription;
     }
@@ -81,13 +71,21 @@ public class ModelGeometry implements Serializable {
         this.modelGeometryDescription = modelGeometryDescription;
     }
 
-    @XmlTransient
-    public Collection<Model> getModelCollection() {
-        return modelCollection;
+    public String getModelGeometryName() {
+        return modelGeometryName;
     }
 
-    public void setModelCollection(Collection<Model> modelCollection) {
-        this.modelCollection = modelCollection;
+    public void setModelGeometryName(String modelGeometryName) {
+        this.modelGeometryName = modelGeometryName;
+    }
+
+    @XmlTransient
+    public Collection<Lattice> getLatticeCollection() {
+        return latticeCollection;
+    }
+
+    public void setLatticeCollection(Collection<Lattice> latticeCollection) {
+        this.latticeCollection = latticeCollection;
     }
 
     @Override
@@ -113,15 +111,6 @@ public class ModelGeometry implements Serializable {
     @Override
     public String toString() {
         return "org.openepics.model.entity.ModelGeometry[ modelGeometryId=" + modelGeometryId + " ]";
-    }
-
-    @XmlTransient
-    public Collection<Lattice> getLatticeCollection() {
-        return latticeCollection;
-    }
-
-    public void setLatticeCollection(Collection<Lattice> latticeCollection) {
-        this.latticeCollection = latticeCollection;
     }
     
 }

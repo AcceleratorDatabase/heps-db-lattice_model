@@ -21,7 +21,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author lv
+ * @author chu
  */
 @Entity
 @Table(name = "rf_gap")
@@ -29,14 +29,14 @@ import javax.xml.bind.annotation.XmlRootElement;
 @NamedQueries({
     @NamedQuery(name = "RfGap.findAll", query = "SELECT r FROM RfGap r"),
     @NamedQuery(name = "RfGap.findByRfGapId", query = "SELECT r FROM RfGap r WHERE r.rfGapId = :rfGapId"),
-    @NamedQuery(name = "RfGap.findByPos", query = "SELECT r FROM RfGap r WHERE r.pos = :pos"),
-    @NamedQuery(name = "RfGap.findByTtf", query = "SELECT r FROM RfGap r WHERE r.ttf = :ttf"),
     @NamedQuery(name = "RfGap.findByAmpFactor", query = "SELECT r FROM RfGap r WHERE r.ampFactor = :ampFactor"),
     @NamedQuery(name = "RfGap.findByEndCellind", query = "SELECT r FROM RfGap r WHERE r.endCellind = :endCellind"),
+    @NamedQuery(name = "RfGap.findByGapName", query = "SELECT r FROM RfGap r WHERE r.gapName = :gapName"),
     @NamedQuery(name = "RfGap.findByGapOffset", query = "SELECT r FROM RfGap r WHERE r.gapOffset = :gapOffset"),
     @NamedQuery(name = "RfGap.findByLen", query = "SELECT r FROM RfGap r WHERE r.len = :len"),
     @NamedQuery(name = "RfGap.findByPhaseFactor", query = "SELECT r FROM RfGap r WHERE r.phaseFactor = :phaseFactor"),
-    @NamedQuery(name = "RfGap.findByGapName", query = "SELECT r FROM RfGap r WHERE r.gapName = :gapName")})
+    @NamedQuery(name = "RfGap.findByPos", query = "SELECT r FROM RfGap r WHERE r.pos = :pos"),
+    @NamedQuery(name = "RfGap.findByTtf", query = "SELECT r FROM RfGap r WHERE r.ttf = :ttf")})
 public class RfGap implements Serializable {
     private static final long serialVersionUID = 1L;
     @Id
@@ -45,23 +45,23 @@ public class RfGap implements Serializable {
     @Column(name = "rf_gap_id")
     private Integer rfGapId;
     // @Max(value=?)  @Min(value=?)//if you know range of your decimal fields consider using these annotations to enforce field validation
-    @Column(name = "pos")
-    private Double pos;
-    @Column(name = "TTF")
-    private Double ttf;
     @Column(name = "ampFactor")
     private Double ampFactor;
     @Column(name = "endCell_ind")
     private Integer endCellind;
+    @Size(max = 255)
+    @Column(name = "gap_name")
+    private String gapName;
     @Column(name = "gapOffset")
     private Double gapOffset;
     @Column(name = "len")
     private Double len;
     @Column(name = "phaseFactor")
     private Double phaseFactor;
-    @Size(max = 45)
-    @Column(name = "gap_name")
-    private String gapName;
+    @Column(name = "pos")
+    private Double pos;
+    @Column(name = "TTF")
+    private Double ttf;
     @JoinColumn(name = "cavity_id", referencedColumnName = "element_id")
     @ManyToOne
     private Element cavityId;
@@ -81,22 +81,6 @@ public class RfGap implements Serializable {
         this.rfGapId = rfGapId;
     }
 
-    public Double getPos() {
-        return pos;
-    }
-
-    public void setPos(Double pos) {
-        this.pos = pos;
-    }
-
-    public Double getTtf() {
-        return ttf;
-    }
-
-    public void setTtf(Double ttf) {
-        this.ttf = ttf;
-    }
-
     public Double getAmpFactor() {
         return ampFactor;
     }
@@ -111,6 +95,14 @@ public class RfGap implements Serializable {
 
     public void setEndCellind(Integer endCellind) {
         this.endCellind = endCellind;
+    }
+
+    public String getGapName() {
+        return gapName;
+    }
+
+    public void setGapName(String gapName) {
+        this.gapName = gapName;
     }
 
     public Double getGapOffset() {
@@ -137,12 +129,20 @@ public class RfGap implements Serializable {
         this.phaseFactor = phaseFactor;
     }
 
-    public String getGapName() {
-        return gapName;
+    public Double getPos() {
+        return pos;
     }
 
-    public void setGapName(String gapName) {
-        this.gapName = gapName;
+    public void setPos(Double pos) {
+        this.pos = pos;
+    }
+
+    public Double getTtf() {
+        return ttf;
+    }
+
+    public void setTtf(Double ttf) {
+        this.ttf = ttf;
     }
 
     public Element getCavityId() {
