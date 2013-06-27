@@ -28,7 +28,7 @@ public class DBTools {
             conn = (Connection) DriverManager.getConnection(url1, user, password);
             boolean rbsign=conn.getRewriteBatchedStatements();          
             if(!rbsign){
-               url1=url1+"?rewriteBatchedStatements=true";
+               // url1=url1+"?rewriteBatchedStatements=true"; // this is not necessary
                closeConnection(conn);
                conn=(Connection) DriverManager.getConnection(url1, user, password);
             }
