@@ -25,7 +25,7 @@ public class ReadPersistenceXML {
     public static Map getPropMap() {
         Map propMap=new HashMap();
         try {
-            File f = new File("src/META-INF/persistence.xml.");
+            File f = new File("src/META-INF/persistence.xml");
             SAXReader reader = new SAXReader();
             Document document = reader.read(f);
             Element root = document.getRootElement();
