@@ -8,6 +8,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
 import java.util.List;
@@ -474,6 +475,10 @@ public class Db2OpenXAL {
         sb.append(accName);
         sb.append("\" ver=\"1.0.0\">\n");
         //TODO set up combo sequences
+
+        // for power supplies
+        ArrayList<String> psList = new ArrayList<String>();
+
         // get all sequences
         BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
         List<BeamlineSequence> blsList = beamlineSequenceAPI.getAllSequences();
@@ -494,7 +499,6 @@ public class Db2OpenXAL {
 
             // loop through each node
             // need to treat RF specially
-
             List<Element> eList = beamlineSequenceAPI.getAllElementsForSequence(bls.getSequenceName());
             Iterator<Element> eIt = eList.iterator();
             while (eIt.hasNext()) {
@@ -639,10 +643,10 @@ public class Db2OpenXAL {
                         }
                     }
                     sb.append("         </attributes>\n");
-
+                    
                     // if the node is not a marker, add EPICS channels 
                     if (!e.getElementTypeId().getElementType().equals("MARK")) {
-                        sb.append("         <channelsuite>\n");
+                        
                         // for magnets
                         //if (!elementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty() &&
                         //       !e.getElementTypeId().getElementType().equals("CAV") ) 
@@ -651,24 +655,34 @@ public class Db2OpenXAL {
                                 e.getElementTypeId().getElementType().equals("DCV")) &&
                                 !e.getElementTypeId().getElementType().equals("CAV")) 
                         {
+                            String psName = e.getElementName().replaceAll(":", ":PS_");
+                            psList.add(psName);
+                            sb.append("         <ps main=\"");
+                            sb.append(psName);        
+                            sb.append("\"/>\n");
+                            sb.append("         <channelsuite name=\"magnetsuite\">\n");
                             sb.append("            <channel handle=\"fieldRB\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":B\" settable=\"false\"/>\n");
-                            sb.append("            <channel handle=\"fieldSet\" signal=\"");
-                            sb.append(e.getElementName());
-                            sb.append(":B_Set\" settable=\"true\"/>\n");
+                            //sb.append("            <channel handle=\"fieldSet\" signal=\"");
+                            //sb.append(e.getElementName());
+                            //sb.append(":B_Set\" settable=\"true\"/>\n");
+                            sb.append("         </channelsuite>\n");
                         }
                         // for BPMs
                         if (e.getElementTypeId().getElementType().equals("BPM")) {
+                            sb.append("         <channelsuite name=\"bpmsuite\">\n");
                             sb.append("            <channel handle=\"xAvg\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":xAvg\" settable=\"false\"/>\n");
                             sb.append("            <channel handle=\"yAvg\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":yAvg\" settable=\"false\"/>\n");
+                            sb.append("         </channelsuite>\n");
                         }
                         // for RF cavities
                         if (e.getElementTypeId().getElementType().equals("CAV")) {
+                            sb.append("         <channelsuite name=\"rfsuite\">\n");
                             sb.append("            <channel handle=\"cavAmpSet\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":ampSet\" settable=\"true\"/>\n");
@@ -681,10 +695,8 @@ public class Db2OpenXAL {
                             sb.append("            <channel handle=\"cavPhaseAvg\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":phase\" settable=\"false\"/>\n");
+                            sb.append("         </channelsuite>\n");
                         }
-                        
-
-                        sb.append("         </channelsuite>\n");
 
                         // now we need to check if this is an RF cavity and fill in all the RF gaps within this cavity
                         if (e.getElementTypeId().getElementType().equals("CAV")) {
@@ -736,6 +748,20 @@ public class Db2OpenXAL {
         }
         // TODO for power supplies
         sb.append("   <powersupplies>\n");
+        for (int i = 0; i<psList.size(); i++) {
+            sb.append("     <ps type=\"main\" id=\"");
+            sb.append(psList.get(i));
+            sb.append("\">\n");
+            sb.append("       <channelsuite name=\"pssuite\">\n");
+            sb.append("         <channel handle=\"fieldSet\" signal=\"");
+            sb.append(psList.get(i));
+            sb.append(":B_Set\"/>\n");
+            sb.append("         <channel handle=\"B_Book\" signal=\"");
+            sb.append(psList.get(i));
+            sb.append(":B_Book\"/>\n");
+            sb.append("       </channelsuite>\n");
+            sb.append("     </ps>\n");
+        }
         sb.append("   </powersupplies>\n");
         // close
         sb.append("</xdxf>");
