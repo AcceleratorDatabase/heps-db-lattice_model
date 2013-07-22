@@ -28,11 +28,6 @@ import org.openepics.model.entity.Lattice;
  */
 public class SeqMap2DB {
 
-    @PersistenceUnit
-    static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
-    static EntityManager em = emf.createEntityManager();
-
-    @PersistenceContext
     public void instDB(ArrayList mapData, String latticeName, String created_by, Date create_date) {
         if (latticeName == null || "".equals(latticeName)) {
             System.out.println("Please insert the Lattice name!");
@@ -42,11 +37,8 @@ public class SeqMap2DB {
             if (l != null) {
                 System.out.println("The Lattice " + latticeName + " is already in the database! Please don't insert repeatedly!");
             } else {
-                em.getTransaction().begin();
-
                 int lattice_id = new LatticeAPI().setLattice(latticeName, created_by, create_date);
-                Lattice lattice = em.find(Lattice.class, lattice_id);
-
+                Lattice lattice = new LatticeAPI().getLatticeById(lattice_id);
                 Iterator it = mapData.iterator();
                 while (it.hasNext()) {
                     Map dataMap = (Map) it.next();
@@ -70,12 +62,9 @@ public class SeqMap2DB {
                     if (bs == null) {
                         beamline_sequence_id = beamlineSequenceAPI.setBeamlineSequence(sequence_name, first_ele_name,
                                 last_ele_name, pre_seq, seq_length, seq_des);
-                        bs = em.find(BeamlineSequence.class, beamline_sequence_id);
-
+                        bs = new BeamlineSequenceAPI().getBeamlineSequenceById(beamline_sequence_id);
                     } else {
                         System.out.println("The sequence " + sequence_name + " is already in the database. Your execution will overwrite this record!");
-
-                        bs = em.find(BeamlineSequence.class, bs.getBeamlineSequenceId());
                         bs.setFirstElementName(first_ele_name);
                         bs.setLastElementName(last_ele_name);
                         bs.setPredecessorSequence(pre_seq);
@@ -89,15 +78,15 @@ public class SeqMap2DB {
                     if (first_ele != null) {
                         System.out.println("Warning:The element " + first_ele_name + " is already in the database! Please don't insert repeatedly!");
                     } else {
-                        new ElementAPI().setElement(first_ele_name, first_ele_s, 0, 0, 0, 0, 0, 0, 0, 0, created_by, create_date,sequence_name, "marker");
+                        new ElementAPI().setElement(first_ele_name, first_ele_s, 0, 0, 0, 0, 0, 0, 0, 0, created_by, create_date, sequence_name, "marker");
                     }
                     if (last_ele != null) {
                         System.out.println("Warning:The element " + last_ele_name + " is already in the database! Please don't insert repeatedly!");
                     } else {
-                          new ElementAPI().setElement(last_ele_name, last_ele_s, 0, 0, 0, 0, 0, 0, 0, seq_length, created_by, create_date,sequence_name, "marker");
-                    }                 
+                        new ElementAPI().setElement(last_ele_name, last_ele_s, 0, 0, 0, 0, 0, 0, 0, seq_length, created_by, create_date, sequence_name, "marker");
+                    }
                 }
-                //  em.getTransaction().commit();
+
             }
         }
     }

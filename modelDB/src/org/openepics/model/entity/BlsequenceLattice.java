@@ -20,7 +20,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author chu
+ * @author admin
  */
 @Entity
 @Table(name = "blsequence_lattice")

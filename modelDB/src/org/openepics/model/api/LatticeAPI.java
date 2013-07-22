@@ -68,6 +68,13 @@ public class LatticeAPI {
         return l.getLatticeId();
     }
 
+    public Lattice getLatticeById(int lattice_id) {
+        Lattice lattice = em.find(Lattice.class, lattice_id);
+        //em.getTransaction().begin();    
+       // em.getTransaction().commit();
+        return lattice;
+    }
+
     /**
      *
      * @param latticeName

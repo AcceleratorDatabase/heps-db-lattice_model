@@ -264,7 +264,7 @@ public class EncapData2DB {
                 DBTools.closePreparedStatement(state);
                 DBTools.closePreparedStatement(eState);            
                 DBTools.closePreparedStatement(propState);
-                DBTools.closeConnection(conn);
+                DBTools.closeConnection();
             }
         }
     }

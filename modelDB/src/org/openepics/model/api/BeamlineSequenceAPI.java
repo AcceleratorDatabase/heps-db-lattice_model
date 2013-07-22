@@ -31,12 +31,14 @@ import org.tools.persistence.PersistenceTools;
 public class BeamlineSequenceAPI {
 
     @PersistenceUnit
-    static Map properties=PersistenceTools.setPersistenceParameters("mysql", "localhost:3306", "paul", "model_test");
-    static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU",properties);
+
+    /*static Map properties=PersistenceTools.setPersistenceParameters("mysql", "localhost:3306", "root", "826529");
+     static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU",properties);
+     static final EntityManager em = emf.createEntityManager();*/
+    static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     static final EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
-
     /**
      * Set a new beamline sequence
      *
@@ -59,12 +61,11 @@ public class BeamlineSequenceAPI {
         em.getTransaction().begin();
         em.persist(bs);
         em.getTransaction().commit();
-        
+
         return bs.getBeamlineSequenceId();
     }
-    
-   
-     /**
+
+    /**
      * Set a new beamline sequence
      *
      * @param seq_name sequence name
@@ -75,8 +76,8 @@ public class BeamlineSequenceAPI {
      * @param seq_desc description for this sequence
      */
     public int setBeamlineSequence(String seq_name, String first_elem_name,
-            String last_elem_name, String previous_seq, double seq_length, 
-            String seq_desc,Collection<BlsequenceLattice> blsequenceLatticeCollection) {
+            String last_elem_name, String previous_seq, double seq_length,
+            String seq_desc, Collection<BlsequenceLattice> blsequenceLatticeCollection) {
         BeamlineSequence bs = new BeamlineSequence();
         bs.setSequenceName(seq_name);
         bs.setFirstElementName(first_elem_name);
@@ -88,10 +89,15 @@ public class BeamlineSequenceAPI {
         em.getTransaction().begin();
         em.persist(bs);
         em.getTransaction().commit();
-        
+
         return bs.getBeamlineSequenceId();
     }
-    
+
+    public BeamlineSequence getBeamlineSequenceById(int bls_id) {
+        BeamlineSequence bls = em.find(BeamlineSequence.class, bls_id);
+        return bls;
+    }
+
     /**
      * Get all accelerator sequences.
      *
@@ -211,10 +217,9 @@ public class BeamlineSequenceAPI {
     }
 
     /**
-     * delete the BeamlineSequence by the given sequence name 
-     * delete the Elements belonging to the sequence 
-     * delete the ElementProps belonging to the Elements 
-     * delete the RfGaps belonging to the Elements
+     * delete the BeamlineSequence by the given sequence name delete the
+     * Elements belonging to the sequence delete the ElementProps belonging to
+     * the Elements delete the RfGaps belonging to the Elements
      */
     public void deleteBySequence(String seqName) {
         em.getTransaction().begin();
@@ -232,7 +237,7 @@ public class BeamlineSequenceAPI {
                     ElementProp ep = (ElementProp) it1.next();
                     em.remove(em.merge(ep));
                 }
-                
+
                 RfGapAPI rfGapAPI = new RfGapAPI();
                 List<RfGap> rfList = rfGapAPI.getAllRfgapsForCavity(e.getElementName());
                 Iterator it2 = rfList.iterator();
@@ -247,7 +252,7 @@ public class BeamlineSequenceAPI {
         } else {
             System.out.println("The BeamlineSequence " + seqName + " doesn't exist!");
         }
-       
+
     }
 
     public void deleteAll() {
@@ -262,7 +267,7 @@ public class BeamlineSequenceAPI {
             Iterator it3 = eList.iterator();
             while (it3.hasNext()) {
                 Element e = (Element) it3.next();
-                
+
                 ElementAPI elementAPI = new ElementAPI();
                 List<ElementProp> epList = elementAPI.getAllPropertiesForElement(e.getElementName());
                 Iterator it1 = epList.iterator();
@@ -270,7 +275,7 @@ public class BeamlineSequenceAPI {
                     ElementProp ep = (ElementProp) it1.next();
                     em.remove(em.merge(ep));
                 }
-                
+
                 RfGapAPI rfGapAPI = new RfGapAPI();
                 List<RfGap> rfList = rfGapAPI.getAllRfgapsForCavity(e.getElementName());
                 Iterator it2 = rfList.iterator();
@@ -284,13 +289,13 @@ public class BeamlineSequenceAPI {
 
         }
         em.getTransaction().commit();
-     
+
     }
-    
+
     public void updateBeamlineSequence(String old_seq_name, String new_seq_name,
-            String first_elem_name, String last_elem_name, String previous_seq, double seq_length, String seq_desc){
+            String first_elem_name, String last_elem_name, String previous_seq, double seq_length, String seq_desc) {
         em.getTransaction().begin();
-        BeamlineSequence bs=getSequenceByName(old_seq_name);
+        BeamlineSequence bs = getSequenceByName(old_seq_name);
         bs.setSequenceName(new_seq_name);
         bs.setFirstElementName(first_elem_name);
         bs.setLastElementName(last_elem_name);
@@ -299,6 +304,6 @@ public class BeamlineSequenceAPI {
         bs.setSequenceDescription(seq_desc);
         em.merge(bs);
         em.getTransaction().commit();
-        
-    } 
+
+    }
 }
