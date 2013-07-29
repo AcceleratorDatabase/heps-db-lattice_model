@@ -7,7 +7,9 @@ package org.openepics.model.api;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
@@ -19,6 +21,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import org.openepics.model.entity.BeamParameter;
+import org.openepics.model.entity.BeamParameterProp;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.Model;
 import org.openepics.model.entity.ParticleType;
@@ -50,8 +53,9 @@ public class BeamParameterAPI {
         q = em.createQuery("SELECT bp FROM BeamParameter bp WHERE bp.modelId=:modelId").setParameter("modelId", model);
         bpList = q.getResultList();
         return bpList;
+       
     }
-
+     
     /**
      * get all beam parameters for the specified element
      *
@@ -112,10 +116,10 @@ public class BeamParameterAPI {
         bp.setElementId(ele);
         bp.setModelId(model);
         bp.setParticleType(pt);
-        em.getTransaction().begin();       
-        em.persist(bp);     
+        em.getTransaction().begin();
+        em.persist(bp);
         em.getTransaction().commit();
-       
+
         return bp;
     }
 
@@ -134,5 +138,39 @@ public class BeamParameterAPI {
         } else {
             return bpList.get(0);
         }
+    }
+
+    public void deleteBeamParameter(BeamParameter bp) {
+        if (bp != null) {
+            em.getTransaction().begin();
+
+            Collection<BeamParameterProp> bppList = bp.getBeamParameterPropCollection();
+            new BeamParameterPropAPI().deleteBeamParameterPropCollection(bppList);
+            if (em.contains(bp)) {
+                em.remove(bp);
+            } else {
+                int id = (int) emf.getPersistenceUnitUtil().getIdentifier(bp);
+                em.remove(em.find(BeamParameter.class, id));
+            }
+            em.getTransaction().commit();
+        }
+    }
+    
+    public void deleteBeamParameterCollection(Collection<BeamParameter> bpList){
+       Iterator it=bpList.iterator();
+       em.getTransaction().begin();
+       while(it.hasNext()){
+         BeamParameter bp=(BeamParameter) it.next();
+         Collection<BeamParameterProp> bppList = bp.getBeamParameterPropCollection();
+         new BeamParameterPropAPI().deleteBeamParameterPropCollection(bppList);
+         
+          if (em.contains(bp)) {
+                em.remove(bp);
+            } else {
+                int id = (int) emf.getPersistenceUnitUtil().getIdentifier(bp);
+                em.remove(em.find(BeamParameter.class, id));
+            }
+       }
+       em.getTransaction().commit();
     }
 }

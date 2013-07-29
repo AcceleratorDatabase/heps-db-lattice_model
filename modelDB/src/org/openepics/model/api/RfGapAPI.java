@@ -4,6 +4,8 @@
  */
 package org.openepics.model.api;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -25,8 +27,7 @@ public class RfGapAPI {
     static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     static EntityManager em = emf.createEntityManager();
 
-    public List<RfGap> getAllRfgapsForCavity(String cav) {
-        
+    public List<RfGap> getAllRfgapsForCavity(String cav) {       
         Query q;
         q = em.createQuery("SELECT rg from RfGap rg WHERE rg.cavityId.elementName = :elementname ")
                 .setParameter("elementname", cav);
@@ -64,4 +65,31 @@ public class RfGapAPI {
         em.getTransaction().commit();
     }
     
+    public void deleteRfGap(RfGap rf){
+        if (rf != null) {
+            em.getTransaction().begin();
+            if (em.contains(rf)) {
+                em.remove(rf);
+            } else {
+                int id = (int) emf.getPersistenceUnitUtil().getIdentifier(rf);
+                em.remove(em.find(RfGap.class, id));
+            }
+            em.getTransaction().commit();
+        }
+    }
+    
+     public void deleteRfGapCollection(Collection<RfGap> rfList){
+       Iterator it=rfList.iterator();
+       em.getTransaction().begin();
+       while(it.hasNext()){
+          RfGap rf=(RfGap) it.next();
+          if (em.contains(rf)) {
+                em.remove(rf);
+            } else {
+                int id = (int) emf.getPersistenceUnitUtil().getIdentifier(rf);
+                em.remove(em.find(RfGap.class, id));
+            }
+       }
+       em.getTransaction().commit();
+    }
 }

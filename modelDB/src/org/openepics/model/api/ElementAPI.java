@@ -5,6 +5,7 @@
 package org.openepics.model.api;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Iterator;
@@ -15,11 +16,11 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
+import org.openepics.model.entity.BeamParameter;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
 import org.openepics.model.entity.ElementType;
-import org.openepics.model.entity.Lattice;
 import org.openepics.model.entity.RfGap;
 
 /**
@@ -180,32 +181,35 @@ public class ElementAPI {
      * Delete the element by the given name
      * Delete the ElementProps belonging to the Element
      * Delete the RfGaps belonging to the Element
+     * Delete the BeamParameters belonging to the Element
      */
 
     public void deleteElementByName(String name) {
         em.getTransaction().begin();
         Element e = getElementByName(name);
         if (e != null) {
-            List<ElementProp> epList = getAllPropertiesForElement(name);
-            Iterator it1 = epList.iterator();
-            while (it1.hasNext()) {
-                ElementProp ep = (ElementProp) it1.next();
-                em.remove(em.merge(ep));
-            }
-
+            //ElementProp
+            Collection<ElementProp> epList = e.getElementPropCollection();
+            new ElementPropAPI().deleteElementPropCollection(epList);
+            //RfGap
             RfGapAPI rfGapAPI = new RfGapAPI();
-            List<RfGap> rfList = rfGapAPI.getAllRfgapsForCavity(name);
-            Iterator it2 = rfList.iterator();
-            while (it2.hasNext()) {
-                RfGap rf = (RfGap) it2.next();
-                em.remove(em.merge(rf));
+            Collection<RfGap> rfList = (Collection<RfGap>) e.getRfGapCollection();
+            new RfGapAPI().deleteRfGapCollection(rfList);
+             //BeamParameter
+            Collection<BeamParameter> bpList=e.getBeamParameterCollection();
+            new BeamParameterAPI().deleteBeamParameterCollection(bpList);
+                    
+            if (em.contains(e)) {
+                em.remove(e);
+            } else {
+                int id = (int) emf.getPersistenceUnitUtil().getIdentifier(e);
+                em.remove(em.find(RfGap.class, id));
             }
-            em.remove(em.merge(e));
+           
         } else {
             System.out.println("The element " + name + " doesn't exist!");
         }
         em.getTransaction().commit();
-
     }
 
     public void updateElement(String old_name, String new_name, double s,

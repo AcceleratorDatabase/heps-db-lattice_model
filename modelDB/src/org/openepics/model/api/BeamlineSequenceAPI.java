@@ -218,78 +218,43 @@ public class BeamlineSequenceAPI {
 
     /**
      * delete the BeamlineSequence by the given sequence name delete the
-     * Elements belonging to the sequence delete the ElementProps belonging to
-     * the Elements delete the RfGaps belonging to the Elements
+     * BlseqneceLattice belonging to the sequence delete the Elements belonging
+     * to the sequence
      */
     public void deleteBySequence(String seqName) {
         em.getTransaction().begin();
         BeamlineSequence bls = getSequenceByName(seqName);
         if (bls != null) {
-            List<Element> eList = getAllElementsForSequence(seqName);
+            //BlsequenceLattice
+            Collection<BlsequenceLattice> blslList = bls.getBlsequenceLatticeCollection();
+            new BlsequenceLatticeAPI().deleteBlsequenceLatticeCollection(blslList);
+            //Element
+            List<Element> eList = (List<Element>) bls.getElementCollection();
             Iterator it = eList.iterator();
             while (it.hasNext()) {
                 Element e = (Element) it.next();
-
-                ElementAPI elementAPI = new ElementAPI();
-                List<ElementProp> epList = elementAPI.getAllPropertiesForElement(e.getElementName());
-                Iterator it1 = epList.iterator();
-                while (it1.hasNext()) {
-                    ElementProp ep = (ElementProp) it1.next();
-                    em.remove(em.merge(ep));
-                }
-
-                RfGapAPI rfGapAPI = new RfGapAPI();
-                List<RfGap> rfList = rfGapAPI.getAllRfgapsForCavity(e.getElementName());
-                Iterator it2 = rfList.iterator();
-                while (it2.hasNext()) {
-                    RfGap rf = (RfGap) it2.next();
-                    em.remove(em.merge(rf));
-                }
-                em.remove(em.merge(e));
+                new ElementAPI().deleteElementByName(e.getElementName());
             }
-            em.remove(em.merge(bls));
+
+            if (em.contains(bls)) {
+                em.remove(bls);
+            } else {
+                int id = (int) emf.getPersistenceUnitUtil().getIdentifier(bls);
+                em.remove(em.find(BeamlineSequence.class, id));
+            }
             em.getTransaction().commit();
         } else {
             System.out.println("The BeamlineSequence " + seqName + " doesn't exist!");
         }
-
     }
 
     public void deleteAll() {
         List sequences = getAllSequences();
-
         Iterator it = sequences.iterator();
-        em.getTransaction().begin();
         while (it.hasNext()) {
-
             BeamlineSequence bls = (BeamlineSequence) it.next();
-            List<Element> eList = getAllElementsForSequence(bls.getSequenceName());
-            Iterator it3 = eList.iterator();
-            while (it3.hasNext()) {
-                Element e = (Element) it3.next();
-
-                ElementAPI elementAPI = new ElementAPI();
-                List<ElementProp> epList = elementAPI.getAllPropertiesForElement(e.getElementName());
-                Iterator it1 = epList.iterator();
-                while (it1.hasNext()) {
-                    ElementProp ep = (ElementProp) it1.next();
-                    em.remove(em.merge(ep));
-                }
-
-                RfGapAPI rfGapAPI = new RfGapAPI();
-                List<RfGap> rfList = rfGapAPI.getAllRfgapsForCavity(e.getElementName());
-                Iterator it2 = rfList.iterator();
-                while (it2.hasNext()) {
-                    RfGap rf = (RfGap) it2.next();
-                    em.remove(em.merge(rf));
-                }
-                em.remove(em.merge(e));
-            }
-            em.remove(em.merge(bls));
-
+            this.deleteBySequence(bls.getSequenceName());
         }
-        em.getTransaction().commit();
-
     }
 
     public void updateBeamlineSequence(String old_seq_name, String new_seq_name,

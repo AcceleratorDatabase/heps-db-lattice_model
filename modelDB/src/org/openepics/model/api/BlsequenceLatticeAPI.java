@@ -4,6 +4,8 @@
  */
 package org.openepics.model.api;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -53,4 +55,40 @@ public class BlsequenceLatticeAPI {
         List<BeamlineSequence> blsList = q.getResultList();
         return blsList;
     }
+    
+    public List<BlsequenceLattice> getBlsequenceLatticeForSequence(String seq_name){
+        Query q;
+        q = em.createQuery("SELECT blsl FROM BlsequenceLattice blsl WHERE blsl.beamlineSequenceId.sequenceName=:sequenceName").setParameter("sequenceName", seq_name);
+        List<BlsequenceLattice> blslList = q.getResultList();
+        return blslList;
+    }
+    
+     public void deleteBlsequenceLattice(BlsequenceLattice blsl) {
+        if (blsl != null) {
+            em.getTransaction().begin();
+            if (em.contains(blsl)) {
+                em.remove(blsl);
+            } else {
+                int id = (int) emf.getPersistenceUnitUtil().getIdentifier(blsl);
+                em.remove(em.find(BlsequenceLattice.class, id));
+            }
+            em.getTransaction().commit();
+        }
+    }
+     
+      public void deleteBlsequenceLatticeCollection(Collection<BlsequenceLattice> bppList){
+       Iterator it=bppList.iterator();
+       em.getTransaction().begin();
+       while(it.hasNext()){
+         BlsequenceLattice blsl=(BlsequenceLattice) it.next();
+          if (em.contains(blsl)) {
+                em.remove(blsl);
+            } else {
+                int id = (int) emf.getPersistenceUnitUtil().getIdentifier(blsl);
+                em.remove(em.find(BlsequenceLattice.class, id));
+            }
+       }
+       em.getTransaction().commit();
+    }
+   
 }

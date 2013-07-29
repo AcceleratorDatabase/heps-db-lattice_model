@@ -4,6 +4,8 @@
  */
 package org.openepics.model.api;
 
+import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -116,5 +118,33 @@ public class BeamParameterPropAPI {
         em.getTransaction().begin();
         em.persist(bpp);
         em.getTransaction().commit();
+    }
+    
+    public void deleteBeamParameterProp(BeamParameterProp bpp) {
+        if (bpp != null) {
+            em.getTransaction().begin();
+            if (em.contains(bpp)) {
+                em.remove(bpp);
+            } else {
+                int id = (int) emf.getPersistenceUnitUtil().getIdentifier(bpp);
+                em.remove(em.find(BeamParameterProp.class, id));
+            }
+            em.getTransaction().commit();
+        }
+    }
+    
+    public void deleteBeamParameterPropCollection(Collection<BeamParameterProp> bppList){
+       Iterator it=bppList.iterator();
+       em.getTransaction().begin();
+       while(it.hasNext()){
+         BeamParameterProp bpp=(BeamParameterProp) it.next();
+          if (em.contains(bpp)) {
+                em.remove(bpp);
+            } else {
+                int id = (int) emf.getPersistenceUnitUtil().getIdentifier(bpp);
+                em.remove(em.find(BeamParameterProp.class, id));
+            }
+       }
+       em.getTransaction().commit();
     }
 }
