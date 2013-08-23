@@ -104,6 +104,7 @@ public class BeamParameterPropAPI {
         bpp.setPropCategory(category);
         bpp.setPropertyName(name);
         bpp.setPropertyDatatype(datatype);
+        bpp.setDescription(description);
         switch (datatype.toLowerCase()) {
             case "string":
                 bpp.setBeamParameterString(prop.toString());

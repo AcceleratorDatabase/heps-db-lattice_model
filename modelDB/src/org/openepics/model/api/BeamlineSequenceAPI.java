@@ -27,7 +27,7 @@ import org.tools.persistence.PersistenceTools;
  * @author chu
  * @author lv
  */
-@Stateless
+//@Stateless
 public class BeamlineSequenceAPI {
 
     @PersistenceUnit
@@ -194,9 +194,7 @@ public class BeamlineSequenceAPI {
      */
     public List<Element> getAllElementsOfTypeForSequence(String seq, String type) {
         Query q;
-        q = em.createQuery("SELECT e FROM Element e WHERE "
-                + "e.sequenceId.sequenceName=:seqName "
-                + "AND e.elementTypeId.elementType= :type")
+        q = em.createQuery("SELECT e FROM Element e WHERE e.beamlineSequenceId.sequenceName=:seqName AND e.elementTypeId.elementType=:type")
                 .setParameter("seqName", seq).setParameter("type", type);
         List<Element> eList = q.getResultList();
         return eList;
@@ -210,7 +208,7 @@ public class BeamlineSequenceAPI {
      */
     public int getElementCountForSequence(String seq) {
         Query q;
-        q = em.createQuery("SELECT e FROM Element e WHERE e.sequenceId.sequenceName=:seqName")
+        q = em.createQuery("SELECT e FROM Element e WHERE e.beamlineSequenceId.sequenceName=:seqName")
                 .setParameter("seqName", seq);
         List<Element> eList = q.getResultList();
         return eList.size();

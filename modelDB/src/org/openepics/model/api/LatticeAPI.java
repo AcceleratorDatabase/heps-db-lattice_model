@@ -169,90 +169,91 @@ public class LatticeAPI {
                         }
                     }
                 }
+            }
+            List blsList = new BlsequenceLatticeAPI().getSequencesForLattice(name);
 
-                List blsList = new BlsequenceLatticeAPI().getSequencesForLattice(name);
-
-                //blsequence_lattice
-                Collection<BlsequenceLattice> blslList = l.getBlsequenceLatticeCollection();
-                if (!blslList.isEmpty()) {
-                    Iterator it8 = blslList.iterator();
-                    while (it8.hasNext()) {
-                        BlsequenceLattice blsl = (BlsequenceLattice) it8.next();
-                        if (em.contains(blsl)) {
-                            em.remove(blsl);
-                        } else {
-                            int id = (int) emf.getPersistenceUnitUtil().getIdentifier(blsl);
-                            em.remove(em.find(BlsequenceLattice.class, id));
-                        }
+            //blsequence_lattice
+            Collection<BlsequenceLattice> blslList = l.getBlsequenceLatticeCollection();
+            if (!blslList.isEmpty()) {
+                Iterator it8 = blslList.iterator();
+                while (it8.hasNext()) {
+                    BlsequenceLattice blsl = (BlsequenceLattice) it8.next();
+                    if (em.contains(blsl)) {
+                        em.remove(blsl);
+                    } else {
+                        int id = (int) emf.getPersistenceUnitUtil().getIdentifier(blsl);
+                        em.remove(em.find(BlsequenceLattice.class, id));
                     }
                 }
+            }
 
-                //beamline sequence
-                if (!blsList.isEmpty()) {
-                    Iterator it1 = blsList.iterator();
-                    while (it1.hasNext()) {
-                        BeamlineSequence bls = (BeamlineSequence) it1.next();
-                        List eleList = (List) bls.getElementCollection();
-                        if (!eleList.isEmpty()) {
-                            Iterator it2 = eleList.iterator();
-                            while (it2.hasNext()) {
+            //beamline sequence
+            if (!blsList.isEmpty()) {
+                Iterator it1 = blsList.iterator();
+                while (it1.hasNext()) {
+                    BeamlineSequence bls = (BeamlineSequence) it1.next();
+                    List eleList = (List) bls.getElementCollection();
+                    if (!eleList.isEmpty()) {
+                        Iterator it2 = eleList.iterator();
+                        while (it2.hasNext()) {
 
-                                Element ele = (Element) it2.next();
+                            Element ele = (Element) it2.next();
 
-                                List elePropList = (List) ele.getElementPropCollection();
-
-                                if (!elePropList.isEmpty()) {
-                                    Iterator it3 = elePropList.iterator();
-                                    while (it3.hasNext()) {
-                                        ElementProp ep = (ElementProp) it3.next();
-                                        if (em.contains(ep)) {
-                                            em.remove(ep);
-                                        } else {
-                                            int id = (int) emf.getPersistenceUnitUtil().getIdentifier(ep);
-                                            em.remove(em.find(ElementProp.class, id));
-                                        }
+                            List elePropList = (List) ele.getElementPropCollection();
+                            //element prop
+                            if (!elePropList.isEmpty()) {
+                                Iterator it3 = elePropList.iterator();
+                                while (it3.hasNext()) {
+                                    ElementProp ep = (ElementProp) it3.next();
+                                    if (em.contains(ep)) {
+                                        em.remove(ep);
+                                    } else {
+                                        int id = (int) emf.getPersistenceUnitUtil().getIdentifier(ep);
+                                        em.remove(em.find(ElementProp.class, id));
                                     }
-                                }
-                                //RfGap                         
-                                List rfList = (List) ele.getRfGapCollection();
-                                if (!rfList.isEmpty()) {
-                                    Iterator it4 = rfList.iterator();
-                                    while (it4.hasNext()) {
-                                        RfGap rfGap = (RfGap) it4.next();
-                                        if (em.contains(rfGap)) {
-                                            em.remove(rfGap);
-                                        } else {
-                                            int id = (int) emf.getPersistenceUnitUtil().getIdentifier(rfGap);
-                                            em.remove(em.find(RfGap.class, id));
-                                        }
-
-                                    }
-                                }
-                                if (em.contains(ele)) {
-                                    em.remove(ele);
-                                } else {
-                                    int id = (int) emf.getPersistenceUnitUtil().getIdentifier(ele);
-                                    em.remove(em.find(Element.class, id));
                                 }
                             }
-                        }
 
-                        if (em.contains(bls)) {
-                            em.remove(bls);
-                        } else {
-                            int id = (int) emf.getPersistenceUnitUtil().getIdentifier(bls);
-                            em.remove(em.find(BeamlineSequence.class, id));
+                            //RfGap                         
+                            List rfList = (List) ele.getRfGapCollection();
+                            if (!rfList.isEmpty()) {
+                                Iterator it4 = rfList.iterator();
+                                while (it4.hasNext()) {
+                                    RfGap rfGap = (RfGap) it4.next();
+                                    if (em.contains(rfGap)) {
+                                        em.remove(rfGap);
+                                    } else {
+                                        int id = (int) emf.getPersistenceUnitUtil().getIdentifier(rfGap);
+                                        em.remove(em.find(RfGap.class, id));
+                                    }
+
+                                }
+                            }
+                            if (em.contains(ele)) {
+                                em.remove(ele);
+                            } else {
+                                int id = (int) emf.getPersistenceUnitUtil().getIdentifier(ele);
+                                em.remove(em.find(Element.class, id));
+                            }
                         }
                     }
+
+                    if (em.contains(bls)) {
+                        em.remove(bls);
+                    } else {
+                        int id = (int) emf.getPersistenceUnitUtil().getIdentifier(bls);
+                        em.remove(em.find(BeamlineSequence.class, id));
+                    }
                 }
-                if (em.contains(l)) {
-                    em.remove(l);
-                } else {
-                    int id = (int) emf.getPersistenceUnitUtil().getIdentifier(l);
-                    em.remove(em.find(Lattice.class, id));
-                }
-                em.getTransaction().commit();
             }
+
+            if (em.contains(l)) {
+                em.remove(l);
+            } else {
+                int id = (int) emf.getPersistenceUnitUtil().getIdentifier(l);
+                em.remove(em.find(Lattice.class, id));
+            }
+            em.getTransaction().commit();
         } else {
             System.out.println("The lattice " + name + " doesn't exist!");
         }

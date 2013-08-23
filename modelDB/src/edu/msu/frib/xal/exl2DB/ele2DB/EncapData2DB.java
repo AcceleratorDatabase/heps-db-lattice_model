@@ -66,7 +66,7 @@ public class EncapData2DB {
                 ArrayList eleNameList = ReadComSheet.getColList(wb, sheetName, "Eng_name", "Physical label");
                 ArrayList sequenceList = ReadComSheet.getColList(wb, sheetName, "Section", "Physical Label");
                 ArrayList eleTypeList = ReadComSheet.getColList(wb, sheetName, "XAL_KeyWord", "Physical Label");
-
+             
                 //key:element_id value:element/s
                 HashMap<Integer, Double> hMap = new HashMap<Integer, Double>();
 

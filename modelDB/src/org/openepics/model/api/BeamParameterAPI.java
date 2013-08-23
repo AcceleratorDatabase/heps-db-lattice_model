@@ -78,10 +78,11 @@ public class BeamParameterAPI {
                 Map<String, Object> map = new HashMap<>();
                 Field[] fields = bp.getClass().getDeclaredFields();
                 int l = fields.length;
-                //System.out.println(l);
+                System.out.println(l);
                 for (int i = 1; i < l; i++) {
                     String fieldName = fields[i].getName();
                     String getter = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+                    System.out.println(i+"*******"+getter);
                     Method method = null;
                     try {
                         method = bp.getClass().getMethod(getter, new Class[]{});
