@@ -502,9 +502,9 @@ public class Db2OpenXAL {
             sb.append("\"");
             // handle DTLs and CCLs
             if (bls.getSequenceName().contains("DTL"))
-                sb.append("\" type=\"DTLTank\"");
+                sb.append(" type=\"DTLTank\"");
             if (bls.getSequenceName().contains("CCL"))
-                sb.append("\" type=\"CCLTank\"");
+                sb.append(" type=\"CCLTank\"");
             
             sb.append(">\n");
             sb.append("      <attributes>\n");
