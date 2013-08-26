@@ -23,12 +23,15 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
+import org.openepics.model.api.BeamParameterAPI;
 import org.openepics.model.api.BeamlineSequenceAPI;
 import org.openepics.model.api.BlsequenceLatticeAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ElementPropAPI;
 import org.openepics.model.api.GoldModelAPI;
+import org.openepics.model.api.ModelAPI;
 import org.openepics.model.api.ModelDB;
+import org.openepics.model.api.ParticleTypeAPI;
 import org.openepics.model.api.RfGapAPI;
 import org.openepics.model.entity.BeamParameter;
 import org.openepics.model.entity.BeamParameterProp;
@@ -37,6 +40,7 @@ import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
 import org.openepics.model.entity.ElementTypeProp;
 import org.openepics.model.entity.Model;
+import org.openepics.model.entity.ParticleType;
 import org.openepics.model.entity.RfGap;
 
 /**
@@ -50,9 +54,14 @@ public class Db2Xal {
     static final EntityManager em = emf.createEntityManager();
     // define the accelerator name
     //String accName = "csns";
-    
+
     @PersistenceContext
     public void write2ModelParam() {
+        // get all model initial conditions
+        ModelAPI mapi = new ModelAPI();
+        List<Model> mList = mapi.getAllModelInitialConditions();
+        List<BeamParameterProp> bppList = null;
+
         // write the header
         StringBuilder sb = new StringBuilder("<?xml version = '1.0' encoding = 'UTF-8'?>\n"
                 + "<!DOCTYPE tablegroup [\n"
@@ -76,39 +85,26 @@ public class Db2Xal {
 
         sb.append("<tablegroup>\n");
 
-        // find the models for each beamline sequence initial condition
-        GoldModelAPI gmAPI = new GoldModelAPI();
-        List<BeamParameter> bpList = gmAPI.getAllDefaultInitialConditions();
-        System.out.println("There are " + bpList.size() + " beamline sequence initial conditions.");
-
-        // Beam Parameter Properties
-        List<BeamParameterProp> bppList = null;
-        // for "species" table
         sb.append("  <table name=\"species\">\n");
         sb.append("     <schema>\n");
         sb.append("         <attribute isPrimaryKey=\"true\" name=\"name\" type=\"java.lang.String\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"mass\" type=\"java.lang.Double\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"charge\" type=\"java.lang.Double\"/>\n");
         sb.append("     </schema>\n");
-        //find all different species but no duplication
-        HashMap<String, Integer> spMap = new HashMap<>();
-        ArrayList<String> spList = new ArrayList<>();
-        for (int i = 0; i < bpList.size(); i++) {
-            if (!spList.contains(bpList.get(i).getParticleType().getParticleName())) {
-                spMap.put(bpList.get(i).getParticleType().getParticleName(), i);
-                spList.add(bpList.get(i).getParticleType().getParticleName());
-            }
-        }
-        // fill in all the distinct species
-        for (int j = 0; j < spList.size(); j++) {
+
+        // get all particle types
+        ParticleTypeAPI pta = new ParticleTypeAPI();
+        List<ParticleType> pList = pta.getAllParticleTypes();
+        for (int i = 0; i < pList.size(); i++) {
             sb.append("     <record name=\"");
-            sb.append(bpList.get(spMap.get(spList.get(j))).getParticleType().getParticleName());
+            sb.append(pList.get(i).getParticleName());
             sb.append("\" mass=\"");
-            sb.append(bpList.get(spMap.get(spList.get(j))).getParticleType().getParticleMass());
+            sb.append(pList.get(i).getParticleMass());
             sb.append("\" charge=\"");
-            sb.append(bpList.get(spMap.get(spList.get(j))).getParticleType().getParticleCharge());
+            sb.append(pList.get(i).getParticleCharge());
             sb.append("\"/>\n");
         }
+
         sb.append("  </table>\n");
 
         // for "beam" table
@@ -118,27 +114,39 @@ public class Db2Xal {
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"I\" type=\"java.lang.Double\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"Q\" type=\"java.lang.Double\"/>\n");
         sb.append("     </schema>\n");
-        sb.append("     <record name=\"default\" I=\"0.0\" Q=\"0.\"/>\n");
-        for (int i = 0; i < bpList.size(); i++) {
+        //I:current Q:charge
+        sb.append("     <record name=\"default\" I=\"0.01483760\" Q=\"8.07168E-15\"/>\n");
+        for (int i = 0; i < mList.size(); i++) {
+            // get beam parameters for this model
+            BeamParameterAPI bpa = new BeamParameterAPI();
+            List<BeamParameter> bpaList = bpa.getAllBeamParametersForModel(mList.get(i));
             // get beam properties
             Query q;
-            q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp WHERE bpp.beamParameterId.twissId=:twiss_id")
-                    .setParameter("twiss_id", bpList.get(i).getTwissId());
-            bppList = q.getResultList();
+            if (bpaList.size() > 0) {
 
-            if (!bppList.isEmpty()) {
-                sb.append("     <record name=\"");
-                sb.append(bpList.get(i).getModelId().getModelName());
-                sb.append("\" ");
-                for (int j = 0; j < bppList.size(); j++) {
-                    if (bppList.get(j).getPropCategory().equals("beam")) {
-                        sb.append(bppList.get(j).getPropertyName());
-                        sb.append("=\"");
-                        sb.append(bppList.get(j).getBeamParameterDouble());
-                        sb.append("\" ");
+                q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp JOIN bpp.beamParameterId pid WHERE pid.modelId=:modelId")
+                        .setParameter("modelId", mList.get(i));
+                bppList = q.getResultList();
+
+                if (!bppList.isEmpty()) {
+                    sb.append("     <record name=\"");
+                    //sb.append(bpList.get(i).getModelId().getModelName());
+                    sb.append(mList.get(i).getModelName());
+                    sb.append("\" ");
+                    for (int j = 0; j < bppList.size(); j++) {
+                        if (bppList.get(j).getPropCategory().equals("beam") && bppList.get(j).getPropertyName().equals("current")) {
+                            sb.append("I=\"" + bppList.get(j).getBeamParameterDouble());
+                            sb.append("\" ");
+
+                        }
+                        if (bppList.get(j).getPropCategory().equals("beam") && bppList.get(j).getPropertyName().equals("charge")) {
+                            sb.append("Q=\"" + bppList.get(j).getBeamParameterDouble());
+                            sb.append("\"");
+
+                        }
                     }
+                    sb.append("/>\n");
                 }
-                sb.append("/>\n");
             }
         }
 
@@ -149,18 +157,18 @@ public class Db2Xal {
         sb.append("     <schema>\n");
         sb.append("         <attribute isPrimaryKey=\"true\" name=\"name\" type=\"java.lang.String\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"errortol\" type=\"java.lang.Double\" defaultValue=\"1.0E-5\"/>\n");
-        sb.append("         <attribute isPrimaryKey=\"false\" name=\"initstep\" type=\"java.lang.Double\" defaultValue=\"0.1\"/>\n");
-        sb.append("         <attribute isPrimaryKey=\"false\" name=\"maxstep\" type=\"java.lang.Double\" defaultValue=\"0.\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"initstep\" type=\"java.lang.Double\" defaultValue=\"0.01\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"maxstep\" type=\"java.lang.Double\" defaultValue=\"0.0\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"norm\" type=\"java.lang.Integer\" defaultValue=\"0\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"order\" type=\"java.lang.Integer\" defaultValue=\"2\"/>\n");
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"slack\" type=\"java.lang.Double\" defaultValue=\"0.05\"/>\n");
-        sb.append("         <attribute isPrimaryKey=\"false\" name=\"maxiter\" type=\"java.lang.Integer\" defaultValue=\"100\"/>\n");
+        sb.append("         <attribute isPrimaryKey=\"false\" name=\"maxiter\" type=\"java.lang.Integer\" defaultValue=\"50\"/>\n");
         sb.append("	</schema>\n");
         sb.append("	<record name=\"default\"/>\n");
-        for (int i = 0; i < bpList.size(); i++) {
+        for (int i = 0; i < mList.size(); i++) {
             sb.append("     <record name=\"");
-            sb.append(bpList.get(i).getModelId().getModelName());
-            sb.append("\" errortol=\"0.1\" initstep=\"0.1\" maxiter=\"100\"/>\n");
+            sb.append(mList.get(i).getModelName());
+            sb.append("\" errortol=\"0.1\" initstep=\"0.1\" maxiter=\"1000\"/>\n");
         }
         sb.append("  </table>\n");
 
@@ -174,89 +182,84 @@ public class Db2Xal {
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"emittance\" type=\"java.lang.Double\"/>\n");
         sb.append("	</schema>\n");
         // TODO
-        for (int i = 0; i < bpList.size(); i++) {
+        for (int i = 0; i < mList.size(); i++) {
             // get twiss properties
             Query q;
-            q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp WHERE bpp.beamParameterId.twissId=:twiss_id")
-                    .setParameter("twiss_id", bpList.get(i).getTwissId());
+
+            q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp JOIN bpp.beamParameterId pid WHERE pid.modelId=:modelId")
+                    .setParameter("modelId", mList.get(i));
             bppList = q.getResultList();
             // TODO: need to fix problem here 
             if (!bppList.isEmpty()) {
-                HashMap<String, Double> xTwissMap = new HashMap<>();
-                HashMap<String, Double> yTwissMap = new HashMap<>();
-                HashMap<String, Double> zTwissMap = new HashMap<>();
+                sb.append("     <record name=\"");
+                sb.append(mList.get(i).getModelName());
+                sb.append("\" coordinate=\"x");
+                // loop over all beam parameter properties
                 for (int j = 0; j < bppList.size(); j++) {
-                    if (bppList.get(j).getPropCategory().equals("twiss")) {
-                        switch (bppList.get(j).getPropertyName()) {
-                            case "x_alpha":
-                            case "x_beta":
-                            case "x_emittance":
-                                xTwissMap.put(bppList.get(j).getPropertyName(), bppList.get(j).getBeamParameterDouble());
-                                break;
-                            case "y_alpha":
-                            case "y_beta":
-                            case "y_emittance":
-                                yTwissMap.put(bppList.get(j).getPropertyName(), bppList.get(j).getBeamParameterDouble());
-                                break;
-                            case "z_alpha":
-                            case "z_beta":
-                            case "z_emittance":
-                                zTwissMap.put(bppList.get(j).getPropertyName(), bppList.get(j).getBeamParameterDouble());
-                                break;
-                        }
+                    switch (bppList.get(j).getPropertyName()) {
+                        case "x_alpha":
+                            sb.append("\" alpha=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "x_beta":
+                            sb.append("\" beta=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "x_emittance":
+                            sb.append("\" emittance=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
                     }
                 }
-                if (!xTwissMap.isEmpty()) {
-                    sb.append("     <record name=\"");
-                    sb.append(bpList.get(i).getModelId().getModelName());
-                    sb.append("\" ");
-                    Set keys = xTwissMap.keySet();
-                    Iterator<String> kIt = keys.iterator();
-                    sb.append("coordinate=\"x\" ");
-                    while (kIt.hasNext()) {
-                        String twissName = kIt.next();
-                        sb.append(twissName.substring(2));
-                        sb.append("=\"");
-                        sb.append(xTwissMap.get(twissName));
-                        sb.append("\" ");
+                sb.append("\"/>\n");
+
+                // for y coordinate
+                sb.append("     <record name=\"");
+                sb.append(mList.get(i).getModelName());
+                sb.append("\" coordinate=\"y");
+                // loop over all beam parameter properties
+                for (int j = 0; j < bppList.size(); j++) {
+                    switch (bppList.get(j).getPropertyName()) {
+                        case "y_alpha":
+                            sb.append("\" alpha=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "y_beta":
+                            sb.append("\" beta=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "y_emittance":
+                            sb.append("\" emittance=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
                     }
                 }
-                sb.append("/>\n");
-                if (!yTwissMap.isEmpty()) {
-                    sb.append("     <record name=\"");
-                    sb.append(bpList.get(i).getModelId().getModelName());
-                    sb.append("\" ");
-                    Set keys = yTwissMap.keySet();
-                    Iterator<String> kIt = keys.iterator();
-                    sb.append("coordinate=\"y\" ");
-                    while (kIt.hasNext()) {
-                        String twissName = kIt.next();
-                        sb.append(twissName.substring(2));
-                        sb.append("=\"");
-                        sb.append(yTwissMap.get(twissName));
-                        sb.append("\" ");
+                sb.append("\"/>\n");
+
+                // for x coordinate
+                sb.append("     <record name=\"");
+                sb.append(mList.get(i).getModelName());
+                sb.append("\" coordinate=\"z");
+                // loop over all beam parameter properties
+                for (int j = 0; j < bppList.size(); j++) {
+                    switch (bppList.get(j).getPropertyName()) {
+                        case "z_alpha":
+                            sb.append("\" alpha=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "z_beta":
+                            sb.append("\" beta=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
+                        case "z_emittance":
+                            sb.append("\" emittance=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
                     }
                 }
-                sb.append("/>\n");
-                if (!zTwissMap.isEmpty()) {
-                    sb.append("     <record name=\"");
-                    sb.append(bpList.get(i).getModelId().getModelName());
-                    sb.append("\" ");
-                    Set keys = zTwissMap.keySet();
-                    Iterator<String> kIt = keys.iterator();
-                    sb.append("coordinate=\"z\" ");
-                    while (kIt.hasNext()) {
-                        String twissName = kIt.next();
-                        sb.append(twissName.substring(2));
-                        sb.append("=\"");
-                        sb.append(zTwissMap.get(twissName));
-                        sb.append("\" ");
-                    }
-                }
-                sb.append("/>\n");
+                sb.append("\"/>\n");
             }
         }
-
         sb.append("  </table>\n");
 
         // for "location" table
@@ -270,25 +273,30 @@ public class Db2Xal {
         sb.append("         <attribute isPrimaryKey=\"false\" name=\"t\" type=\"java.lang.Double\" defaultValue=\"0\"/>\n");
         sb.append("	</schema>\n");
         // TODO
-        for (int i = 0; i < bpList.size(); i++) {
+        for (int i = 0; i < mList.size(); i++) {
             // get location properties
             Query q;
-            q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp WHERE bpp.beamParameterId.twissId=:twiss_id")
-                    .setParameter("twiss_id", bpList.get(i).getTwissId());
+            q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp JOIN bpp.beamParameterId pid WHERE pid.modelId=:modelId")
+                    .setParameter("modelId", mList.get(i));
             bppList = q.getResultList();
-
             if (!bppList.isEmpty()) {
                 sb.append("     <record name=\"");
-                sb.append(bpList.get(i).getModelId().getModelName());
+                sb.append(mList.get(i).getModelName());
+                q = em.createQuery("SELECT pt FROM ParticleType pt JOIN pt.beamParameterCollection bp WHERE bp.modelId=:modelId")
+                        .setParameter("modelId", mList.get(i));
+                List<ParticleType> ptList = q.getResultList();
                 sb.append("\" species=\"");
-                sb.append(bpList.get(i).getParticleType().getParticleName());
-                sb.append("\" ");
+                if (ptList.size() > 0) {
+                    sb.append(ptList.get(0).getParticleName());
+                }
+
+                // get the energy from beam parameter properties
                 for (int j = 0; j < bppList.size(); j++) {
-                    if (bppList.get(j).getPropCategory().equals("location")) {
-                        sb.append(bppList.get(j).getPropertyName());
-                        sb.append("=\"");
-                        sb.append(bppList.get(j).getBeamParameterDouble());
-                        sb.append("\" ");
+                    switch (bppList.get(j).getPropertyName()) {
+                        case "W":
+                            sb.append("\" W=\"");
+                            sb.append(bppList.get(j).getBeamParameterDouble());
+                            break;
                     }
                 }
                 sb.append("/>\n");
@@ -347,7 +355,7 @@ public class Db2Xal {
         // write to file
         BufferedWriter writer = null;
         try {
-           // File file = new File("frib.impl");
+            // File file = new File("frib.impl");
             File file = new File(accName + ".impl");
             writer = new BufferedWriter(new FileWriter(file));
             writer.write(sb.toString());
@@ -376,9 +384,9 @@ public class Db2Xal {
         // get all sequences
         /////////////////////////////////////////////
         BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
-       // List<BeamlineSequence> blsList = beamlineSequenceAPI.getAllSequences();
-        BlsequenceLatticeAPI blsequenceLatticeAPI =new BlsequenceLatticeAPI();
-         List<BeamlineSequence> blsList=blsequenceLatticeAPI.getSequencesForLattice(latticeName);
+        // List<BeamlineSequence> blsList = beamlineSequenceAPI.getAllSequences();
+        BlsequenceLatticeAPI blsequenceLatticeAPI = new BlsequenceLatticeAPI();
+        List<BeamlineSequence> blsList = blsequenceLatticeAPI.getSequencesForLattice(latticeName);
         Iterator<BeamlineSequence> blsIt = blsList.iterator();
         // loop through each sequence
         while (blsIt.hasNext()) {
@@ -492,7 +500,7 @@ public class Db2Xal {
                                 }
 
                                 sb.append("/>\n");
-                            } 
+                            }
                         }
 
                         // set bpm attributes 
@@ -529,12 +537,12 @@ public class Db2Xal {
                                 sb.append(rfAttMap.get(key4));
                                 sb.append("\" ");
                             }
-                            
+
                             if (!magAttMap.isEmpty()) {
-                                    sb.append("len");
-                                    sb.append("=\"");
-                                    sb.append(magAttMap.get(""));
-                                    sb.append("\" ");                               
+                                sb.append("len");
+                                sb.append("=\"");
+                                sb.append(magAttMap.get(""));
+                                sb.append("\" ");
                             }
 
                             sb.append("/>\n");
@@ -546,8 +554,8 @@ public class Db2Xal {
                     if (!e.getElementTypeId().getElementType().equals("MARK")) {
                         sb.append("         <channelsuite>\n");
                         // for magnets
-                        if (!elementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty() &&
-                               !e.getElementTypeId().getElementType().equals("CAV") ) {
+                        if (!elementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty()
+                                && !e.getElementTypeId().getElementType().equals("CAV")) {
                             sb.append("            <channel handle=\"fieldRB\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":B\" settable=\"false\"/>\n");
@@ -625,7 +633,7 @@ public class Db2Xal {
         // write to file
         BufferedWriter writer = null;
         try {
-           // File file = new File("frib.xdxf");
+            // File file = new File("frib.xdxf");
             File file = new File(accName + ".xdxf");
             writer = new BufferedWriter(new FileWriter(file));
             writer.write(sb.toString());
@@ -648,7 +656,7 @@ public class Db2Xal {
 
         // TODO get the accelerator name to override the default one (accName)
 
-       // x.write2IMPL();
+        // x.write2IMPL();
         x.write2ModelParam();
         x.write2XDXF("csns","Linac_lattice_model_template_2013");
     }
