@@ -797,7 +797,9 @@ public class Db2OpenXAL {
                     }
 
                     // close the <node>
-                    if (!e.getElementTypeId().getElementType().equals("CAV")) {
+                  //  if (!e.getElementTypeId().getElementType().equals("CAV")) {
+                    if(!e.getElementTypeId().getElementType().equals("CAV") && 
+                            !e.getElementTypeId().getElementType().equals("Bnch")){
                         sb.append("      </node>\n");
                     } // close the RF cavity <sequence>
                     else {
@@ -856,8 +858,8 @@ public class Db2OpenXAL {
 
         // TODO get the accelerator name to override the default one (accName)
 
-        x.write2IMPL("frib");
-        x.write2ModelParam();
+      //  x.write2IMPL("frib");
+       // x.write2ModelParam();
        // x.write2XDXF("frib", "lattice_model_template");
         x.write2XDXF("csns","Linac_lattice_model_template_2013");
     }
