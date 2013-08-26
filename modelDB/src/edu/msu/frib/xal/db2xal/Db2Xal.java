@@ -24,6 +24,7 @@ import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import org.openepics.model.api.BeamlineSequenceAPI;
+import org.openepics.model.api.BlsequenceLatticeAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ElementPropAPI;
 import org.openepics.model.api.GoldModelAPI;
@@ -48,8 +49,8 @@ public class Db2Xal {
     static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     static final EntityManager em = emf.createEntityManager();
     // define the accelerator name
-    String accName = "frib";
-
+    //String accName = "csns";
+    
     @PersistenceContext
     public void write2ModelParam() {
         // write the header
@@ -321,7 +322,7 @@ public class Db2Xal {
     /**
      * write to XAL .impl file
      */
-    public void write2IMPL() {
+    public void write2IMPL(String accName) {
         ModelDB md = new ModelDB();
 
         List<ElementTypeProp> typeMapping = md.getAllElementClassMappings();
@@ -361,7 +362,7 @@ public class Db2Xal {
         }
     }
 
-    public void write2XDXF() {
+    public void write2XDXF(String accName, String latticeName) {
         StringBuilder sb = new StringBuilder("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                 + "<!DOCTYPE xdxf SYSTEM \"xdxf.dtd\">\n");
         sb.append("<xdxf date=\"");
@@ -373,8 +374,11 @@ public class Db2Xal {
         sb.append("\" ver=\"1.0.0\">\n");
         //TODO set up combo sequences
         // get all sequences
+        /////////////////////////////////////////////
         BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
-        List<BeamlineSequence> blsList = beamlineSequenceAPI.getAllSequences();
+       // List<BeamlineSequence> blsList = beamlineSequenceAPI.getAllSequences();
+        BlsequenceLatticeAPI blsequenceLatticeAPI =new BlsequenceLatticeAPI();
+         List<BeamlineSequence> blsList=blsequenceLatticeAPI.getSequencesForLattice(latticeName);
         Iterator<BeamlineSequence> blsIt = blsList.iterator();
         // loop through each sequence
         while (blsIt.hasNext()) {
@@ -646,6 +650,6 @@ public class Db2Xal {
 
        // x.write2IMPL();
         x.write2ModelParam();
-        x.write2XDXF();
+        x.write2XDXF("csns","Linac_lattice_model_template_2013");
     }
 }
