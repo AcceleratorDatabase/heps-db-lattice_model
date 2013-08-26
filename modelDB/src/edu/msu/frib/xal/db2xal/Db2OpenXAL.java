@@ -381,6 +381,7 @@ public class Db2OpenXAL {
                         case "W":
                             sb.append("\" W=\"");
                             sb.append(bppList.get(j).getBeamParameterDouble());
+                            sb.append("\"");
                             break;                            
                     }
                 }

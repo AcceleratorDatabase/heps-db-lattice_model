@@ -296,6 +296,7 @@ public class Db2Xal {
                         case "W":
                             sb.append("\" W=\"");
                             sb.append(bppList.get(j).getBeamParameterDouble());
+                            sb.append("\"");
                             break;
                     }
                 }
@@ -765,7 +766,7 @@ public class Db2Xal {
 
         // TODO get the accelerator name to override the default one (accName)
 
-       // x.write2IMPL();
+        x.write2IMPL("csns");
         x.write2ModelParam();
         x.write2XDXF("csns", "Linac_lattice_model_template_2013");
     }
