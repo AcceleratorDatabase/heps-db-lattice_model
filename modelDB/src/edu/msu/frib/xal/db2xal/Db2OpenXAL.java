@@ -505,7 +505,7 @@ public class Db2OpenXAL {
                 sb.append(" type=\"DTLTank\"");
             if (bls.getSequenceName().contains("CCL"))
                 sb.append(" type=\"CCLTank\"");
-            
+             
             sb.append(">\n");
             sb.append("      <attributes>\n");
             sb.append("         <sequence predecessors=\"");

@@ -409,8 +409,8 @@ public class Db2Xal {
             if (bls.getSequenceName().contains("DTL"))
                 sb.append(" type=\"DTLTank\"");
             if (bls.getSequenceName().contains("CCL"))
-                sb.append(" type=\"CCLTank\"");
-            
+                sb.append(" type=\"CCLTank\"");  
+       
             sb.append(">\n");
             sb.append("      <attributes>\n");
             sb.append("         <sequence predecessors=\"");
