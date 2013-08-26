@@ -515,7 +515,8 @@ public class Db2OpenXAL {
             // handle DTLs and CCLs
             if (bls.getSequenceName().contains("DTL") || bls.getSequenceName().contains("CCL")) {
                 ElementAPI ea = new ElementAPI();
-                Element tank = ea.getElementByName(bls.getSequenceName());
+               // Element tank = ea.getElementByName(bls.getSequenceName());
+                Element tank=ea.getElementByPid(bls.getSequenceName());             
 
                 ElementPropAPI elementPropAPI = new ElementPropAPI();
                 Map rfAttMap = elementPropAPI.getRfcavityAttributesForElement(tank.getElementName());
@@ -539,7 +540,8 @@ public class Db2OpenXAL {
                 
             if (bls.getSequenceName().contains("DTL") || bls.getSequenceName().contains("CCL")) {                
                 ElementAPI ea = new ElementAPI();
-                Element tank = ea.getElementByName(bls.getSequenceName());
+                //Element tank = ea.getElementByName(bls.getSequenceName());
+                 Element tank=ea.getElementByPid(bls.getSequenceName());             
 
                 sb.append("      <channelsuite name=\"rfsuite\">\n");
                 sb.append("         <channel handle=\"cavAmpSet\" signal=\"");
@@ -856,6 +858,7 @@ public class Db2OpenXAL {
 
         x.write2IMPL("frib");
         x.write2ModelParam();
-        x.write2XDXF("frib", "lattice_model_template");
+       // x.write2XDXF("frib", "lattice_model_template");
+        x.write2XDXF("csns","Linac_lattice_model_template_2013");
     }
 }

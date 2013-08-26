@@ -79,6 +79,20 @@ public class ElementAPI {
         }
     }
 
+    public Element getElementByPid(String pid) {
+        Query q;
+        q = em.createQuery("SELECT ep FROM ElementProp ep WHERE ep.elementPropName=:propName"
+                + " AND ep.elementPropString=:propString").setParameter("propName", "pid")
+                .setParameter("propString", pid);
+        List epList = q.getResultList();
+        if (!epList.isEmpty()) {
+            ElementProp ep = (ElementProp) epList.get(0);
+            return ep.getElementId();
+        } else {
+            return null;
+        }
+    }
+
     public Element getElementByNameAndLattice(String ele_name, String lattice_name) {
         /*Query q;
          q = em.createNamedQuery("Element.findByElementName").setParameter("elementName", ele_name);
@@ -195,17 +209,17 @@ public class ElementAPI {
             RfGapAPI rfGapAPI = new RfGapAPI();
             Collection<RfGap> rfList = (Collection<RfGap>) e.getRfGapCollection();
             new RfGapAPI().deleteRfGapCollection(rfList);
-             //BeamParameter
-            Collection<BeamParameter> bpList=e.getBeamParameterCollection();
+            //BeamParameter
+            Collection<BeamParameter> bpList = e.getBeamParameterCollection();
             new BeamParameterAPI().deleteBeamParameterCollection(bpList);
-                    
+
             if (em.contains(e)) {
                 em.remove(e);
             } else {
                 int id = (int) emf.getPersistenceUnitUtil().getIdentifier(e);
                 em.remove(em.find(RfGap.class, id));
             }
-           
+
         } else {
             System.out.println("The element " + name + " doesn't exist!");
         }
