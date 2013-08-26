@@ -643,7 +643,8 @@ public class Db2OpenXAL {
                         // set magnet attributes
                         Map magAttMap = elementPropAPI.getMagnetAttributesForElement(e.getElementName());
                         if (!magAttMap.isEmpty()) {
-                            if (!e.getElementTypeId().getElementType().equals("CAV")) {
+                            if (!e.getElementTypeId().getElementType().equals("CAV") &&
+                                   !e.getElementTypeId().getElementType().equals("Bnch") ) {
                                 sb.append("            <magnet ");
 
                                 Set keySet2 = magAttMap.keySet();
@@ -744,7 +745,8 @@ public class Db2OpenXAL {
                             sb.append("         </channelsuite>\n");
                         }
                         // for RF cavities
-                        if (e.getElementTypeId().getElementType().equals("CAV")) {
+                        if (e.getElementTypeId().getElementType().equals("CAV") || 
+                                e.getElementTypeId().getElementType().equals("Bnch")) {
                             sb.append("         <channelsuite name=\"rfsuite\">\n");
                             sb.append("            <channel handle=\"cavAmpSet\" signal=\"");
                             sb.append(e.getElementName());
