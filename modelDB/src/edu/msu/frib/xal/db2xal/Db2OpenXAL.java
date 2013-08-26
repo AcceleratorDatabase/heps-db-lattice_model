@@ -24,6 +24,7 @@ import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
 import org.openepics.model.api.BeamParameterAPI;
 import org.openepics.model.api.BeamlineSequenceAPI;
+import org.openepics.model.api.BlsequenceLatticeAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ElementPropAPI;
 import org.openepics.model.api.ModelAPI;
@@ -50,7 +51,7 @@ public class Db2OpenXAL {
     static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     static final EntityManager em = emf.createEntityManager();
     // define the accelerator name
-    String accName = "frib";
+//    String accName = "frib";
 
     @PersistenceContext
     public void write2ModelParam() {
@@ -424,7 +425,7 @@ public class Db2OpenXAL {
     /**
      * write to XAL .impl file
      */
-    public void write2IMPL() {
+    public void write2IMPL(String accName) {
         ModelDB md = new ModelDB();
 
         List<ElementTypeProp> typeMapping = md.getAllElementClassMappings();
@@ -464,7 +465,7 @@ public class Db2OpenXAL {
         }
     }
 
-    public void write2XDXF() {
+    public void write2XDXF(String accName, String latticeName) {
         StringBuilder sb = new StringBuilder("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                 + "<!DOCTYPE xdxf SYSTEM \"xdxf.dtd\">\n");
         sb.append("<xdxf date=\"");
@@ -480,9 +481,17 @@ public class Db2OpenXAL {
         ArrayList<String> psList = new ArrayList<String>();
 
         // get all sequences
+//        BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
+//        List<BeamlineSequence> blsList = beamlineSequenceAPI.getAllSequences();
+//        Iterator<BeamlineSequence> blsIt = blsList.iterator();
+
         BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
-        List<BeamlineSequence> blsList = beamlineSequenceAPI.getAllSequences();
+        // List<BeamlineSequence> blsList = beamlineSequenceAPI.getAllSequences();
+        BlsequenceLatticeAPI blsequenceLatticeAPI =new BlsequenceLatticeAPI();
+        List<BeamlineSequence> blsList=blsequenceLatticeAPI.getSequencesForLattice(latticeName);
         Iterator<BeamlineSequence> blsIt = blsList.iterator();
+
+        
         // loop through each sequence
         while (blsIt.hasNext()) {
             BeamlineSequence bls = blsIt.next();
@@ -490,12 +499,63 @@ public class Db2OpenXAL {
             sb.append(bls.getSequenceName());
             sb.append("\" len=\"");
             sb.append(bls.getSequenceLength());
-            sb.append("\">\n");
+            sb.append("\"");
+            // handle DTLs and CCLs
+            if (bls.getSequenceName().contains("DTL"))
+                sb.append("\" type=\"DTLTank\"");
+            if (bls.getSequenceName().contains("CCL"))
+                sb.append("\" type=\"CCLTank\"");
+            
+            sb.append(">\n");
             sb.append("      <attributes>\n");
             sb.append("         <sequence predecessors=\"");
             sb.append(bls.getPredecessorSequence());
             sb.append("\"/>\n");
+            
+            // handle DTLs and CCLs
+            if (bls.getSequenceName().contains("DTL") || bls.getSequenceName().contains("CCL")) {
+                ElementAPI ea = new ElementAPI();
+                Element tank = ea.getElementByName(bls.getSequenceName());
+
+                ElementPropAPI elementPropAPI = new ElementPropAPI();
+                Map rfAttMap = elementPropAPI.getRfcavityAttributesForElement(tank.getElementName());
+                if (!rfAttMap.isEmpty()) {
+
+                    sb.append("         <rfcavity ");
+
+                    Set keySet4 = rfAttMap.keySet();
+                    Iterator<String> keyIt4 = keySet4.iterator();
+                    while (keyIt4.hasNext()) {
+                        String key4 = keyIt4.next();
+                        sb.append(key4);
+                        sb.append("=\"");
+                        sb.append(rfAttMap.get(key4));
+                        sb.append("\" ");
+                    }
+                    sb.append("/>\n");
+                }
+            }
             sb.append("      </attributes>\n");
+                
+            if (bls.getSequenceName().contains("DTL") || bls.getSequenceName().contains("CCL")) {                
+                ElementAPI ea = new ElementAPI();
+                Element tank = ea.getElementByName(bls.getSequenceName());
+
+                sb.append("      <channelsuite name=\"rfsuite\">\n");
+                sb.append("         <channel handle=\"cavAmpSet\" signal=\"");
+                sb.append(tank.getElementName());
+                sb.append(":ampSet\" settable=\"true\"/>\n");
+                sb.append("         <channel handle=\"cavPhaseSet\" signal=\"");
+                sb.append(tank.getElementName());
+                sb.append(":phaseSet\" settable=\"true\"/>\n");
+                sb.append("         <channel handle=\"cavAmpAvg\" signal=\"");
+                sb.append(tank.getElementName());
+                sb.append(":amp\" settable=\"false\"/>\n");
+                sb.append("         <channel handle=\"cavPhaseAvg\" signal=\"");
+                sb.append(tank.getElementName());
+                sb.append(":phase\" settable=\"false\"/>\n");
+                sb.append("      </channelsuite>\n");
+            }
 
             // loop through each node
             // need to treat RF specially
@@ -509,7 +569,8 @@ public class Db2OpenXAL {
                     ElementAPI elementAPI = new ElementAPI();
                     List<ElementProp> epList = elementAPI.getAllPropertiesForElement(e.getElementName());
                     // everything other than RF cavities treated as node
-                    if (!e.getElementTypeId().getElementType().equals("CAV")) {
+                    if (!e.getElementTypeId().getElementType().equals("CAV") && 
+                            !e.getElementTypeId().getElementType().equals("Bnch") ) {
                         sb.append("      <node id=\"");
                     } // RF cavities treated as sequence
                     else {
@@ -793,8 +854,8 @@ public class Db2OpenXAL {
 
         // TODO get the accelerator name to override the default one (accName)
 
-        x.write2IMPL();
+        x.write2IMPL("frib");
         x.write2ModelParam();
-        x.write2XDXF();
+        x.write2XDXF("frib", "lattice_model_template");
     }
 }
