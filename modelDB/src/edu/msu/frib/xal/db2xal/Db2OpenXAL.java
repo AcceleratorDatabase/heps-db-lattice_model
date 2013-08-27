@@ -573,7 +573,9 @@ public class Db2OpenXAL {
                     List<ElementProp> epList = elementAPI.getAllPropertiesForElement(e.getElementName());
                     // everything other than RF cavities treated as node
                     if (!e.getElementTypeId().getElementType().equals("CAV") && 
-                            !e.getElementTypeId().getElementType().equals("Bnch") ) {
+                            !e.getElementTypeId().getElementType().equals("Bnch") &&
+                            !e.getElementTypeId().getElementType().equals("DTLTank") &&
+                            !e.getElementTypeId().getElementType().equals("CCLTank")) {
                         sb.append("      <node id=\"");
                     } // RF cavities treated as sequence
                     else {
@@ -645,7 +647,9 @@ public class Db2OpenXAL {
                         Map magAttMap = elementPropAPI.getMagnetAttributesForElement(e.getElementName());
                         if (!magAttMap.isEmpty()) {
                             if (!e.getElementTypeId().getElementType().equals("CAV") &&
-                                   !e.getElementTypeId().getElementType().equals("Bnch") ) {
+                                   !e.getElementTypeId().getElementType().equals("Bnch") &&
+                                   !e.getElementTypeId().getElementType().equals("DTLTank") &&
+                                    !e.getElementTypeId().getElementType().equals("CCLTank")) {
                                 sb.append("            <magnet ");
 
                                 Set keySet2 = magAttMap.keySet();

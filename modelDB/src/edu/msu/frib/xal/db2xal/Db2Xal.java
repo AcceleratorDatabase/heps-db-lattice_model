@@ -372,7 +372,7 @@ public class Db2Xal {
     }
 
     public void write2XDXF(String accName, String latticeName) {
-       StringBuilder sb = new StringBuilder("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
+        StringBuilder sb = new StringBuilder("<?xml version=\"1.0\" encoding=\"utf-8\"?>\n"
                 + "<!DOCTYPE xdxf SYSTEM \"xdxf.dtd\">\n");
         sb.append("<xdxf date=\"");
         Date date = new Date();
@@ -393,11 +393,11 @@ public class Db2Xal {
 
         BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
         // List<BeamlineSequence> blsList = beamlineSequenceAPI.getAllSequences();
-        BlsequenceLatticeAPI blsequenceLatticeAPI =new BlsequenceLatticeAPI();
-        List<BeamlineSequence> blsList=blsequenceLatticeAPI.getSequencesForLattice(latticeName);
+        BlsequenceLatticeAPI blsequenceLatticeAPI = new BlsequenceLatticeAPI();
+        List<BeamlineSequence> blsList = blsequenceLatticeAPI.getSequencesForLattice(latticeName);
         Iterator<BeamlineSequence> blsIt = blsList.iterator();
 
-        
+
         // loop through each sequence
         while (blsIt.hasNext()) {
             BeamlineSequence bls = blsIt.next();
@@ -407,22 +407,24 @@ public class Db2Xal {
             sb.append(bls.getSequenceLength());
             sb.append("\"");
             // handle DTLs and CCLs
-            if (bls.getSequenceName().contains("DTL"))
+            if (bls.getSequenceName().contains("DTL")) {
                 sb.append(" type=\"DTLTank\"");
-            if (bls.getSequenceName().contains("CCL"))
-                sb.append(" type=\"CCLTank\"");  
-       
+            }
+            if (bls.getSequenceName().contains("CCL")) {
+                sb.append(" type=\"CCLTank\"");
+            }
+
             sb.append(">\n");
             sb.append("      <attributes>\n");
             sb.append("         <sequence predecessors=\"");
             sb.append(bls.getPredecessorSequence());
             sb.append("\"/>\n");
-            
+
             // handle DTLs and CCLs
             if (bls.getSequenceName().contains("DTL") || bls.getSequenceName().contains("CCL")) {
                 ElementAPI ea = new ElementAPI();
-               // Element tank = ea.getElementByName(bls.getSequenceName());
-                Element tank=ea.getElementByPid(bls.getSequenceName());             
+                // Element tank = ea.getElementByName(bls.getSequenceName());
+                Element tank = ea.getElementByPid(bls.getSequenceName());
 
                 ElementPropAPI elementPropAPI = new ElementPropAPI();
                 Map rfAttMap = elementPropAPI.getRfcavityAttributesForElement(tank.getElementName());
@@ -443,25 +445,36 @@ public class Db2Xal {
                 }
             }
             sb.append("      </attributes>\n");
-                
-            if (bls.getSequenceName().contains("DTL") || bls.getSequenceName().contains("CCL")) {                
+
+            if (bls.getSequenceName().contains("DTL") || bls.getSequenceName().contains("CCL")) {
                 ElementAPI ea = new ElementAPI();
                 //Element tank = ea.getElementByName(bls.getSequenceName());
-                 Element tank=ea.getElementByPid(bls.getSequenceName());             
+                Element tank = ea.getElementByPid(bls.getSequenceName());
 
                 sb.append("      <channelsuite name=\"rfsuite\">\n");
                 sb.append("         <channel handle=\"cavAmpSet\" signal=\"");
                 sb.append(tank.getElementName());
-                sb.append(":ampSet\" settable=\"true\"/>\n");
+                sb.append(":CtlAmpSet\" settable=\"true\"/>\n");
                 sb.append("         <channel handle=\"cavPhaseSet\" signal=\"");
                 sb.append(tank.getElementName());
-                sb.append(":phaseSet\" settable=\"true\"/>\n");
+                sb.append(":CtlphaseSet\" settable=\"true\"/>\n");
                 sb.append("         <channel handle=\"cavAmpAvg\" signal=\"");
                 sb.append(tank.getElementName());
-                sb.append(":amp\" settable=\"false\"/>\n");
+                sb.append(":cavAmpAvg\" settable=\"false\"/>\n");
                 sb.append("         <channel handle=\"cavPhaseAvg\" signal=\"");
                 sb.append(tank.getElementName());
-                sb.append(":phase\" settable=\"false\"/>\n");
+                sb.append(":cavPhaseAvg\" settable=\"false\"/>\n");
+                
+                sb.append("         <channel handle=\"deltaTRFStart\" signal=\"");
+                sb.append(tank.getElementName());
+                sb.append(":deltaTRFStart\" settable=\"true\"/>\n");
+                sb.append("         <channel handle=\"deltaTRFEnd\" signal=\"");
+                sb.append(tank.getElementName());
+                sb.append(":deltaTRFEnd\" settable=\"true\"/>\n");
+                sb.append("         <channel handle=\"tDelay\" signal=\"");
+                sb.append(tank.getElementName());
+                sb.append(":tDelay\" settable=\"true\"/>\n");
+
                 sb.append("      </channelsuite>\n");
             }
 
@@ -477,8 +490,10 @@ public class Db2Xal {
                     ElementAPI elementAPI = new ElementAPI();
                     List<ElementProp> epList = elementAPI.getAllPropertiesForElement(e.getElementName());
                     // everything other than RF cavities treated as node
-                    if (!e.getElementTypeId().getElementType().equals("CAV") && 
-                            !e.getElementTypeId().getElementType().equals("Bnch") ) {
+                    if (!e.getElementTypeId().getElementType().equals("CAV")
+                            && !e.getElementTypeId().getElementType().equals("Bnch")
+                            && !e.getElementTypeId().getElementType().equals("DTLTank")
+                            && !e.getElementTypeId().getElementType().equals("CCLTank")) {
                         sb.append("      <node id=\"");
                     } // RF cavities treated as sequence
                     else {
@@ -549,8 +564,10 @@ public class Db2Xal {
                         // set magnet attributes
                         Map magAttMap = elementPropAPI.getMagnetAttributesForElement(e.getElementName());
                         if (!magAttMap.isEmpty()) {
-                            if (!e.getElementTypeId().getElementType().equals("CAV") &&
-                                   !e.getElementTypeId().getElementType().equals("Bnch") ) {
+                            if (!e.getElementTypeId().getElementType().equals("CAV")
+                                    && !e.getElementTypeId().getElementType().equals("Bnch")
+                                    && !e.getElementTypeId().getElementType().equals("DTLTank")
+                                    && !e.getElementTypeId().getElementType().equals("CCLTank")) {
                                 sb.append("            <magnet ");
 
                                 Set keySet2 = magAttMap.keySet();
@@ -564,7 +581,7 @@ public class Db2Xal {
                                 }
 
                                 sb.append("/>\n");
-                            } 
+                            }
                         }
 
                         // set bpm attributes 
@@ -601,34 +618,33 @@ public class Db2Xal {
                                 sb.append(rfAttMap.get(key4));
                                 sb.append("\" ");
                             }
-                            
+
                             if (!magAttMap.isEmpty()) {
-                                    sb.append("len");
-                                    sb.append("=\"");
-                                    sb.append(magAttMap.get(""));
-                                    sb.append("\" ");                               
+                                sb.append("len");
+                                sb.append("=\"");
+                                sb.append(magAttMap.get(""));
+                                sb.append("\" ");
                             }
 
                             sb.append("/>\n");
                         }
                     }
                     sb.append("         </attributes>\n");
-                    
+
                     // if the node is not a marker, add EPICS channels 
                     if (!e.getElementTypeId().getElementType().equals("MARK")) {
-                        
+
                         // for magnets
                         //if (!elementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty() &&
                         //       !e.getElementTypeId().getElementType().equals("CAV") ) 
-                        if ((!elementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty() ||
-                                e.getElementTypeId().getElementType().equals("DCH") ||
-                                e.getElementTypeId().getElementType().equals("DCV")) &&
-                                !e.getElementTypeId().getElementType().equals("CAV")) 
-                        {
+                        if ((!elementPropAPI.getMagnetAttributesForElement(e.getElementName()).isEmpty()
+                                || e.getElementTypeId().getElementType().equals("DCH")
+                                || e.getElementTypeId().getElementType().equals("DCV"))
+                                && !e.getElementTypeId().getElementType().equals("CAV")) {
                             String psName = e.getElementName().replaceAll(":", ":PS_");
                             psList.add(psName);
                             sb.append("         <ps main=\"");
-                            sb.append(psName);        
+                            sb.append(psName);
                             sb.append("\"/>\n");
                             sb.append("         <channelsuite name=\"magnetsuite\">\n");
                             sb.append("            <channel handle=\"fieldRB\" signal=\"");
@@ -648,11 +664,15 @@ public class Db2Xal {
                             sb.append("            <channel handle=\"yAvg\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":yAvg\" settable=\"false\"/>\n");
+                            //
+                            sb.append("            <channel handle=\"amplitudeAvg\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":amplitudeAvg\" settable=\"false\"/>\n");
                             sb.append("         </channelsuite>\n");
                         }
                         // for RF cavities
-                        if (e.getElementTypeId().getElementType().equals("CAV") || 
-                                e.getElementTypeId().getElementType().equals("Bnch")) {
+                        if (e.getElementTypeId().getElementType().equals("CAV")
+                                || e.getElementTypeId().getElementType().equals("Bnch")) {
                             sb.append("         <channelsuite name=\"rfsuite\">\n");
                             sb.append("            <channel handle=\"cavAmpSet\" signal=\"");
                             sb.append(e.getElementName());
@@ -705,9 +725,9 @@ public class Db2Xal {
                     }
 
                     // close the <node>
-                  //  if (!e.getElementTypeId().getElementType().equals("CAV")) {
-                    if(!e.getElementTypeId().getElementType().equals("CAV") && 
-                            !e.getElementTypeId().getElementType().equals("Bnch")){
+                    //  if (!e.getElementTypeId().getElementType().equals("CAV")) {
+                    if (!e.getElementTypeId().getElementType().equals("CAV")
+                            && !e.getElementTypeId().getElementType().equals("Bnch")) {
                         sb.append("      </node>\n");
                     } // close the RF cavity <sequence>
                     else {
@@ -721,7 +741,7 @@ public class Db2Xal {
         }
         // TODO for power supplies
         sb.append("   <powersupplies>\n");
-        for (int i = 0; i<psList.size(); i++) {
+        for (int i = 0; i < psList.size(); i++) {
             sb.append("     <ps type=\"main\" id=\"");
             sb.append(psList.get(i));
             sb.append("\">\n");
@@ -743,7 +763,7 @@ public class Db2Xal {
         // write to file
         BufferedWriter writer = null;
         try {
-           // File file = new File("frib.xdxf");
+            // File file = new File("frib.xdxf");
             File file = new File(accName + ".xdxf");
             writer = new BufferedWriter(new FileWriter(file));
             writer.write(sb.toString());
