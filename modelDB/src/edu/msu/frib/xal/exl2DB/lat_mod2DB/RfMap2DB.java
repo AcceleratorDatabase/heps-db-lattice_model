@@ -72,7 +72,8 @@ public class RfMap2DB {
             RfGapAPI rfGapAPI = new RfGapAPI();
             RfGap rfGap = rfGapAPI.getRfGapByName(gap_name);
             ElementAPI elementAPI = new ElementAPI();
-            cavity = elementAPI.getElementByName(cavity_name);
+            //cavity = elementAPI.getElementByName(cavity_name);
+            cavity=elementAPI.getElementByPid(cavity_name);
             if (rfGap != null) {
                 System.out.println("The RfGap " + gap_name + " is already in the database! Please don't insert repeatedly!");
             }
