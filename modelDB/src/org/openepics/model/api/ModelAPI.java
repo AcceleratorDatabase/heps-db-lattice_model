@@ -4,7 +4,10 @@
  */
 package org.openepics.model.api;
 
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -12,11 +15,20 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
+import org.openepics.model.entity.BeamParameter;
+import org.openepics.model.entity.BeamParameterProp;
+import org.openepics.model.entity.BeamlineSequence;
+import org.openepics.model.entity.Element;
+import org.openepics.model.entity.ElementProp;
+import org.openepics.model.entity.ElementType;
 import org.openepics.model.entity.Lattice;
 import org.openepics.model.entity.MachineMode;
 import org.openepics.model.entity.Model;
 import org.openepics.model.entity.ModelCode;
 import org.openepics.model.entity.ModelLine;
+import org.openepics.model.entity.ParticleType;
+import org.openepics.model.extraEntity.BeamParams;
+import org.openepics.model.extraEntity.Device;
 
 /**
  *
@@ -138,10 +150,10 @@ public class ModelAPI {
                 ModelLine ml = new ModelLine();
                 ml.setModelLineName(model_line);
                 em.persist(ml);
-              //  m.setModelLineId(ml);
+                //  m.setModelLineId(ml);
                 l.setModelLineId(ml);
             } else {
-              //  m.setModelLineId((ModelLine) q.getResultList().get(0));
+                //  m.setModelLineId((ModelLine) q.getResultList().get(0));
                 l.setModelLineId(mlList.get(0));
             }
 
@@ -154,10 +166,10 @@ public class ModelAPI {
                 MachineMode mm = new MachineMode();
                 mm.setMachineModeName(machine_mode);
                 em.persist(mm);
-               // m.setMachineModeId(mm);
+                // m.setMachineModeId(mm);
                 l.setMachineModeId(mm);
             } else {
-               // m.setMachineModeId(mmList.get(0));
+                // m.setMachineModeId(mmList.get(0));
                 l.setMachineModeId(mmList.get(0));
             }
             em.persist(l);
@@ -184,19 +196,19 @@ public class ModelAPI {
         m.setModelName(model_name);
         m.setModelDesc(model_desc);
         m.setUpdatedBy(System.getProperty("user.name"));
-        m.setUpdateDate(new Date());   
+        m.setUpdateDate(new Date());
         em.getTransaction().begin();
         em.persist(m);
         em.getTransaction().commit();
     }
 
-    public void setModelForInit(String model_name, String lattice_name,String created_by,Date create_date) {
+    public void setModelForInit(String model_name, String lattice_name, String created_by, Date create_date) {
         Model m = new Model();
-        Lattice l=new LatticeAPI().getLatticeByName(lattice_name);
+        Lattice l = new LatticeAPI().getLatticeByName(lattice_name);
         m.setLatticeId(l);
         m.setModelName(model_name);
         m.setUpdatedBy(System.getProperty("user.name"));
-        m.setUpdateDate(new Date());  
+        m.setUpdateDate(new Date());
         m.setCreatedBy(created_by);
         m.setCreateDate(create_date);
         m.setInitialConditionInd(1);
@@ -215,14 +227,99 @@ public class ModelAPI {
             return mList.get(0);
         }
     }
-    
+
     public List<Model> getAllModelInitialConditions() {
         List<Model> mList = null;
-        
+
         Query q;
         q = em.createQuery("SELECT m FROM Model m WHERE m.initialConditionInd=:ind").setParameter("ind", 1);
         mList = q.getResultList();
-        
+
         return mList;
+    }
+
+    public void setModel(String model_name, String lattice_name, Collection<Device> deviceCollection) {
+        em.getTransaction().begin();
+
+        Lattice l = new Lattice();
+        l.setLatticeName(lattice_name);
+        l.setCreatedBy(System.getProperty("user.name"));
+        l.setCreateDate(new Date());
+        em.persist(l);
+
+        Model m = new Model();
+        m.setModelName(model_name);
+        m.setCreatedBy(System.getProperty("user.name"));
+        m.setCreateDate(new Date());
+        m.setLatticeId(l);
+        m.setInitialConditionInd(0);
+        em.persist(m);
+
+        Iterator it = deviceCollection.iterator();
+        while (it.hasNext()) {
+            Device device = (Device) it.next();
+            ElementType et = new ElementTypeAPI().getElementTypeByType(device.getElementType());
+            BeamlineSequence bls = new BeamlineSequenceAPI().getSequenceByName(device.getBeamlineSequenceName());
+
+            Element element = new Element();
+            element.setDx(device.getDx());
+            element.setDy(device.getDy());
+            element.setDz(device.getDz());
+            element.setElementName(device.getElementName());
+            element.setLen(device.getLen());
+            element.setPitch(device.getPitch());
+            element.setPos(device.getPos());
+            element.setRoll(device.getRoll());
+            element.setS(device.getS());
+            element.setYaw(device.getYaw());
+            element.setElementTypeId(et);
+            element.setBeamlineSequenceId(bls);
+
+            element.setCreatedBy(System.getProperty("user.name"));
+            element.setInsertDate(new Date());
+
+            Collection<BeamParams> beamParamCollection = device.getBeamParamsCollection();
+            Iterator bpit = beamParamCollection.iterator();
+            while (bpit.hasNext()) {
+                BeamParameter beamParameter = new BeamParameter();
+
+                BeamParams beamParams = (BeamParams) bpit.next();
+                ParticleType pt = new ParticleTypeAPI().getParticleType(beamParams.getParticleName());
+
+                beamParameter.setElementId(element);
+                beamParameter.setModelId(m);
+                beamParameter.setParticleType(pt);
+                em.persist(beamParameter);
+
+                Collection<BeamParameterProp> beamParameterPropCollection = beamParams.getBeamParameterPropCollection();
+                Iterator bppit = beamParameterPropCollection.iterator();
+                while (bppit.hasNext()) {
+                    BeamParameterProp beamParameterProp = (BeamParameterProp) bppit.next();
+                    beamParameterProp.setBeamParameterId(beamParameter);
+                    em.persist(beamParameterProp);
+                }
+            }
+
+            Collection<ElementProp> elementPropCollection = device.getElementPropCollection();
+            Iterator epit = elementPropCollection.iterator();
+            while (epit.hasNext()) {
+                ElementProp ep = new ElementProp();
+
+                ElementProp elementProp = (ElementProp) epit.next();
+
+                ep.setElementPropDouble(elementProp.getElementPropDouble());
+                ep.setElementPropInt(elementProp.getElementPropInt());
+                ep.setElementPropString(elementProp.getElementPropString());
+                ep.setElementPropName(elementProp.getElementPropName());
+                ep.setPropCategory(elementProp.getPropCategory());
+
+                ep.setElementId(element);
+                ep.setLatticeId(l);
+
+                em.persist(ep);
+            }
+            em.persist(element);
+        }
+        em.getTransaction().commit();
     }
 }
