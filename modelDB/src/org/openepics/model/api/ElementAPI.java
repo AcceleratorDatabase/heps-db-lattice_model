@@ -31,8 +31,8 @@ import org.openepics.model.entity.RfGap;
 public class ElementAPI {
 
     @PersistenceUnit
-    static EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
-    static EntityManager em = emf.createEntityManager();
+    static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
+    static final EntityManager em = emf.createEntityManager();
 
     @PersistenceContext
     /**
@@ -289,6 +289,14 @@ public class ElementAPI {
             List<Element> eList1 = q.getResultList();
             eList.addAll(eList1);
         }
+        return eList;
+    }
+
+    public List<Element> getAllElements() {
+        Query q;
+        q = em.createNamedQuery("Element.findAll");
+        List<Element> eList = q.getResultList();
+
         return eList;
     }
 }

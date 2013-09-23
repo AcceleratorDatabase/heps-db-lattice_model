@@ -25,6 +25,7 @@ import org.openepics.model.entity.BeamParameterProp;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.Model;
 import org.openepics.model.entity.ParticleType;
+import org.openepics.model.extraEntity.BeamParams;
 
 /**
  *
@@ -53,9 +54,9 @@ public class BeamParameterAPI {
         q = em.createQuery("SELECT bp FROM BeamParameter bp WHERE bp.modelId=:modelId").setParameter("modelId", model);
         bpList = q.getResultList();
         return bpList;
-       
+
     }
-     
+
     /**
      * get all beam parameters for the specified element
      *
@@ -81,35 +82,88 @@ public class BeamParameterAPI {
                 System.out.println(l);
                 for (int i = 1; i < l; i++) {
                     String fieldName = fields[i].getName();
-                    String getter = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
-                    System.out.println(i+"*******"+getter);
-                    Method method = null;
-                    try {
-                        method = bp.getClass().getMethod(getter, new Class[]{});
-                    } catch (NoSuchMethodException ex) {
-                        Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
-                    } catch (SecurityException ex) {
-                        Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    Object value = null;
-                    try {
-                        try {
-                            value = method.invoke(bp, new Object[]{});
-                        } catch (IllegalAccessException ex) {
-                            Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (IllegalArgumentException ex) {
-                            Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+                    if (!fieldName.toLowerCase().contains("collection")) {
+                        String getter = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+                        if (!getter.contains("persistence")) {
+                            Method method = null;
+                            try {
+                                //System.out.println(i + "**********" + getter);
+                                method = bp.getClass().getMethod(getter, new Class[]{});
+                                //System.out.println(i + "++++++++" + method);
+                            } catch (NoSuchMethodException ex) {
+                                Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+                            } catch (SecurityException ex) {
+                                Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            Object value = null;
+                            try {
+                                try {
+                                    value = method.invoke(bp, new Object[]{});
+                                } catch (IllegalAccessException ex) {
+                                    Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+                                } catch (IllegalArgumentException ex) {
+                                    Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+                                }
+                            } catch (InvocationTargetException ex) {
+                                Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+                            }
+                            System.out.println("******" + value);
+                            map.put(fieldName, value);
                         }
-                    } catch (InvocationTargetException ex) {
-                        Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
-
                     }
-                    map.put(fieldName, value);
                 }
                 return map;
             }
         }
         return null;
+        /*Query q;
+         q = em.createQuery("SELECT  bp FROM BeamParameter bp WHERE bp.elementId.elementName=:elName")
+         .setParameter("elName", elm);
+         List<BeamParameter> bps = q.getResultList();
+         if (bps.isEmpty()) {
+         return null;
+         } else {
+         //to remove the first field "serialVersionUID" 
+         if (bps.size() > 1) {
+         System.out.println("warning:there are more than 1 bean_parameter for the specified element!");
+         } else {
+         BeamParameter bp = bps.get(0);
+         Map<String, Object> map = new HashMap<>();
+         Field[] fields = bp.getClass().getDeclaredFields();
+         int l = fields.length;
+         System.out.println(l);
+         for (int i = 1; i < l; i++) {
+         String fieldName = fields[i].getName();
+         System.out.println(fieldName);
+         String getter = "get" + fieldName.substring(0, 1).toUpperCase() + fieldName.substring(1);
+         System.out.println(i+"*******"+getter);
+         Method method = null;
+         try {
+         method = bp.getClass().getMethod(getter, new Class[]{});
+         } catch (NoSuchMethodException ex) {
+         Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+         } catch (SecurityException ex) {
+         Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+         }
+         Object value = null;
+         try {
+         try {
+         value = method.invoke(bp, new Object[]{});
+         } catch (IllegalAccessException ex) {
+         Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+         } catch (IllegalArgumentException ex) {
+         Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+         }
+         } catch (InvocationTargetException ex) {
+         Logger.getLogger(BeamParameterAPI.class.getName()).log(Level.SEVERE, null, ex);
+
+         }
+         map.put(fieldName, value);
+         }
+         return map;
+         }
+         }
+         return null;*/
     }
 
     public BeamParameter setBeamParameter(Element ele, Model model, ParticleType pt) {
@@ -156,22 +210,30 @@ public class BeamParameterAPI {
             em.getTransaction().commit();
         }
     }
-    
-    public void deleteBeamParameterCollection(Collection<BeamParameter> bpList){
-       Iterator it=bpList.iterator();
-       em.getTransaction().begin();
-       while(it.hasNext()){
-         BeamParameter bp=(BeamParameter) it.next();
-         Collection<BeamParameterProp> bppList = bp.getBeamParameterPropCollection();
-         new BeamParameterPropAPI().deleteBeamParameterPropCollection(bppList);
-         
-          if (em.contains(bp)) {
+
+    public void deleteBeamParameterCollection(Collection<BeamParameter> bpList) {
+        Iterator it = bpList.iterator();
+        em.getTransaction().begin();
+        while (it.hasNext()) {
+            BeamParameter bp = (BeamParameter) it.next();
+            Collection<BeamParameterProp> bppList = bp.getBeamParameterPropCollection();
+            new BeamParameterPropAPI().deleteBeamParameterPropCollection(bppList);
+
+            if (em.contains(bp)) {
                 em.remove(bp);
             } else {
                 int id = (int) emf.getPersistenceUnitUtil().getIdentifier(bp);
                 em.remove(em.find(BeamParameter.class, id));
             }
-       }
-       em.getTransaction().commit();
+        }
+        em.getTransaction().commit();
+    }
+
+    public List<BeamParameter> getAllBeamParameters() {
+        Query q;
+        q = em.createNamedQuery("BeamParameter.findAll");
+        List<BeamParameter> bList = q.getResultList();
+
+        return bList;
     }
 }

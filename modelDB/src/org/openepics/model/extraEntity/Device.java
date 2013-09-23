@@ -24,6 +24,10 @@ public class Device {
     private Double roll;
     private Double s;
     private Double yaw;
+    private String elementType;
+    private String beamlineSequenceName;
+    private Collection<ElementProp> elementPropCollection;
+    private Collection<BeamParams> beamParamsCollection;
 
     public Double getDx() {
         return dx;
@@ -136,8 +140,4 @@ public class Device {
     public void setBeamParamsCollection(Collection<BeamParams> beamParamsCollection) {
         this.beamParamsCollection = beamParamsCollection;
     }
-    private String elementType;
-    private String beamlineSequenceName;
-    private Collection<ElementProp> elementPropCollection;
-    private Collection<BeamParams> beamParamsCollection;
 }

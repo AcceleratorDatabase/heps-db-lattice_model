@@ -48,7 +48,7 @@ public class LatticeAPI {
         l.setUpdateDate(date);
         l.setCreatedBy(created_by);
         l.setCreateDate(create_date);
-
+ 
         em.getTransaction().begin();
         em.persist(l);
         em.getTransaction().commit();

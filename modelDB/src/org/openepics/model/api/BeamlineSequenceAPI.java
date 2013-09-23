@@ -109,7 +109,7 @@ public class BeamlineSequenceAPI {
         List<BeamlineSequence> seqList = q.getResultList();
 
         return seqList;
-    }
+    }    
 
     /**
      * get all elements within the specified sequence

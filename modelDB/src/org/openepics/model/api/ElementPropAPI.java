@@ -4,6 +4,7 @@
  */
 package org.openepics.model.api;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -37,7 +38,6 @@ public class ElementPropAPI {
      */
     public String getPidForElement(String elm) {
         String pid = "";
-
         Query q;
         q = em.createQuery("SELECT ep from ElementProp ep "
                 + "WHERE ep.elementId.elementName = :elementname "
@@ -52,6 +52,39 @@ public class ElementPropAPI {
 
         return pid;
     }
+    
+    public List<String> getAllPropertyNames(){
+        List<String> names=new ArrayList();
+        Query q;
+        String sql="SELECT DISTINCT element_prop_name FROM element_prop";
+        q=em.createNativeQuery(sql);
+        List l=q.getResultList();
+        return l;
+    }
+
+    public Object getElementPropValueByNameForElement(String ele_prop_name, Element e) {
+        Query q;
+        String sql = "SELECT element_prop_id FROM (SELECT * FROM element_prop WHERE element_id=" + e.getElementId() + ")" + " AS ep" + " WHERE element_prop_name='" + ele_prop_name + "'";
+       // System.out.println(sql);
+        q = em.createNativeQuery(sql);
+        List idList = q.getResultList();
+       // System.out.println(idList);
+        if (idList.isEmpty()) {
+            return null;
+        } else {
+            ElementProp ep = em.find(ElementProp.class, idList.get(0));
+            if (ep.getElementPropDouble() != null) {
+                return ep.getElementPropDouble();
+            } else if (ep.getElementPropInt() != null) {
+                return ep.getElementPropInt();
+            } else if (ep.getElementPropString() != null) {
+                return ep.getElementPropString();
+            }
+        }
+        return null;
+    }
+    
+    
 
     /**
      * get magnet attributes for the specified element
@@ -250,19 +283,19 @@ public class ElementPropAPI {
             em.getTransaction().commit();
         }
     }
-    
-    public void deleteElementPropCollection(Collection<ElementProp> epList){
-       Iterator it=epList.iterator();
-       em.getTransaction().begin();
-       while(it.hasNext()){
-          ElementProp ep=(ElementProp) it.next();
-          if (em.contains(ep)) {
+
+    public void deleteElementPropCollection(Collection<ElementProp> epList) {
+        Iterator it = epList.iterator();
+        em.getTransaction().begin();
+        while (it.hasNext()) {
+            ElementProp ep = (ElementProp) it.next();
+            if (em.contains(ep)) {
                 em.remove(ep);
             } else {
                 int id = (int) emf.getPersistenceUnitUtil().getIdentifier(ep);
                 em.remove(em.find(ElementProp.class, id));
             }
-       }
-       em.getTransaction().commit();
+        }
+        em.getTransaction().commit();
     }
 }
