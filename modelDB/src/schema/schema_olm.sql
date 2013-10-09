@@ -1,23 +1,9 @@
 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
-SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL,ALLOW_INVALID_DATES';
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='TRADITIONAL';
 
 CREATE SCHEMA IF NOT EXISTS `discs_model` DEFAULT CHARACTER SET latin1 ;
 USE `discs_model` ;
-
--- -----------------------------------------------------
--- Table `discs_model`.`particle_type`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `discs_model`.`particle_type` (
-  `particle_type_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `particle_charge` INT(11) NULL DEFAULT NULL ,
-  `particle_mass` DOUBLE NULL DEFAULT NULL ,
-  `particle_name` VARCHAR(255) NULL DEFAULT NULL ,
-  PRIMARY KEY (`particle_type_id`) )
-ENGINE = InnoDB
-AUTO_INCREMENT = 3
-DEFAULT CHARACTER SET = latin1;
-
 
 -- -----------------------------------------------------
 -- Table `discs_model`.`beamline_sequence`
@@ -32,7 +18,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beamline_sequence` (
   `sequence_name` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`beamline_sequence_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 23
+AUTO_INCREMENT = 56
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -45,7 +31,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type` (
   `element_type_description` VARCHAR(255) NULL DEFAULT NULL ,
   PRIMARY KEY (`element_type_id`) )
 ENGINE = InnoDB
-AUTO_INCREMENT = 125
+AUTO_INCREMENT = 187
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -78,23 +64,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element` (
     FOREIGN KEY (`element_type_id` )
     REFERENCES `discs_model`.`element_type` (`element_type_id` ))
 ENGINE = InnoDB
-AUTO_INCREMENT = 2619
-DEFAULT CHARACTER SET = latin1;
-
-
--- -----------------------------------------------------
--- Table `discs_model`.`model_line`
--- -----------------------------------------------------
-CREATE  TABLE IF NOT EXISTS `discs_model`.`model_line` (
-  `model_line_id` INT(11) NOT NULL AUTO_INCREMENT ,
-  `end_marker` VARCHAR(255) NULL DEFAULT NULL ,
-  `end_position` DOUBLE NULL DEFAULT NULL ,
-  `model_line_description` VARCHAR(255) NULL DEFAULT NULL ,
-  `model_line_name` VARCHAR(255) NULL DEFAULT NULL ,
-  `start_marker` VARCHAR(255) NULL DEFAULT NULL ,
-  `start_position` DOUBLE NULL DEFAULT NULL ,
-  PRIMARY KEY (`model_line_id`) )
-ENGINE = InnoDB
+AUTO_INCREMENT = 6546
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -123,6 +93,22 @@ DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
+-- Table `discs_model`.`model_line`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `discs_model`.`model_line` (
+  `model_line_id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `end_marker` VARCHAR(255) NULL DEFAULT NULL ,
+  `end_position` DOUBLE NULL DEFAULT NULL ,
+  `model_line_description` VARCHAR(255) NULL DEFAULT NULL ,
+  `model_line_name` VARCHAR(255) NULL DEFAULT NULL ,
+  `start_marker` VARCHAR(255) NULL DEFAULT NULL ,
+  `start_position` DOUBLE NULL DEFAULT NULL ,
+  PRIMARY KEY (`model_line_id`) )
+ENGINE = InnoDB
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
 -- Table `discs_model`.`lattice`
 -- -----------------------------------------------------
 CREATE  TABLE IF NOT EXISTS `discs_model`.`lattice` (
@@ -140,11 +126,6 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`lattice` (
   INDEX `FK_lattice_model_line_id_idx` (`model_line_id` ASC) ,
   INDEX `FK_lattice_machine_mode_id_idx` (`machine_mode_id` ASC) ,
   INDEX `FK_lattice_model_geometry_id_idx` (`model_geometry_id` ASC) ,
-  CONSTRAINT `FK_lattice_model_line_id`
-    FOREIGN KEY (`model_line_id` )
-    REFERENCES `discs_model`.`model_line` (`model_line_id` )
-    ON DELETE CASCADE
-    ON UPDATE CASCADE,
   CONSTRAINT `FK_lattice_machine_mode_id`
     FOREIGN KEY (`machine_mode_id` )
     REFERENCES `discs_model`.`machine_mode` (`machine_mode_id` )
@@ -154,9 +135,14 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`lattice` (
     FOREIGN KEY (`model_geometry_id` )
     REFERENCES `discs_model`.`model_geometry` (`model_geometry_id` )
     ON DELETE CASCADE
+    ON UPDATE CASCADE,
+  CONSTRAINT `FK_lattice_model_line_id`
+    FOREIGN KEY (`model_line_id` )
+    REFERENCES `discs_model`.`model_line` (`model_line_id` )
+    ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 3
+AUTO_INCREMENT = 6
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -205,7 +191,21 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`model` (
     FOREIGN KEY (`model_code_id` )
     REFERENCES `discs_model`.`model_code` (`model_code_id` ))
 ENGINE = InnoDB
-AUTO_INCREMENT = 11
+AUTO_INCREMENT = 41
+DEFAULT CHARACTER SET = latin1;
+
+
+-- -----------------------------------------------------
+-- Table `discs_model`.`particle_type`
+-- -----------------------------------------------------
+CREATE  TABLE IF NOT EXISTS `discs_model`.`particle_type` (
+  `particle_type_id` INT(11) NOT NULL AUTO_INCREMENT ,
+  `particle_charge` INT(11) NULL DEFAULT NULL ,
+  `particle_mass` DOUBLE NULL DEFAULT NULL ,
+  `particle_name` VARCHAR(255) NULL DEFAULT NULL ,
+  PRIMARY KEY (`particle_type_id`) )
+ENGINE = InnoDB
+AUTO_INCREMENT = 5
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -217,21 +217,22 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beam_parameter` (
   `element_id` INT(11) NULL DEFAULT NULL ,
   `model_id` INT(11) NULL DEFAULT NULL ,
   `particle_type` INT(11) NULL DEFAULT NULL ,
+  `slice_id` INT(11) NULL DEFAULT NULL ,
   PRIMARY KEY (`twiss_id`) ,
   INDEX `FK_beam_parameter_model_id_idx` (`model_id` ASC) ,
   INDEX `FK_beam_parameter_element_id_idx` (`element_id` ASC) ,
   INDEX `FK_beam_parameter_particle_type_idx` (`particle_type` ASC) ,
-  CONSTRAINT `FK_beam_parameter_particle_type`
-    FOREIGN KEY (`particle_type` )
-    REFERENCES `discs_model`.`particle_type` (`particle_type_id` ),
   CONSTRAINT `FK_beam_parameter_element_id`
     FOREIGN KEY (`element_id` )
     REFERENCES `discs_model`.`element` (`element_id` ),
   CONSTRAINT `FK_beam_parameter_model_id`
     FOREIGN KEY (`model_id` )
-    REFERENCES `discs_model`.`model` (`model_id` ))
+    REFERENCES `discs_model`.`model` (`model_id` ),
+  CONSTRAINT `FK_beam_parameter_particle_type`
+    FOREIGN KEY (`particle_type` )
+    REFERENCES `discs_model`.`particle_type` (`particle_type_id` ))
 ENGINE = InnoDB
-AUTO_INCREMENT = 181
+AUTO_INCREMENT = 211
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -255,7 +256,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`beam_parameter_prop` (
     FOREIGN KEY (`beam_parameter_id` )
     REFERENCES `discs_model`.`beam_parameter` (`twiss_id` ))
 ENGINE = InnoDB
-AUTO_INCREMENT = 181
+AUTO_INCREMENT = 721
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -270,14 +271,14 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`blsequence_lattice` (
   PRIMARY KEY (`blsequence_lattice_id`) ,
   INDEX `FK_blsequence_lattice_beamline_sequence_id_idx` (`beamline_sequence_id` ASC) ,
   INDEX `FK_blsequence_lattice_lattice_id_idx` (`lattice_id` ASC) ,
-  CONSTRAINT `FK_blsequence_lattice_lattice_id`
-    FOREIGN KEY (`lattice_id` )
-    REFERENCES `discs_model`.`lattice` (`lattice_id` ),
   CONSTRAINT `FK_blsequence_lattice_beamline_sequence_id`
     FOREIGN KEY (`beamline_sequence_id` )
-    REFERENCES `discs_model`.`beamline_sequence` (`beamline_sequence_id` ))
+    REFERENCES `discs_model`.`beamline_sequence` (`beamline_sequence_id` ),
+  CONSTRAINT `FK_blsequence_lattice_lattice_id`
+    FOREIGN KEY (`lattice_id` )
+    REFERENCES `discs_model`.`lattice` (`lattice_id` ))
 ENGINE = InnoDB
-AUTO_INCREMENT = 23
+AUTO_INCREMENT = 56
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -288,15 +289,12 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_install_device` (
   `element_install_id` INT(11) NOT NULL ,
   `element_id` INT(11) NULL DEFAULT NULL ,
   `install_id` INT(11) NULL DEFAULT NULL ,
-  `slice` INT(11) NULL DEFAULT NULL ,
   `index` INT(11) NULL DEFAULT NULL ,
   PRIMARY KEY (`element_install_id`) ,
   INDEX `FK_element_id_idx` (`element_id` ASC) ,
-  CONSTRAINT `FK_element_id`
+  CONSTRAINT `FK_element_install_device_element_id`
     FOREIGN KEY (`element_id` )
-    REFERENCES `discs_model`.`element` (`element_id` )
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION)
+    REFERENCES `discs_model`.`element` (`element_id` ))
 ENGINE = InnoDB
 DEFAULT CHARACTER SET = latin1;
 
@@ -318,7 +316,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_type_prop` (
     FOREIGN KEY (`element_type_id` )
     REFERENCES `discs_model`.`element_type` (`element_type_id` ))
 ENGINE = InnoDB
-AUTO_INCREMENT = 125
+AUTO_INCREMENT = 187
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -341,17 +339,17 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`element_prop` (
   INDEX `FK_element_prop_element_id_idx` (`element_id` ASC) ,
   INDEX `FK_element_prop_element_type_prop_id_idx` (`element_type_prop_id` ASC) ,
   INDEX `FK_element_prop_lattice_id_idx` (`lattice_id` ASC) ,
-  CONSTRAINT `FK_element_prop_lattice_id`
-    FOREIGN KEY (`lattice_id` )
-    REFERENCES `discs_model`.`lattice` (`lattice_id` ),
   CONSTRAINT `FK_element_prop_element_id`
     FOREIGN KEY (`element_id` )
     REFERENCES `discs_model`.`element` (`element_id` ),
   CONSTRAINT `FK_element_prop_element_type_prop_id`
     FOREIGN KEY (`element_type_prop_id` )
-    REFERENCES `discs_model`.`element_type_prop` (`element_type_prop_id` ))
+    REFERENCES `discs_model`.`element_type_prop` (`element_type_prop_id` ),
+  CONSTRAINT `FK_element_prop_lattice_id`
+    FOREIGN KEY (`lattice_id` )
+    REFERENCES `discs_model`.`lattice` (`lattice_id` ))
 ENGINE = InnoDB
-AUTO_INCREMENT = 12351
+AUTO_INCREMENT = 30876
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -416,7 +414,7 @@ CREATE  TABLE IF NOT EXISTS `discs_model`.`rf_gap` (
     FOREIGN KEY (`cavity_id` )
     REFERENCES `discs_model`.`element` (`element_id` ))
 ENGINE = InnoDB
-AUTO_INCREMENT = 665
+AUTO_INCREMENT = 1661
 DEFAULT CHARACTER SET = latin1;
 
 
