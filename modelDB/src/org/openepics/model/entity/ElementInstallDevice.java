@@ -19,7 +19,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 
 /**
  *
- * @author admin
+ * @author chu
  */
 @Entity
 @Table(name = "element_install_device")
@@ -28,7 +28,6 @@ import javax.xml.bind.annotation.XmlRootElement;
     @NamedQuery(name = "ElementInstallDevice.findAll", query = "SELECT e FROM ElementInstallDevice e"),
     @NamedQuery(name = "ElementInstallDevice.findByElementInstallId", query = "SELECT e FROM ElementInstallDevice e WHERE e.elementInstallId = :elementInstallId"),
     @NamedQuery(name = "ElementInstallDevice.findByInstallId", query = "SELECT e FROM ElementInstallDevice e WHERE e.installId = :installId"),
-    @NamedQuery(name = "ElementInstallDevice.findBySlice", query = "SELECT e FROM ElementInstallDevice e WHERE e.slice = :slice"),
     @NamedQuery(name = "ElementInstallDevice.findByIndex", query = "SELECT e FROM ElementInstallDevice e WHERE e.index = :index")})
 public class ElementInstallDevice implements Serializable {
     private static final long serialVersionUID = 1L;
@@ -39,8 +38,6 @@ public class ElementInstallDevice implements Serializable {
     private Integer elementInstallId;
     @Column(name = "install_id")
     private Integer installId;
-    @Column(name = "slice")
-    private Integer slice;
     @Column(name = "index")
     private Integer index;
     @JoinColumn(name = "element_id", referencedColumnName = "element_id")
@@ -68,14 +65,6 @@ public class ElementInstallDevice implements Serializable {
 
     public void setInstallId(Integer installId) {
         this.installId = installId;
-    }
-
-    public Integer getSlice() {
-        return slice;
-    }
-
-    public void setSlice(Integer slice) {
-        this.slice = slice;
     }
 
     public Integer getIndex() {

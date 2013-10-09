@@ -32,6 +32,8 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "BeamParameter.findAll", query = "SELECT b FROM BeamParameter b"),
     @NamedQuery(name = "BeamParameter.findByTwissId", query = "SELECT b FROM BeamParameter b WHERE b.twissId = :twissId")})
 public class BeamParameter implements Serializable {
+    @Column(name = "slice_id")
+    private Integer sliceId;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -121,6 +123,14 @@ public class BeamParameter implements Serializable {
     @Override
     public String toString() {
         return "org.openepics.model.entity.BeamParameter[ twissId=" + twissId + " ]";
+    }
+
+    public Integer getSliceId() {
+        return sliceId;
+    }
+
+    public void setSliceId(Integer sliceId) {
+        this.sliceId = sliceId;
     }
     
 }
