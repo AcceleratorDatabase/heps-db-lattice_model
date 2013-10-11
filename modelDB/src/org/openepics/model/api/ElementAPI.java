@@ -29,11 +29,11 @@ import org.openepics.model.entity.RfGap;
  * @author lv
  */
 public class ElementAPI {
-
+    
     @PersistenceUnit
     static final EntityManagerFactory emf = Persistence.createEntityManagerFactory("modelAPIPU");
     static final EntityManager em = emf.createEntityManager();
-
+    
     @PersistenceContext
     /**
      * get all properties for the specified element
@@ -65,7 +65,7 @@ public class ElementAPI {
             return eList.get(0);
         }
     }
-
+    
     public Element getElementByNameAndType(String name, String type) {
         Query q;
         q = em.createQuery("SELECT e FROM Element e WHERE e.elementName=:elementName "
@@ -78,7 +78,7 @@ public class ElementAPI {
             return (Element) eList.get(0);
         }
     }
-
+    
     public Element getElementByPid(String pid) {
         Query q;
         q = em.createQuery("SELECT ep FROM ElementProp ep WHERE ep.elementPropName=:propName"
@@ -92,7 +92,7 @@ public class ElementAPI {
             return null;
         }
     }
-
+    
     public Element getElementByNameAndLattice(String ele_name, String lattice_name) {
         /*Query q;
          q = em.createNamedQuery("Element.findByElementName").setParameter("elementName", ele_name);
@@ -163,7 +163,7 @@ public class ElementAPI {
             e.setBeamlineSequenceId(bls);
         }
     }
-
+    
     public void setElement(String ele_name, double s, double len, double dx, double dy, double dz, double pitch, double yaw, double roll,
             double pos, String created_by, Date create_date, String seq_name, String ele_type_name) {
         if (getElementByName(ele_name) == null) {
@@ -197,7 +197,7 @@ public class ElementAPI {
      * Delete the RfGaps belonging to the Element
      * Delete the BeamParameters belonging to the Element
      */
-
+    
     public void deleteElementByName(String name) {
         em.getTransaction().begin();
         Element e = getElementByName(name);
@@ -212,28 +212,29 @@ public class ElementAPI {
             //BeamParameter
             Collection<BeamParameter> bpList = e.getBeamParameterCollection();
             new BeamParameterAPI().deleteBeamParameterCollection(bpList);
-
+            
             if (em.contains(e)) {
                 em.remove(e);
             } else {
                 int id = (int) emf.getPersistenceUnitUtil().getIdentifier(e);
                 em.remove(em.find(RfGap.class, id));
             }
-
+            
         } else {
             System.out.println("The element " + name + " doesn't exist!");
         }
         em.getTransaction().commit();
     }
-
-    public void updateElement(String old_name, String new_name, double s,
+    
+    public void updateElement(int id, String element_name, double s,
             double len, double dx, double dy, double dz, double pitch, double yaw, double roll,
             double pos, String sequence_name) {
-
-        Element e = getElementByName(old_name);
+        
+       // Element e = getElementByName(old_name);
+        Element e=em.find(Element.class, id);
         if (e != null) {
             em.getTransaction().begin();
-            e.setElementName(new_name);
+            e.setElementName(element_name);
             Date date = new Date();
             e.setInsertDate(date);
             e.setCreatedBy(System.getProperty("user.name"));
@@ -256,15 +257,15 @@ public class ElementAPI {
             BeamlineSequenceAPI beamlineSequenceAPI = new BeamlineSequenceAPI();
             BeamlineSequence bls = beamlineSequenceAPI.getSequenceByName(sequence_name);
             e.setBeamlineSequenceId(bls);
-
+            
             em.merge(e);
             em.getTransaction().commit();
-
+            
         } else {
-            System.out.println("The element " + old_name + " doesn't exist!");
+            System.out.println("The element " + element_name + " doesn't exist!");
         }
     }
-
+    
     public int getMaxId() {
         Query q;
         q = em.createQuery("SELECT MAX(e.elementId) FROM Element e");
@@ -275,7 +276,7 @@ public class ElementAPI {
             return idList.get(0);
         }
     }
-
+    
     public ArrayList<Element> getAllElementsForLattice(String latticeName) {
         Query q;
         ArrayList<Element> eList = new ArrayList();
@@ -283,20 +284,37 @@ public class ElementAPI {
         Iterator it = blsList.iterator();
         while (it.hasNext()) {
             BeamlineSequence bls = (BeamlineSequence) it.next();
-            q = em.createQuery("SELECT e FROM Element e WHERE e.beamlineSequenceId=:beamlineSequence")
+            q = em.createQuery("SELECT e FROM Element e WHERE e.beamlineSequenceId=:beamlineSequence ")
                     .setParameter("beamlineSequence", bls);
-
+            
             List<Element> eList1 = q.getResultList();
             eList.addAll(eList1);
         }
         return eList;
     }
-
+    
     public List<Element> getAllElements() {
         Query q;
         q = em.createNamedQuery("Element.findAll");
         List<Element> eList = q.getResultList();
-
+        
         return eList;
+    }
+    
+    public List<Element> getElementsByText(String searchItem) {
+        Query q;
+        q = em.createQuery("SELECT e FROM Element e WHERE e.elementName LIKE :ele_name OR e.beamlineSequenceId.sequenceName LIKE :seq_name")
+                .setParameter("ele_name","%"+searchItem+"%").setParameter("seq_name","%"+searchItem+"%");
+        List l = q.getResultList();
+        
+        Query q1 = em.createQuery("SELECT ep FROM ElementProp ep WHERE ep.elementPropName=:propName"
+                + " AND ep.elementPropString LIKE :propString").setParameter("propName", "pid")
+                .setParameter("propString", "%"+searchItem+"%");
+        List epList = q1.getResultList();
+        for (int i = 0; i < epList.size(); i++) {
+            ElementProp ep = (ElementProp) epList.get(i);
+            l.add(ep.getElementId());
+        }
+        return l;
     }
 }
