@@ -278,27 +278,23 @@ public class ModelAPI {
             element.setCreatedBy(System.getProperty("user.name"));
             element.setInsertDate(new Date());
 
-            Collection<BeamParams> beamParamCollection = device.getBeamParamsCollection();
-            Iterator bpit = beamParamCollection.iterator();
-            while (bpit.hasNext()) {
-                BeamParameter beamParameter = new BeamParameter();
+            BeamParams beamParams = device.getBeamParams();
+            BeamParameter beamParameter = new BeamParameter();
+            ParticleType pt = new ParticleTypeAPI().getParticleType(beamParams.getParticleName());
 
-                BeamParams beamParams = (BeamParams) bpit.next();
-                ParticleType pt = new ParticleTypeAPI().getParticleType(beamParams.getParticleName());
+            beamParameter.setElementId(element);
+            beamParameter.setModelId(m);
+            beamParameter.setParticleType(pt);
+            em.persist(beamParameter);
 
-                beamParameter.setElementId(element);
-                beamParameter.setModelId(m);
-                beamParameter.setParticleType(pt);
-                em.persist(beamParameter);
-
-                Collection<BeamParameterProp> beamParameterPropCollection = beamParams.getBeamParameterPropCollection();
-                Iterator bppit = beamParameterPropCollection.iterator();
-                while (bppit.hasNext()) {
-                    BeamParameterProp beamParameterProp = (BeamParameterProp) bppit.next();
-                    beamParameterProp.setBeamParameterId(beamParameter);
-                    em.persist(beamParameterProp);
-                }
+            Collection<BeamParameterProp> beamParameterPropCollection = beamParams.getBeamParameterPropCollection();
+            Iterator bppit = beamParameterPropCollection.iterator();
+            while (bppit.hasNext()) {
+                BeamParameterProp beamParameterProp = (BeamParameterProp) bppit.next();
+                beamParameterProp.setBeamParameterId(beamParameter);
+                em.persist(beamParameterProp);
             }
+
 
             Collection<ElementProp> elementPropCollection = device.getElementPropCollection();
             Iterator epit = elementPropCollection.iterator();
