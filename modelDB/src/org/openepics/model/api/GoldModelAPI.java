@@ -120,6 +120,12 @@ public class GoldModelAPI {
         
         return m;
     }
+    public List<GoldModel> getGoldModelByModelName(String model_name){
+        Query q;
+        q = em.createQuery("SELECT g from GoldModel g WHERE g.modelId.modelName=:model_name").setParameter("model_name", model_name);      
+        List<GoldModel> gList = q.getResultList();
+        return gList;
+    }
 
     /**
      * 

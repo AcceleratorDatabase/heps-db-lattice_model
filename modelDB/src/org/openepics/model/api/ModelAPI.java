@@ -21,6 +21,7 @@ import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
 import org.openepics.model.entity.ElementType;
+import org.openepics.model.entity.GoldModel;
 import org.openepics.model.entity.Lattice;
 import org.openepics.model.entity.MachineMode;
 import org.openepics.model.entity.Model;
@@ -317,5 +318,61 @@ public class ModelAPI {
             em.persist(element);
         }
         em.getTransaction().commit();
+    }
+
+    public void deleteModel(String model_name) {
+
+        Model m = this.getModelForName(model_name);
+        if (m != null) {
+            em.getTransaction().begin();
+            List<GoldModel> gmList = new GoldModelAPI().getGoldModelByModelName(model_name);
+            if (!(gmList.isEmpty() || gmList == null)) {
+                Iterator it3 = gmList.iterator();
+                while (it3.hasNext()) {
+                    GoldModel gm = (GoldModel) it3.next();
+                    if (em.contains(gm)) {
+                        em.remove(gm);
+                    } else {
+                        int id = (int) emf.getPersistenceUnitUtil().getIdentifier(gm);
+                        em.remove(em.find(GoldModel.class, id));
+                    }
+
+                }
+            }
+
+            List<BeamParameter> bpList = (List<BeamParameter>) m.getBeamParameterCollection();
+            if (!bpList.isEmpty()) {
+                Iterator it1 = bpList.iterator();
+                while (it1.hasNext()) {
+                    BeamParameter bp = (BeamParameter) it1.next();
+                    Collection<BeamParameterProp> bppList = (Collection<BeamParameterProp>) bp.getBeamParameterPropCollection();
+
+                    Iterator it2 = bppList.iterator();
+                    while (it2.hasNext()) {
+                        BeamParameterProp bpp = (BeamParameterProp) it2.next();
+                        if (em.contains(bpp)) {
+                            em.remove(bpp);
+                        } else {
+                            int id = (int) emf.getPersistenceUnitUtil().getIdentifier(bpp);
+                            em.remove(em.find(BeamParameterProp.class, id));
+                        }
+
+                    }
+                    if (em.contains(bp)) {
+                        em.remove(bp);
+                    } else {
+                        int id = (int) emf.getPersistenceUnitUtil().getIdentifier(bp);
+                        em.remove(em.find(BeamParameter.class, id));
+                    }
+                }
+                if (em.contains(m)) {
+                    em.remove(m);
+                } else {
+                    int id = (int) emf.getPersistenceUnitUtil().getIdentifier(m);
+                    em.remove(em.find(Model.class, id));
+                }
+            }
+            em.getTransaction().commit();
+        }
     }
 }

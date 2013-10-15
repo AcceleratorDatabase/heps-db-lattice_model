@@ -52,23 +52,23 @@ public class ElementPropAPI {
 
         return pid;
     }
-    
-    public List<String> getAllPropertyNames(){
-        List<String> names=new ArrayList();
+
+    public List<String> getAllPropertyNames() {
+        List<String> names = new ArrayList();
         Query q;
-        String sql="SELECT DISTINCT element_prop_name FROM element_prop";
-        q=em.createNativeQuery(sql);
-        List l=q.getResultList();
+        String sql = "SELECT DISTINCT element_prop_name FROM element_prop";
+        q = em.createNativeQuery(sql);
+        List l = q.getResultList();
         return l;
     }
 
     public Object getElementPropValueByNameForElement(String ele_prop_name, Element e) {
         Query q;
         String sql = "SELECT element_prop_id FROM (SELECT * FROM element_prop WHERE element_id=" + e.getElementId() + ")" + " AS ep" + " WHERE element_prop_name='" + ele_prop_name + "'";
-       // System.out.println(sql);
+        // System.out.println(sql);
         q = em.createNativeQuery(sql);
         List idList = q.getResultList();
-       // System.out.println(idList);
+        // System.out.println(idList);
         if (idList.isEmpty()) {
             return null;
         } else {
@@ -83,8 +83,6 @@ public class ElementPropAPI {
         }
         return null;
     }
-    
-    
 
     /**
      * get magnet attributes for the specified element
@@ -241,6 +239,7 @@ public class ElementPropAPI {
      * @return initialized ElementProp
      */
     public ElementProp setElementProperty(Element e, String propCategory, String propName, String datatype, Object prop) {
+        em.getTransaction().begin();
         ElementProp ep = new ElementProp();
         ep.setElementId(e);
         ep.setPropCategory(propCategory);
@@ -256,6 +255,8 @@ public class ElementPropAPI {
                 ep.setElementPropDouble(Double.parseDouble(prop.toString()));
                 break;
         }
+        em.persist(ep);
+        em.getTransaction().commit();
         return ep;
     }
 
