@@ -748,6 +748,14 @@ public class Db2OpenXAL {
                             sb.append(e.getElementName());
                             sb.append(":yAvg\" settable=\"false\"/>\n");
                             sb.append("         </channelsuite>\n");
+                            sb.append("            <channel handle=\"phaseAvg\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":phaseAvg\" settable=\"false\"/>\n");
+                            sb.append("         </channelsuite>\n");
+                            sb.append("            <channel handle=\"amplitudeAvg\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":amplitudeAvg\" settable=\"false\"/>\n");
+                            sb.append("         </channelsuite>\n");
                         }
                         // for RF cavities
                         if (e.getElementTypeId().getElementType().equals("CAV") || 
