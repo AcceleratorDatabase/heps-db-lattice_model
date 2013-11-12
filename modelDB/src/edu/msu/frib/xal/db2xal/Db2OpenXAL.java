@@ -747,11 +747,9 @@ public class Db2OpenXAL {
                             sb.append("            <channel handle=\"yAvg\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":yAvg\" settable=\"false\"/>\n");
-                            sb.append("         </channelsuite>\n");
                             sb.append("            <channel handle=\"phaseAvg\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":phaseAvg\" settable=\"false\"/>\n");
-                            sb.append("         </channelsuite>\n");
                             sb.append("            <channel handle=\"amplitudeAvg\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":amplitudeAvg\" settable=\"false\"/>\n");
@@ -875,7 +873,7 @@ public class Db2OpenXAL {
 
       //  x.write2IMPL("frib");
        // x.write2ModelParam();
-       // x.write2XDXF("frib", "lattice_model_template");
-        x.write2XDXF("csns","Linac_lattice_model_template_2013");
+        x.write2XDXF("frib", "lattice_model_template");
+       // x.write2XDXF("csns","Linac_lattice_model_template_2013");
     }
 }
