@@ -4,6 +4,8 @@
  */
 package org.openepics.model.api;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -56,6 +58,25 @@ public class ModelAPI {
     }
 
     /**
+     * get models within a time range
+     * @param start_time the start time of the range
+     * @param end_time the end time of the range
+     * @return 
+     */
+    public List<Model> getModelFor(Date start_time, Date end_time) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormat.format(start_time);
+        dateFormat.format(end_time);
+        List<Model> mList = null;
+        Query q;
+        q = em.createQuery("SELECT m FROM Model m WHERE m.initialConditionInd=:init_ind "
+                + "AND m.createDate BETWEEN :s_time AND :e_time").setParameter("init_ind", 0)
+                .setParameter("s_time", start_time).setParameter("e_time", end_time);
+        mList = q.getResultList();
+        return mList;
+    }
+ 
+ /**
      * Get all models for the specified machine mode
      *
      * @param mode machine mode name
