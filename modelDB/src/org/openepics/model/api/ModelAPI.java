@@ -63,7 +63,7 @@ public class ModelAPI {
      * @param end_time the end time of the range
      * @return 
      */
-    public List<Model> getModelFor(Date start_time, Date end_time) {
+    public List<Model> getModelsFor(Date start_time, Date end_time) {
         DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
         dateFormat.format(start_time);
         dateFormat.format(end_time);
