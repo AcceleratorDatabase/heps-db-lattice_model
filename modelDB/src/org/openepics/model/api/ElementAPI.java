@@ -287,6 +287,11 @@ public class ElementAPI {
         }
     }
 
+    /**
+     * get all elements within the lattice
+     * @param latticeName lattice name in String
+     * @return all elements within the specified lattice
+     */
     public ArrayList<Element> getAllElementsForLattice(String latticeName) {
         Query q;
         ArrayList<Element> eList = new ArrayList();
@@ -301,6 +306,16 @@ public class ElementAPI {
             eList.addAll(eList1);
         }
         return eList;
+    }
+
+    /**
+     * get all elements within the lattice
+     * @param lattice lattice
+     * @return all elements within the specified lattice
+     */
+    public ArrayList<Element> getAllElementsForLattice(Lattice lattice) {
+        String latticeName = lattice.getLatticeName();
+        return getAllElementsForLattice(latticeName);
     }
 
     public List<Element> getAllElements() {
