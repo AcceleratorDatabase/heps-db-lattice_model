@@ -50,8 +50,7 @@ public class ReadSheet {
                         case Cell.CELL_TYPE_ERROR:
                             System.out.println("Error");
                             break;
-                    }
-                    
+                    }               
                     oneRow.add(o);
                 }
                 dataList.add(oneRow);

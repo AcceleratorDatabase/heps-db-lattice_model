@@ -171,6 +171,20 @@ public class BeamParameterAPI {
         bp.setElementId(ele);
         bp.setModelId(model);
         bp.setParticleType(pt);
+       
+        em.getTransaction().begin();
+        em.persist(bp);
+        em.getTransaction().commit();
+
+        return bp;
+    }
+    
+     public BeamParameter setBeamParameter(Element ele, Model model, ParticleType pt, int slice_id) {
+        BeamParameter bp = new BeamParameter();
+        bp.setElementId(ele);
+        bp.setModelId(model);
+        bp.setParticleType(pt);
+        bp.setSliceId(0);
         em.getTransaction().begin();
         em.persist(bp);
         em.getTransaction().commit();
@@ -235,5 +249,14 @@ public class BeamParameterAPI {
         List<BeamParameter> bList = q.getResultList();
 
         return bList;
+    }
+    
+    public List<BeamParameter> getBeamParametersByText(String searchItem){
+       Query q;
+       q=em.createQuery("SELECT bp FROM BeamParameter bp WHERE bp.elementId.elementName LIKE :ele_name "
+               + "OR bp.modelId.modelName LIKE :model_name OR bp.particleType.particleName LIKE :par_name")
+               .setParameter("ele_name", "%"+searchItem+"%").setParameter("model_name", "%"+searchItem+"%").setParameter("par_name", "%"+searchItem+"%");
+       List<BeamParameter> bpList=q.getResultList();
+       return bpList;
     }
 }

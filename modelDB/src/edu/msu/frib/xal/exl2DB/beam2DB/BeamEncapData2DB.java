@@ -60,7 +60,7 @@ public class BeamEncapData2DB {
                 }
                 ArrayList rowClsList = (ArrayList) encapDataList.get(i);
                 Model model = new ModelAPI().getModelForName(model_name);
-                BeamParameter beamParameter = new BeamParameterAPI().setBeamParameter(e, model, particleType);
+                BeamParameter beamParameter = new BeamParameterAPI().setBeamParameter(e, model, particleType,0);               
                 Iterator it = rowClsList.iterator();
                 while (it.hasNext()) {
                     BeamCell cellProp = (BeamCell) it.next();

@@ -684,7 +684,15 @@ public class Db2OpenXAL {
 
                             sb.append("/>\n");
                         }
-
+                        
+                        //TODO: save BPM attributes to DB and comment the following code section out
+                        // hardwire BPM for FRIB only
+                        if (e.getElementTypeId().getElementType().equals("BPM")) {
+                            sb.append("            <bpm ");
+                            sb.append("frequency=\"161\" ");
+                            sb.append("orientation=\"1\"/>\n");
+                        }
+                        
                         // set rfcavity attributes
                         Map rfAttMap = elementPropAPI.getRfcavityAttributesForElement(e.getElementName());
                         if (!rfAttMap.isEmpty()) {
@@ -747,6 +755,18 @@ public class Db2OpenXAL {
                             sb.append("            <channel handle=\"yAvg\" signal=\"");
                             sb.append(e.getElementName());
                             sb.append(":yAvg\" settable=\"false\"/>\n");
+                            sb.append("            <channel handle=\"phaseAvg\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":phaseAvg\" settable=\"false\"/>\n");
+                            sb.append("            <channel handle=\"amplitudeAvg\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":amplitudeAvg\" settable=\"false\"/>\n");
+                            sb.append("            <channel handle=\"xTBT\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":hposA\" settable=\"false\"/>\n");
+                            sb.append("            <channel handle=\"yTBT\" signal=\"");
+                            sb.append(e.getElementName());
+                            sb.append(":vposA\" settable=\"false\"/>\n");
                             sb.append("         </channelsuite>\n");
                         }
                         // for RF cavities
@@ -867,7 +887,7 @@ public class Db2OpenXAL {
 
       //  x.write2IMPL("frib");
        // x.write2ModelParam();
-       // x.write2XDXF("frib", "lattice_model_template");
-        x.write2XDXF("csns","Linac_lattice_model_template_2013");
+        x.write2XDXF("frib", "lattice_model_template");
+       // x.write2XDXF("csns","Linac_lattice_model_template_2013");
     }
 }

@@ -27,7 +27,15 @@ public class Device {
     private String elementType;
     private String beamlineSequenceName;
     private Collection<ElementProp> elementPropCollection;
-    private Collection<BeamParams> beamParamsCollection;
+    private BeamParams beamParams;
+
+    public BeamParams getBeamParams() {
+        return beamParams;
+    }
+
+    public void setBeamParams(BeamParams beamParams) {
+        this.beamParams = beamParams;
+    }
 
     public Double getDx() {
         return dx;
@@ -133,11 +141,5 @@ public class Device {
         this.elementPropCollection = elementPropCollection;
     }
 
-    public Collection<BeamParams> getBeamParamsCollection() {
-        return beamParamsCollection;
-    }
-
-    public void setBeamParamsCollection(Collection<BeamParams> beamParamsCollection) {
-        this.beamParamsCollection = beamParamsCollection;
-    }
+   
 }

@@ -24,6 +24,7 @@ public class Data2Map {
         Iterator it = dataList.iterator();
         while (it.hasNext()) {
             ArrayList dataRow = (ArrayList) it.next();
+            //System.out.println(dataRow);
             if (i > 0) {
                 Map dataMap = new HashMap();
                 for (int j = 0; j < colNum; j++) {

@@ -4,12 +4,21 @@
  */
 package org.openepics.model.api;
 
+import com.mysql.jdbc.Connection;
+import com.mysql.jdbc.PreparedStatement;
+import edu.msu.frib.xal.exl2DB.tools.DBTools;
+import edu.msu.frib.xal.exl2DB.tools.MyComparator;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
@@ -21,6 +30,7 @@ import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
 import org.openepics.model.entity.ElementType;
+import org.openepics.model.entity.Lattice;
 import org.openepics.model.entity.RfGap;
 
 /**
@@ -226,14 +236,15 @@ public class ElementAPI {
         em.getTransaction().commit();
     }
 
-    public void updateElement(String old_name, String new_name, double s,
+    public void updateElement(int id, String element_name, double s,
             double len, double dx, double dy, double dz, double pitch, double yaw, double roll,
             double pos, String sequence_name) {
 
-        Element e = getElementByName(old_name);
+        // Element e = getElementByName(old_name);
+        Element e = em.find(Element.class, id);
         if (e != null) {
             em.getTransaction().begin();
-            e.setElementName(new_name);
+            e.setElementName(element_name);
             Date date = new Date();
             e.setInsertDate(date);
             e.setCreatedBy(System.getProperty("user.name"));
@@ -261,7 +272,7 @@ public class ElementAPI {
             em.getTransaction().commit();
 
         } else {
-            System.out.println("The element " + old_name + " doesn't exist!");
+            System.out.println("The element " + element_name + " doesn't exist!");
         }
     }
 
@@ -276,6 +287,11 @@ public class ElementAPI {
         }
     }
 
+    /**
+     * get all elements within the lattice
+     * @param latticeName lattice name in String
+     * @return all elements within the specified lattice
+     */
     public ArrayList<Element> getAllElementsForLattice(String latticeName) {
         Query q;
         ArrayList<Element> eList = new ArrayList();
@@ -283,7 +299,7 @@ public class ElementAPI {
         Iterator it = blsList.iterator();
         while (it.hasNext()) {
             BeamlineSequence bls = (BeamlineSequence) it.next();
-            q = em.createQuery("SELECT e FROM Element e WHERE e.beamlineSequenceId=:beamlineSequence")
+            q = em.createQuery("SELECT e FROM Element e WHERE e.beamlineSequenceId=:beamlineSequence ")
                     .setParameter("beamlineSequence", bls);
 
             List<Element> eList1 = q.getResultList();
@@ -292,11 +308,83 @@ public class ElementAPI {
         return eList;
     }
 
+    /**
+     * get all elements within the lattice
+     * @param lattice lattice
+     * @return all elements within the specified lattice
+     */
+    public ArrayList<Element> getAllElementsForLattice(Lattice lattice) {
+        String latticeName = lattice.getLatticeName();
+        return getAllElementsForLattice(latticeName);
+    }
+
     public List<Element> getAllElements() {
         Query q;
         q = em.createNamedQuery("Element.findAll");
         List<Element> eList = q.getResultList();
 
         return eList;
+    }
+
+    public List<Element> getElementsByText(String searchItem) {
+        Query q;
+        q = em.createQuery("SELECT e FROM Element e WHERE e.elementName LIKE :ele_name OR e.beamlineSequenceId.sequenceName LIKE :seq_name")
+                .setParameter("ele_name", "%" + searchItem + "%").setParameter("seq_name", "%" + searchItem + "%");
+        List l = q.getResultList();
+
+        Query q1 = em.createQuery("SELECT ep FROM ElementProp ep WHERE ep.elementPropName=:propName"
+                + " AND ep.elementPropString LIKE :propString").setParameter("propName", "pid")
+                .setParameter("propString", "%" + searchItem + "%");
+        List epList = q1.getResultList();
+        for (int i = 0; i < epList.size(); i++) {
+            ElementProp ep = (ElementProp) epList.get(i);
+            l.add(ep.getElementId());
+        }
+        return l;
+    }
+
+    public void sortElementsForLattice(String lattice_name) {
+        Connection conn = null;
+        PreparedStatement state = null;
+        try {
+            conn = (Connection) DBTools.getConnection();
+            conn.setAutoCommit(false);
+            List<Element> eleList = this.getAllElementsForLattice(lattice_name);
+            Lattice l = new LatticeAPI().getLatticeByName(lattice_name);
+            int lattice_id = l.getLatticeId();
+            HashMap<Integer, Double> hMap = new HashMap<>();
+            Iterator it = eleList.iterator();
+            while (it.hasNext()) {
+                Element ele = (Element) it.next();
+                hMap.put(ele.getElementId(), ele.getS());
+            }
+            ElementPropAPI epAPI = new ElementPropAPI();
+            int i = 0;
+            if (!hMap.isEmpty()) {
+                List mapList = new ArrayList(hMap.entrySet());
+                Collections.sort(mapList, new MyComparator());
+                Iterator iter = mapList.iterator();
+                while (iter.hasNext()) {
+                    i++;
+                    Map.Entry entry = (Map.Entry) iter.next();
+                    String sql = "insert into element_prop set element_id=?,element_prop_name=?,element_prop_int=?,lattice_id=?";
+                    if (i == 1) {
+                        state = (PreparedStatement) conn.prepareStatement(sql);
+                    }
+                    state.setInt(1, Integer.parseInt(entry.getKey().toString()));
+                    state.setString(2, "element_order");
+                    state.setInt(3, i);
+                    state.setInt(4, lattice_id);
+                    state.addBatch();
+                }
+                state.executeBatch();
+                conn.commit();
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(ElementAPI.class.getName()).log(Level.SEVERE, null, ex);
+        } finally {
+            DBTools.closePreparedStatement(state);
+            DBTools.closeConnection();
+        }
     }
 }

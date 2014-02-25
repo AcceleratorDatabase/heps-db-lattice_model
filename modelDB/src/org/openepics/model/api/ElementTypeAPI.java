@@ -80,4 +80,11 @@ public class ElementTypeAPI {
         }
     }
     
+     public List<ElementType> getElementTypesByText(String searchItem) {
+        Query q;
+        q = em.createQuery("SELECT et FROM ElementType et WHERE et.elementType LIKE :ele_type OR et.elementTypeDescription LIKE :ele_type_des")
+                .setParameter("ele_type","%"+searchItem+"%").setParameter("ele_type_des","%"+searchItem+"%");
+        List<ElementType> l = q.getResultList();      
+        return l;
+    }   
 }

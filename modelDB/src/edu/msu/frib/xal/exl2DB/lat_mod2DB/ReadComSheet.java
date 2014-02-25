@@ -128,7 +128,7 @@ public class ReadComSheet {
      * @param labelType Physical label, XAL label, or DB label
      * @return
      */
-    public static ArrayList getColList(Workbook wb, String sheetName, String label, String labelType) {
+    public static ArrayList getColList(Workbook wb, String sheetName, String label, String labelType) {     
         ArrayList colList = new ArrayList();
         Sheet sheet = wb.getSheet(sheetName);
         int colNum = getLabelColNum(wb, sheetName, label, labelType);
@@ -136,8 +136,7 @@ public class ReadComSheet {
         for (Iterator<Row> rit = sheet.rowIterator(); rit.hasNext();) {
             Row row = (Row) rit.next();
             if (row.getRowNum() >= startRowNum) {
-                Cell cell = row.getCell(colNum);
-
+                Cell cell = row.getCell(colNum);              
                 if (Cell.CELL_TYPE_STRING == cell.getCellType()) {
                     colList.add(cell.getStringCellValue());
                 } else if (Cell.CELL_TYPE_FORMULA == cell.getCellType()) {

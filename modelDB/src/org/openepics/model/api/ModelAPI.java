@@ -4,6 +4,8 @@
  */
 package org.openepics.model.api;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Date;
@@ -21,6 +23,7 @@ import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.ElementProp;
 import org.openepics.model.entity.ElementType;
+import org.openepics.model.entity.GoldModel;
 import org.openepics.model.entity.Lattice;
 import org.openepics.model.entity.MachineMode;
 import org.openepics.model.entity.Model;
@@ -55,6 +58,25 @@ public class ModelAPI {
     }
 
     /**
+     * get models within a time range
+     * @param start_time the start time of the range
+     * @param end_time the end time of the range
+     * @return 
+     */
+    public List<Model> getModelsFor(Date start_time, Date end_time) {
+        DateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+        dateFormat.format(start_time);
+        dateFormat.format(end_time);
+        List<Model> mList = null;
+        Query q;
+        q = em.createQuery("SELECT m FROM Model m WHERE m.initialConditionInd=:init_ind "
+                + "AND m.createDate BETWEEN :s_time AND :e_time").setParameter("init_ind", 0)
+                .setParameter("s_time", start_time).setParameter("e_time", end_time);
+        mList = q.getResultList();
+        return mList;
+    }
+ 
+ /**
      * Get all models for the specified machine mode
      *
      * @param mode machine mode name
@@ -278,27 +300,23 @@ public class ModelAPI {
             element.setCreatedBy(System.getProperty("user.name"));
             element.setInsertDate(new Date());
 
-            Collection<BeamParams> beamParamCollection = device.getBeamParamsCollection();
-            Iterator bpit = beamParamCollection.iterator();
-            while (bpit.hasNext()) {
-                BeamParameter beamParameter = new BeamParameter();
+            BeamParams beamParams = device.getBeamParams();
+            BeamParameter beamParameter = new BeamParameter();
+            ParticleType pt = new ParticleTypeAPI().getParticleType(beamParams.getParticleName());
 
-                BeamParams beamParams = (BeamParams) bpit.next();
-                ParticleType pt = new ParticleTypeAPI().getParticleType(beamParams.getParticleName());
+            beamParameter.setElementId(element);
+            beamParameter.setModelId(m);
+            beamParameter.setParticleType(pt);
+            em.persist(beamParameter);
 
-                beamParameter.setElementId(element);
-                beamParameter.setModelId(m);
-                beamParameter.setParticleType(pt);
-                em.persist(beamParameter);
-
-                Collection<BeamParameterProp> beamParameterPropCollection = beamParams.getBeamParameterPropCollection();
-                Iterator bppit = beamParameterPropCollection.iterator();
-                while (bppit.hasNext()) {
-                    BeamParameterProp beamParameterProp = (BeamParameterProp) bppit.next();
-                    beamParameterProp.setBeamParameterId(beamParameter);
-                    em.persist(beamParameterProp);
-                }
+            Collection<BeamParameterProp> beamParameterPropCollection = beamParams.getBeamParameterPropCollection();
+            Iterator bppit = beamParameterPropCollection.iterator();
+            while (bppit.hasNext()) {
+                BeamParameterProp beamParameterProp = (BeamParameterProp) bppit.next();
+                beamParameterProp.setBeamParameterId(beamParameter);
+                em.persist(beamParameterProp);
             }
+
 
             Collection<ElementProp> elementPropCollection = device.getElementPropCollection();
             Iterator epit = elementPropCollection.iterator();
@@ -321,5 +339,61 @@ public class ModelAPI {
             em.persist(element);
         }
         em.getTransaction().commit();
+    }
+
+    public void deleteModel(String model_name) {
+
+        Model m = this.getModelForName(model_name);
+        if (m != null) {
+            em.getTransaction().begin();
+            List<GoldModel> gmList = new GoldModelAPI().getGoldModelByModelName(model_name);
+            if (!(gmList.isEmpty() || gmList == null)) {
+                Iterator it3 = gmList.iterator();
+                while (it3.hasNext()) {
+                    GoldModel gm = (GoldModel) it3.next();
+                    if (em.contains(gm)) {
+                        em.remove(gm);
+                    } else {
+                        int id = (int) emf.getPersistenceUnitUtil().getIdentifier(gm);
+                        em.remove(em.find(GoldModel.class, id));
+                    }
+
+                }
+            }
+
+            List<BeamParameter> bpList = (List<BeamParameter>) m.getBeamParameterCollection();
+            if (!bpList.isEmpty()) {
+                Iterator it1 = bpList.iterator();
+                while (it1.hasNext()) {
+                    BeamParameter bp = (BeamParameter) it1.next();
+                    Collection<BeamParameterProp> bppList = (Collection<BeamParameterProp>) bp.getBeamParameterPropCollection();
+
+                    Iterator it2 = bppList.iterator();
+                    while (it2.hasNext()) {
+                        BeamParameterProp bpp = (BeamParameterProp) it2.next();
+                        if (em.contains(bpp)) {
+                            em.remove(bpp);
+                        } else {
+                            int id = (int) emf.getPersistenceUnitUtil().getIdentifier(bpp);
+                            em.remove(em.find(BeamParameterProp.class, id));
+                        }
+
+                    }
+                    if (em.contains(bp)) {
+                        em.remove(bp);
+                    } else {
+                        int id = (int) emf.getPersistenceUnitUtil().getIdentifier(bp);
+                        em.remove(em.find(BeamParameter.class, id));
+                    }
+                }
+                if (em.contains(m)) {
+                    em.remove(m);
+                } else {
+                    int id = (int) emf.getPersistenceUnitUtil().getIdentifier(m);
+                    em.remove(em.find(Model.class, id));
+                }
+            }
+            em.getTransaction().commit();
+        }
     }
 }

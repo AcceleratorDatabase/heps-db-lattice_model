@@ -52,12 +52,12 @@ public class EncapData2DB {
             Connection conn = null;
             PreparedStatement state = null;
             PreparedStatement propState = null;
-            PreparedStatement eState = null;        
+            PreparedStatement eState = null;
             ResultSet rs = null;
 
             boolean propStateSign = false;
             boolean eStateSign = false;
-           
+
             try {
                 conn = (Connection) DBTools.getConnection();
                 conn.setAutoCommit(false);
@@ -66,7 +66,7 @@ public class EncapData2DB {
                 ArrayList eleNameList = ReadComSheet.getColList(wb, sheetName, "Eng_name", "Physical label");
                 ArrayList sequenceList = ReadComSheet.getColList(wb, sheetName, "Section", "Physical Label");
                 ArrayList eleTypeList = ReadComSheet.getColList(wb, sheetName, "XAL_KeyWord", "Physical Label");
-             
+
                 //key:element_id value:element/s
                 HashMap<Integer, Double> hMap = new HashMap<Integer, Double>();
 
@@ -102,7 +102,7 @@ public class EncapData2DB {
                                 String ele_name = (String) eleNameList.get(t);
                                 ElementAPI elementAPI = new ElementAPI();
                                 //Element e = elementAPI.getElementByName(ele_name);
-                                Element e=elementAPI.getElementByNameAndType(ele_name, ele_type);
+                                Element e = elementAPI.getElementByNameAndType(ele_name, ele_type);
                                 boolean ele_sign = false;      //If true,the element is already in the database
 
                                 // if (e != null && e.getBeamlineSequenceId().getSequenceName().equals(sequence_name)) {
@@ -169,7 +169,8 @@ public class EncapData2DB {
                                             String category = cellProp.getCategory();
 
 
-                                            String sql3 = "update element_prop set element_id=?,prop_category=?,element_prop_name=?,lattice_id=? where element_prop_id=?";
+                                            String datatype = cellProp.getType().substring(cellProp.getType().lastIndexOf("_") + 1);
+                                            String sql3 = "update element_prop set element_id=?,prop_category=?,element_prop_name=?,lattice_id=?,element_prop_datatype=? where element_prop_id=?";
                                             if ("".equals(category)) {
                                                 category = null;
                                             }
@@ -183,12 +184,13 @@ public class EncapData2DB {
                                             propState.setString(2, category);
                                             propState.setString(3, cellProp.getName());
                                             propState.setInt(4, lattice_id);
-                                            propState.setInt(5, element_prop_id);
+                                            propState.setString(5, datatype);
+                                            propState.setInt(6, element_prop_id);
                                             propState.addBatch();
 
                                             propStateSign = true;
 
-                                            //System.out.println(cellProp.getType()+"******"+value);
+                                           // System.out.println(cellProp.getType() + "******" + value);
                                             String sql4 = "update element_prop set " + cellProp.getType() + "=? where element_prop_id=?";
                                             state = (PreparedStatement) conn.prepareStatement(sql4);
                                             state.setObject(1, value);
@@ -252,7 +254,7 @@ public class EncapData2DB {
                 if (eStateSign) {
                     eState.executeBatch();
                 }
-                 
+
                 conn.commit();
                 conn.setAutoCommit(true);
             } catch (SQLException e) {
@@ -262,7 +264,7 @@ public class EncapData2DB {
                     DBTools.closeResultSet(rs);
                 }
                 DBTools.closePreparedStatement(state);
-                DBTools.closePreparedStatement(eState);            
+                DBTools.closePreparedStatement(eState);
                 DBTools.closePreparedStatement(propState);
                 DBTools.closeConnection();
             }
