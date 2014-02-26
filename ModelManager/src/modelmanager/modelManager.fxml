@@ -1,0 +1,319 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import java.lang.*?>
+<?import java.util.*?>
+<?import javafx.collections.*?>
+<?import javafx.scene.*?>
+<?import javafx.scene.chart.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import modelmanager.widget.*?>
+
+<AnchorPane id="AnchorPane" prefHeight="835.0000168945262" prefWidth="1113.0000558593674" xmlns:fx="http://javafx.com/fxml" fx:controller="modelmanager.ModelManagerDocument">
+  <children>
+    <SplitPane focusTraversable="true" layoutY="31.0" orientation="VERTICAL" prefHeight="759.0" prefWidth="1113.0">
+      <items>
+        <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="757.0" prefWidth="1112.0">
+          <children>
+            <TabPane layoutX="-1.0" prefHeight="761.0" prefWidth="1113.0" tabClosingPolicy="UNAVAILABLE">
+              <tabs>
+                <Tab text="Model Data">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="730.0" prefWidth="1106.0000999999975">
+                      <children>
+                        <SplitPane dividerPositions="0.8433843384338434" focusTraversable="true" layoutY="50.0" prefHeight="461.0" prefWidth="1113.0">
+                          <items>
+                            <AnchorPane fx:id="dataDisplayPane" minHeight="0.0" minWidth="0.0" prefHeight="459.0" prefWidth="918.0">
+                              <children>
+                                <LineChart fx:id="modelDataPlot" prefHeight="389.0" prefWidth="934.0" title="Model Data" AnchorPane.bottomAnchor="70.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                  <xAxis>
+                                    <NumberAxis fx:id="xAxis" side="BOTTOM" />
+                                  </xAxis>
+                                  <yAxis>
+                                    <NumberAxis fx:id="yAxis" side="LEFT" />
+                                  </yAxis>
+                                </LineChart>
+                                <AnchorPane fx:id="synopticPane" prefHeight="45.0" prefWidth="931.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="404.0" />
+                              </children>
+                            </AnchorPane>
+                            <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="459.0" prefWidth="183.0">
+                              <children>
+                                <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="304.0" prefWidth="176.0">
+                                  <children>
+                                    <MenuButton fx:id="plotSelection" mnemonicParsing="false" prefWidth="172.0" text="Plot Selection">
+                                      <items>
+                                        <MenuItem mnemonicParsing="false" text="Kinetic Energy" fx:id="kE" />
+                                        <Menu mnemonicParsing="false" text="Phase Space">
+                                          <items>
+                                            <MenuItem mnemonicParsing="false" text="X" fx:id="phX" />
+                                            <MenuItem mnemonicParsing="false" text="X'" fx:id="phXP" />
+                                            <MenuItem mnemonicParsing="false" text="Y" fx:id="phY" />
+                                            <MenuItem mnemonicParsing="false" text="Y'" fx:id="phYP" />
+                                            <MenuItem mnemonicParsing="false" text="Z" fx:id="phZ" />
+                                            <MenuItem mnemonicParsing="false" text="Z'" fx:id="phZP" />
+                                          </items>
+                                        </Menu>
+                                        <Menu mnemonicParsing="false" text="Twiss Parameters">
+                                          <items>
+                                            <MenuItem mnemonicParsing="false" text="Beta_X" fx:id="betaX" />
+                                            <MenuItem mnemonicParsing="false" text="Alpha_X" fx:id="alphaX" />
+                                            <MenuItem mnemonicParsing="false" text="Emit_X" fx:id="emitX" />
+                                            <MenuItem mnemonicParsing="false" text="Beta_Y" fx:id="betaY" />
+                                            <MenuItem mnemonicParsing="false" text="Alpha_Y" fx:id="alphaY" />
+                                            <MenuItem mnemonicParsing="false" text="Emit_Y" fx:id="emitY" />
+                                            <MenuItem mnemonicParsing="false" text="Beta_Z" fx:id="betaZ" />
+                                            <MenuItem mnemonicParsing="false" text="Alpha_Z" fx:id="alphaZ" />
+                                            <MenuItem mnemonicParsing="false" text="Emit_Z" fx:id="emitZ" />
+                                          </items>
+                                        </Menu>
+                                        <Menu mnemonicParsing="false" text="Chromaticity">
+                                          <items>
+                                            <MenuItem mnemonicParsing="false" text="Chrom_X" />
+                                            <MenuItem mnemonicParsing="false" text="Chrom_X'" />
+                                            <MenuItem mnemonicParsing="false" text="Chrom_Y" />
+                                            <MenuItem mnemonicParsing="false" text="Chrom_Y'" />
+                                          </items>
+                                        </Menu>
+                                        <Menu mnemonicParsing="false" text="Dispersion">
+                                          <items>
+                                            <MenuItem mnemonicParsing="false" text="Disp_X" />
+                                            <MenuItem mnemonicParsing="false" text="Disp_Y" />
+                                          </items>
+                                        </Menu>
+                                        <Menu mnemonicParsing="false" text="R-Matrix">
+                                          <items>
+                                            <MenuItem mnemonicParsing="false" text="R11" />
+                                            <MenuItem mnemonicParsing="false" text="R12" />
+                                            <MenuItem mnemonicParsing="false" text="R13" />
+                                            <MenuItem mnemonicParsing="false" text="R14" />
+                                            <MenuItem mnemonicParsing="false" text="R15" />
+                                            <MenuItem mnemonicParsing="false" text="R16" />
+                                            <MenuItem mnemonicParsing="false" text="R21" />
+                                            <MenuItem mnemonicParsing="false" text="R22" />
+                                            <MenuItem mnemonicParsing="false" text="R23" />
+                                            <MenuItem mnemonicParsing="false" text="R24" />
+                                            <MenuItem mnemonicParsing="false" text="R25" />
+                                            <MenuItem mnemonicParsing="false" text="R26" />
+                                            <MenuItem mnemonicParsing="false" text="R31" />
+                                            <MenuItem mnemonicParsing="false" text="R32" />
+                                            <MenuItem mnemonicParsing="false" text="R33" />
+                                            <MenuItem mnemonicParsing="false" text="R34" />
+                                            <MenuItem mnemonicParsing="false" text="R35" />
+                                            <MenuItem mnemonicParsing="false" text="R36" />
+                                            <MenuItem mnemonicParsing="false" text="R41" />
+                                            <MenuItem mnemonicParsing="false" text="R42" />
+                                            <MenuItem mnemonicParsing="false" text="R43" />
+                                            <MenuItem mnemonicParsing="false" text="R44" />
+                                            <MenuItem mnemonicParsing="false" text="R45" />
+                                            <MenuItem mnemonicParsing="false" text="R46" />
+                                            <MenuItem mnemonicParsing="false" text="R51" />
+                                            <MenuItem mnemonicParsing="false" text="R52" />
+                                            <MenuItem mnemonicParsing="false" text="R53" />
+                                            <MenuItem mnemonicParsing="false" text="R54" />
+                                            <MenuItem mnemonicParsing="false" text="R55" />
+                                            <MenuItem mnemonicParsing="false" text="R56" />
+                                            <MenuItem mnemonicParsing="false" text="R61" />
+                                            <MenuItem mnemonicParsing="false" text="R62" />
+                                            <MenuItem mnemonicParsing="false" text="R63" />
+                                            <MenuItem mnemonicParsing="false" text="R64" />
+                                            <MenuItem mnemonicParsing="false" text="R65" />
+                                            <MenuItem mnemonicParsing="false" text="R66" />
+                                          </items>
+                                        </Menu>
+                                        <Menu mnemonicParsing="false" text="RMS Beam Size">
+                                          <items>
+                                            <MenuItem mnemonicParsing="false" text="Sigma_X" />
+                                            <MenuItem mnemonicParsing="false" text="Sigma_Y" />
+                                            <MenuItem mnemonicParsing="false" text="Bunch Length" />
+                                          </items>
+                                        </Menu>
+                                      </items>
+                                    </MenuButton>
+                                  </children>
+                                </AnchorPane>
+                                <ComboBox layoutY="311.0" prefHeight="23.0" prefWidth="172.0" promptText="Comparison">
+                                  <items>
+                                    <FXCollections fx:factory="observableArrayList">
+                                      <String fx:value="Overlay Reference" />
+                                      <String fx:value="Diff from Reference" />
+                                    </FXCollections>
+                                  </items>
+                                </ComboBox>
+                                <TitledPane animated="false" layoutY="363.0" minWidth="161.0" prefHeight="96.0" prefWidth="172.0" text="Configuration" />
+                              </children>
+                            </AnchorPane>
+                          </items>
+                        </SplitPane>
+                        <Button fx:id="runModel" layoutX="156.0" layoutY="15.0" mnemonicParsing="false" text="Run Model" />
+                        <Button fx:id="saveModel" layoutX="248.0" layoutY="15.0" mnemonicParsing="false" text="Save Model" />
+                        <Button fx:id="tagGoldModel" layoutX="345.0" layoutY="15.0" mnemonicParsing="false" text="Tag Gold Model" />
+                        <ComboBox id="mSourceSelection" fx:id="mSyncMode" layoutX="37.0" layoutY="16.0" prefHeight="21.0" prefWidth="106.0" promptText="Model Source">
+                          <items>
+                            <FXCollections fx:factory="observableArrayList">
+                              <String fx:value="Design" />
+                              <String fx:value="All Channel Access" />
+                              <String fx:value="RF with Design" />
+                              <String fx:value="PV Logger" />
+                            </FXCollections>
+                          </items>
+                        </ComboBox>
+                        <AnchorPane layoutX="4.0" layoutY="524.0" minHeight="0.0" minWidth="0.0" prefHeight="30.0" prefWidth="1083.0">
+                          <children>
+                            <Pane prefHeight="29.0" prefWidth="1083.0">
+                              <children>
+                                <Label layoutX="7.0" layoutY="7.0" text="Saved Models:" />
+                                <Button fx:id="modelQueryButton" layoutX="844.0" layoutY="4.0" mnemonicParsing="false" text="Find" />
+                                <Button layoutX="900.0" layoutY="4.0" mnemonicParsing="false" text="Restore Default" />
+                                <Button layoutX="1013.0" layoutY="5.0" mnemonicParsing="false" text="Advance" />
+                                <CheckBox layoutX="741.0" layoutY="8.0" mnemonicParsing="false" text="Set End Time" />
+                                <Label layoutX="244.0" layoutY="8.0" text="From:" />
+                                <TextField fx:id="fromDateField" layoutX="281.0" layoutY="4.0" prefWidth="200.0" />
+                                <Label layoutX="493.0" layoutY="7.0" text="To:" />
+                                <TextField fx:id="toDateField" editable="false" layoutX="516.0" layoutY="4.0" prefWidth="200.0" promptText="Now" />
+                              </children>
+                            </Pane>
+                          </children>
+                        </AnchorPane>
+                        <TableView id="modelList" fx:id="modelListTable" layoutY="554.0" prefHeight="175.99990000000253" prefWidth="1112.0">
+                          <columns>
+                            <TableColumn prefWidth="75.0" text="Model ID" fx:id="modelIdCol" />
+                            <TableColumn prefWidth="180.0" text="Date" fx:id="dateCol" />
+                            <TableColumn prefWidth="75.0" text="Model Source" fx:id="modelSrcCol" />
+                            <TableColumn prefWidth="75.0" text="Mode" fx:id="modeCol" />
+                            <TableColumn prefWidth="450.0" text="Comments" fx:id="commentsCol" />
+                            <TableColumn prefWidth="75.0" text="Gold" fx:id="goldCol" />
+                            <TableColumn prefWidth="75.0" text="Ref" fx:id="refCol" />
+                            <TableColumn prefWidth="75.0" text="Sel" fx:id="selCol" />
+                          </columns>
+                        </TableView>
+                      </children>
+                    </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab text="Model Data Table">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <children>
+                        <TableView fx:id="elementTable" layoutX="1.0" layoutY="44.0" prefHeight="684.0" prefWidth="1111.0000999999975">
+                          <columns>
+                            <TableColumn minWidth="180.0" prefWidth="180.0" text="Element" fx:id="elementCol" />
+                            <TableColumn prefWidth="75.0" text="Position" fx:id="posCol" />
+                            <TableColumn prefWidth="75.0" text="Kinetic Energy" fx:id="eCol" />
+                            <TableColumn prefWidth="75.0" text="X" fx:id="phXCol" />
+                            <TableColumn prefWidth="75.0" text="X'" fx:id="phXPCol" />
+                            <TableColumn prefWidth="75.0" text="Y" fx:id="phYCol" />
+                            <TableColumn prefWidth="75.0" text="Y'" fx:id="phYPCol" />
+                            <TableColumn prefWidth="75.0" text="Z" fx:id="phZCol" />
+                            <TableColumn prefWidth="75.0" text="Z'" fx:id="phZPCol" />
+                            <TableColumn prefWidth="75.0" text="Beta_X" fx:id="betaXCol" />
+                            <TableColumn prefWidth="75.0" text="Alpha_X" fx:id="alphaXCol" />
+                            <TableColumn prefWidth="75.0" text="Emit_X" fx:id="emitXCol" />
+                            <TableColumn prefWidth="75.0" text="Beta_Y" fx:id="betaYCol" />
+                            <TableColumn prefWidth="75.0" text="Alpha_Y" fx:id="alphaYCol" />
+                            <TableColumn prefWidth="75.0" text="Emit_Y" fx:id="emitYCol" />
+                            <TableColumn prefWidth="75.0" text="Beta_Z" fx:id="betaZCol" />
+                            <TableColumn prefWidth="75.0" text="Alpha_Z" fx:id="alphaZCol" />
+                            <TableColumn prefWidth="75.0" text="Emit_Z" fx:id="emitZCol" />
+                            <TableColumn prefWidth="75.0" text="Chrom_X" fx:id="chromXCol" />
+                            <TableColumn prefWidth="75.0" text="Chrom_X'" fx:id="chromXPCol" />
+                            <TableColumn prefWidth="75.0" text="Chrom_Y" fx:id="chromYCol" />
+                            <TableColumn prefWidth="75.0" text="Chrom_Y'" fx:id="chromYPCol" />
+                            <TableColumn prefWidth="75.0" text="Disp_X" fx:id="dispXCol" />
+                            <TableColumn prefWidth="75.0" text="Disp_Y" fx:id="dispYCol" />
+                            <TableColumn prefWidth="75.0" text="Sigma_X" fx:id="sigmaXCol" />
+                            <TableColumn prefWidth="75.0" text="Sigma_Y" fx:id="sigmaYCol" />
+                            <TableColumn prefWidth="75.0" text="Bunch_Length" fx:id="bunchLengthCol" />
+                          </columns>
+                        </TableView>
+                        <TextField layoutX="109.0" layoutY="22.0" prefWidth="759.0" />
+                        <Label layoutX="14.0" layoutY="25.0" text="User Comments:" />
+                        <Button layoutX="883.0" layoutY="22.0" mnemonicParsing="false" text="Export to CSV File" />
+                        <Label layoutX="14.0" layoutY="6.0" text="Model Info:" />
+                        <Label layoutX="587.0" layoutY="6.0" text="Date Created:" />
+                        <TextField layoutX="82.0" prefWidth="481.0" />
+                        <TextField layoutX="668.0" prefWidth="260.0" />
+                      </children>
+                    </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab text="R-mat">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <children>
+                        <TableView fx:id="rMatTable" prefHeight="728.0" prefWidth="1113.0">
+                          <columns>
+                            <TableColumn prefWidth="75.0" text="R11" fx:id="r11Col" />
+                            <TableColumn prefWidth="75.0" text="R12" fx:id="r12Col" />
+                            <TableColumn prefWidth="75.0" text="R13" fx:id="r13Col" />
+                            <TableColumn prefWidth="75.0" text="R14" fx:id="r14Col" />
+                            <TableColumn prefWidth="75.0" text="R15" fx:id="r15Col" />
+                            <TableColumn prefWidth="75.0" text="R16" fx:id="r16Col" />
+                            <TableColumn prefWidth="75.0" text="R21" fx:id="r21Col" />
+                            <TableColumn prefWidth="75.0" text="R22" fx:id="r22Col" />
+                            <TableColumn prefWidth="75.0" text="R23" fx:id="r23Col" />
+                            <TableColumn prefWidth="75.0" text="R24" fx:id="r24Col" />
+                            <TableColumn prefWidth="75.0" text="R25" fx:id="r25Col" />
+                            <TableColumn prefWidth="75.0" text="R26" fx:id="r26Col" />
+                            <TableColumn prefWidth="75.0" text="R31" fx:id="r31Col" />
+                            <TableColumn prefWidth="75.0" text="R32" fx:id="r32Col" />
+                            <TableColumn prefWidth="75.0" text="R33" fx:id="r33Col" />
+                            <TableColumn prefWidth="75.0" text="R34" fx:id="r34Col" />
+                            <TableColumn prefWidth="75.0" text="R35" fx:id="r35Col" />
+                            <TableColumn prefWidth="75.0" text="R36" fx:id="r36Col" />
+                            <TableColumn prefWidth="75.0" text="R41" fx:id="r41Col" />
+                            <TableColumn prefWidth="75.0" text="R42" fx:id="r42Col" />
+                            <TableColumn prefWidth="75.0" text="R43" fx:id="r43Col" />
+                            <TableColumn prefWidth="75.0" text="R44" fx:id="r44Col" />
+                            <TableColumn prefWidth="75.0" text="R45" fx:id="r45Col" />
+                            <TableColumn prefWidth="75.0" text="R46" fx:id="r46Col" />
+                            <TableColumn prefWidth="75.0" text="R51" fx:id="r51Col" />
+                            <TableColumn prefWidth="75.0" text="R52" fx:id="r52Col" />
+                            <TableColumn prefWidth="75.0" text="R53" fx:id="r53Col" />
+                            <TableColumn prefWidth="75.0" text="R54" fx:id="r54Col" />
+                            <TableColumn prefWidth="75.0" text="R55" fx:id="r55Col" />
+                            <TableColumn prefWidth="75.0" text="R56" fx:id="r56Col" />
+                            <TableColumn prefWidth="75.0" text="R61" fx:id="r61Col" />
+                            <TableColumn prefWidth="75.0" text="R62" fx:id="r62Col" />
+                            <TableColumn prefWidth="75.0" text="R63" fx:id="r63Col" />
+                            <TableColumn prefWidth="75.0" text="R64" fx:id="r64Col" />
+                            <TableColumn prefWidth="75.0" text="R65" fx:id="r65Col" />
+                            <TableColumn prefWidth="75.0" text="R66" fx:id="r66Col" />
+                          </columns>
+                        </TableView>
+                      </children>
+                    </AnchorPane>
+                  </content>
+                </Tab>
+                <Tab text="Device Settings">
+                  <content>
+                    <AnchorPane id="Content" minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                      <children>
+                        <TableView fx:id="deviceSettingTable" layoutY="1.0" prefHeight="727.0" prefWidth="1111.0">
+                          <columns>
+                            <TableColumn editable="false" prefWidth="200.0" text="Device" fx:id="deviceNameCol" />
+                            <TableColumn editable="false" prefWidth="200.0" text="position" fx:id="positionCol" />
+                            <TableColumn editable="false" prefWidth="200.0" text="Device Property" fx:id="propertyNameCol" />
+                            <TableColumn prefWidth="200.0" text="Device Property Value" fx:id="propertyValCol" />
+                          </columns>
+                        </TableView>
+                      </children>
+                    </AnchorPane>
+                  </content>
+                </Tab>
+              </tabs>
+            </TabPane>
+          </children>
+        </AnchorPane>
+      </items>
+    </SplitPane>
+    <Button layoutX="855.0" layoutY="4.0" mnemonicParsing="false" text="-&gt; Log Book" />
+    <Button fx:id="modelParamEditor" layoutX="149.0" layoutY="7.0" mnemonicParsing="false" text="Model Param Editor" />
+    <Pane layoutY="790.0" prefHeight="45.0" prefWidth="1091.0">
+      <children>
+        <Label layoutX="14.0" layoutY="7.0" text="Status:" />
+        <TextField fx:id="statusField" layoutX="60.0" layoutY="4.0" prefWidth="510.0" />
+      </children>
+    </Pane>
+    <CheckBox fx:id="dbSupport" layoutX="32.0" layoutY="10.0" mnemonicParsing="false" text="DB Support" />
+  </children>
+</AnchorPane>
