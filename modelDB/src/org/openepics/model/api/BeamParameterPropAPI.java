@@ -58,6 +58,36 @@ public class BeamParameterPropAPI {
         return null;
     }
 
+    /**
+     * get beam parameter property for specified model ID, element name and property name
+     * @param model_id model ID
+     * @param elem_name element name
+     * @param prop_name property name
+     * @return 
+     */
+    public Object getBeamParameterPropFor(int model_id, String elem_name, String prop_name) {
+        Query q;
+        q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp WHERE bpp.beamParameterId.elementId.elementName=:elemName "
+                + "AND  bpp.propertyName=:propName "
+                + "AND bpp.beamParameterId.modelId.modelId=:modelId ").setParameter("elemName", elem_name)
+                .setParameter("propName", prop_name).setParameter("modelId", model_id);
+        List<BeamParameterProp> bppList = q.getResultList();
+        if (bppList.isEmpty()) {
+            return null;
+        } else {
+            BeamParameterProp bpp = bppList.get(0);
+            switch (bpp.getPropertyDatatype().toLowerCase()) {
+                case "string":
+                    return bpp.getBeamParameterString();
+                case "int":
+                    return bpp.getBeamParameterInt();
+                case "double":
+                    return bpp.getBeamParameterDouble();
+            }
+        }
+        return null;
+    }
+    
     public void setBeamParameterPropFor(String elem_name, int model_id, String prop_name, Object prop_val) {
         // TODO
         // determine object type and insert accordingly
