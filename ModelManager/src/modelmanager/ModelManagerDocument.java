@@ -19,6 +19,7 @@ import javax.persistence.Persistence;
 import modelmanager.widget.XALSynopticFXPanel;
 
 import org.openepics.model.api.BeamParameterAPI;
+import org.openepics.model.api.BeamParameterPropAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.ElementPropAPI;
 import org.openepics.model.api.ModelAPI;
@@ -959,7 +960,7 @@ public class ModelManagerDocument extends AcceleratorDocument implements DataLis
     }
     
     private void updateDBTwiss(Model model) {
-    	BeamParameterAPI bpa = new BeamParameterAPI();
+    	BeamParameterPropAPI bppa = new BeamParameterPropAPI();
     	
     	// get all elements first
     	ElementAPI eapi = new ElementAPI();
@@ -969,7 +970,10 @@ public class ModelManagerDocument extends AcceleratorDocument implements DataLis
     	// loop through all elements and with the specified model    	
     	for (int i=0; i<elements.size(); i++) {
     		org.openepics.model.entity.Element elem = elements.get(i);
-    		   		
+    		    		
+    		double x = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "x");
+
+    		
 //    		List<BeamParameterProp> bpps = bpa.getBeamParameterForElementAndModel(elem, model);
     		
 //    		twissData.add(new Element(elem.getElementName(), elem.getPos(),
