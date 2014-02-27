@@ -971,13 +971,43 @@ public class ModelManagerDocument extends AcceleratorDocument implements DataLis
     	for (int i=0; i<elements.size(); i++) {
     		org.openepics.model.entity.Element elem = elements.get(i);
     		    		
+    		double w = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "W");
     		double x = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "x");
-
+    		double xp = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "xp");
+    		double y = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "y");
+    		double yp = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "yp");
+    		double z = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "z");
+    		double zp = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "zp");
+    		double beta_x = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "x_beta");
+    		double alpha_x = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "x_alpha");
+    		double emit_x = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "x_emittance");
+    		double beta_y = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "y_beta");
+    		double alpha_y = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "y_alpha");
+    		double emit_y = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "y_emittance");
+    		double beta_z = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "z_beta");
+    		double alpha_z = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "z_alpha");
+    		double emit_z = (double) bppa.getBeamParameterPropFor(model.getModelId().intValue(), elem.getElementName(), "z_emittance");
     		
 //    		List<BeamParameterProp> bpps = bpa.getBeamParameterForElementAndModel(elem, model);
     		
-//    		twissData.add(new Element(elem.getElementName(), elem.getPos(),
-//    				));
+    		twissData.add(new Element(elem.getElementName(), elem.getPos(),
+    				w,
+    				x,
+    				xp,
+    				y,
+    				yp,
+    				z,
+    				zp,
+    				beta_x,
+    				alpha_x,
+    				emit_x,
+    				beta_y,
+    				alpha_y,
+    				emit_y,
+    				beta_z,
+    				alpha_z,
+    				emit_z
+    				));
     	}
     }
     
@@ -1250,43 +1280,62 @@ public class ModelManagerDocument extends AcceleratorDocument implements DataLis
 
         	ArrayList<BeamParameterProp> beamParameterPropCollection = new ArrayList<>();
         	//TODO
+        	BeamParameterProp x = new BeamParameterProp();
+        	x.setPropertyName("x");
+        	x.setBeamParameterDouble(phXCol.getCellData(i));        	
+        	BeamParameterProp xp = new BeamParameterProp();
+        	xp.setPropertyName("xp");
+        	xp.setBeamParameterDouble(phXPCol.getCellData(i));        	
+        	BeamParameterProp y = new BeamParameterProp();
+        	y.setPropertyName("y");
+        	y.setBeamParameterDouble(phYCol.getCellData(i));        	
+        	BeamParameterProp yp = new BeamParameterProp();
+        	yp.setPropertyName("yp");
+        	yp.setBeamParameterDouble(phYPCol.getCellData(i));        	
+        	BeamParameterProp z = new BeamParameterProp();
+        	z.setPropertyName("z");
+        	z.setBeamParameterDouble(phYCol.getCellData(i));        	
+        	BeamParameterProp zp = new BeamParameterProp();
+        	zp.setPropertyName("zp");
+        	zp.setBeamParameterDouble(phZPCol.getCellData(i));        	
+        	
         	BeamParameterProp beta_x = new BeamParameterProp();
-        	beta_x.setPropertyName("beta_x");
+        	beta_x.setPropertyName("x_beta");
         	beta_x.setBeamParameterDouble(betaXCol.getCellData(i));
 //        	beta_x.setBeamParameterDouble(states.get(i).getTwiss()[0].getBeta());
         	beamParameterPropCollection.add(beta_x);
         	BeamParameterProp alpha_x = new BeamParameterProp();
-        	alpha_x.setPropertyName("alpha_x");
+        	alpha_x.setPropertyName("x_alpha");
 //        	alpha_x.setBeamParameterDouble(states.get(i).getTwiss()[0].getAlpha());
         	alpha_x.setBeamParameterDouble(alphaXCol.getCellData(i));
         	beamParameterPropCollection.add(alpha_x);
         	BeamParameterProp emit_x = new BeamParameterProp();
-        	emit_x.setPropertyName("emit_x");
+        	emit_x.setPropertyName("x_emittance");
 //        	emit_x.setBeamParameterDouble(states.get(i).getTwiss()[0].getEmittance());
         	emit_x.setBeamParameterDouble(emitXCol.getCellData(i));
         	beamParameterPropCollection.add(emit_x);
         	BeamParameterProp beta_y = new BeamParameterProp();
-        	beta_y.setPropertyName("beta_y");
+        	beta_y.setPropertyName("y_beta");
         	beta_y.setBeamParameterDouble(betaXCol.getCellData(i));
         	beamParameterPropCollection.add(beta_y);
         	BeamParameterProp alpha_y = new BeamParameterProp();
-        	alpha_y.setPropertyName("alpha_y");
+        	alpha_y.setPropertyName("y_alpha");
         	alpha_y.setBeamParameterDouble(alphaXCol.getCellData(i));
         	beamParameterPropCollection.add(alpha_y);
         	BeamParameterProp emit_y = new BeamParameterProp();
-        	emit_y.setPropertyName("emit_y");
+        	emit_y.setPropertyName("y_emittance");
         	emit_y.setBeamParameterDouble(emitXCol.getCellData(i));
         	beamParameterPropCollection.add(emit_y);
         	BeamParameterProp beta_z = new BeamParameterProp();
-        	beta_z.setPropertyName("beta_z");
+        	beta_z.setPropertyName("z_beta");
         	beta_z.setBeamParameterDouble(betaXCol.getCellData(i));
         	beamParameterPropCollection.add(beta_z);
         	BeamParameterProp alpha_z = new BeamParameterProp();
-        	alpha_z.setPropertyName("alpha_z");
+        	alpha_z.setPropertyName("z_alpha");
         	alpha_z.setBeamParameterDouble(alphaXCol.getCellData(i));
         	beamParameterPropCollection.add(alpha_z);
         	BeamParameterProp emit_z = new BeamParameterProp();
-        	emit_z.setPropertyName("emit_z");
+        	emit_z.setPropertyName("z_emittance");
         	emit_z.setBeamParameterDouble(emitXCol.getCellData(i));
         	beamParameterPropCollection.add(emit_z);
         	
