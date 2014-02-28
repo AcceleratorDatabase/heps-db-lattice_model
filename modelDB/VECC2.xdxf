@@ -1,0 +1,529 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE xdxf SYSTEM "xdxf.dtd">
+<xdxf date="Mon Jul 08 10:14:36 EDT 2013" system="frib" ver="1.0.0">
+   <sequence id="VGUN" len="0.15">
+      <attributes>
+         <sequence predecessors="null"/>
+      </attributes>
+      <node id="VGUN_START" type="marker" pos="0.0" len="0.0" s="0.0">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+      <node id="VGUN_END" type="marker" pos="0.15" len="0.0" s="0.15">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+      <node id="VGUN:DCH1" type="DCH" pos="0.05" len="0.0" s="0.05">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+         <ps main="VGUN:PS_DCH1"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VGUN:DCH1:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VGUN:DCV2" type="DCV" pos="0.05" len="0.0" s="0.05">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+         <ps main="VGUN:PS_DCV2"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VGUN:DCV2:B" settable="false"/>
+         </channelsuite>
+      </node>
+   </sequence>
+   <sequence id="VLBT_A" len="0.52313">
+      <attributes>
+         <sequence predecessors="VGUN"/>
+      </attributes>
+      <node id="VLBT_A_START" type="marker" pos="0.0" len="0.0" s="0.15">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+      <node id="VLBT_A_END" type="marker" pos="0.52313" len="0.0" s="0.67313">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+      <node id="VLBT_A:SOL13" type="SOL" pos="0.15" len="0.3" s="0.3">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+            <magnet polarity="1" len="0.3" dfltMagFld="0.04" solenoidKs="4.14215" />
+         </attributes>
+         <ps main="VLBT_A:PS_SOL13"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT_A:SOL13:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT_A:FC4" type="FC" pos="0.33923000000000003" len="0.0" s="0.48923">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+      <node id="VLBT_A:SLT5" type="SLT" pos="0.33923000000000003" len="0.0" s="0.48923">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+      <node id="VLBT_A:WS6" type="WS" pos="0.33923000000000003" len="0.0" s="0.48923">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+      <node id="VLBT_A:BPM7" type="BPM" pos="0.408" len="0.0" s="0.558">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+         <channelsuite name="bpmsuite">
+            <channel handle="xAvg" signal="VLBT_A:BPM7:xAvg" settable="false"/>
+            <channel handle="yAvg" signal="VLBT_A:BPM7:yAvg" settable="false"/>
+         </channelsuite>
+      </node>
+   </sequence>
+   <sequence id="VLBT_B" len="0.52632">
+      <attributes>
+         <sequence predecessors="VLBT_A"/>
+      </attributes>
+      <node id="VLBT_B_START" type="marker" pos="0.0" len="0.0" s="0.67313">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+      <node id="VLBT_B_END" type="marker" pos="0.52632" len="0.0" s="1.1994500000000001">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+      <sequence id="VLBT_B:CAV8" type="CAV" pos="0.1" len="0.2" s="0.77313">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+            <rfcavity freq="1300.0" phase="90.0" amp="0.5" len="null" />
+         </attributes>
+         <channelsuite name="rfsuite">
+            <channel handle="cavAmpSet" signal="VLBT_B:CAV8:ampSet" settable="true"/>
+            <channel handle="cavPhaseSet" signal="VLBT_B:CAV8:phaseSet" settable="true"/>
+            <channel handle="cavAmpAvg" signal="VLBT_B:CAV8:amp" settable="false"/>
+            <channel handle="cavPhaseAvg" signal="VLBT_B:CAV8:phase" settable="false"/>
+         </channelsuite>
+         <node type="RG" id="VLBT_B:CAV8:RG01" pos="0.0">
+           <attributes>
+             <rfgap length="0.2" phaseFactor="0.0" ampFactor="1.0" TTF="1.0" endCell="1" gapOffset="0.0"/>
+           </attributes>
+         </node>
+      </sequence>
+      <node id="VLBT_B:DCH9" type="DCH" pos="0.17867999999999995" len="0.0" s="0.85181">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+         <ps main="VLBT_B:PS_DCH9"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT_B:DCH9:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT_B:DCV10" type="DCV" pos="0.17867999999999995" len="0.0" s="0.85181">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+         <ps main="VLBT_B:PS_DCV10"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT_B:DCV10:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT_B:SLT11" type="SLT" pos="0.30141999999999997" len="0.0" s="0.9745499999999999">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+      <node id="VLBT_B:SLT12" type="SLT" pos="0.30141999999999997" len="0.0" s="0.9745499999999999">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+      <node id="VLBT_B:WS13" type="WS" pos="0.30141999999999997" len="0.0" s="0.9745499999999999">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+      <node id="VLBT_B:BPM14" type="BPM" pos="0.36660000000000004" len="0.0" s="1.03973">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+         <channelsuite name="bpmsuite">
+            <channel handle="xAvg" signal="VLBT_B:BPM14:xAvg" settable="false"/>
+            <channel handle="yAvg" signal="VLBT_B:BPM14:yAvg" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT_B:SOL15" type="SOL" pos="0.47464999999999996" len="0.3" s="1.14778">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+            <magnet polarity="1" len="0.3" dfltMagFld="0.04" solenoidKs="4.14215" />
+         </attributes>
+         <ps main="VLBT_B:PS_SOL15"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT_B:SOL15:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT_B:DCH16" type="DCH" pos="0.52465" len="0.0" s="1.19778">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+         <ps main="VLBT_B:PS_DCH16"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT_B:DCH16:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT_B:DCV17" type="DCV" pos="0.52465" len="0.0" s="1.19778">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+         <ps main="VLBT_B:PS_DCV17"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT_B:DCV17:B" settable="false"/>
+         </channelsuite>
+      </node>
+   </sequence>
+   <sequence id="VLBT_C" len="1.13738">
+      <attributes>
+         <sequence predecessors="VLBT_B"/>
+      </attributes>
+      <node id="VLBT_C_START" type="marker" pos="0.0" len="0.0" s="1.34296">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+      <node id="VLBT_C_END" type="marker" pos="1.13738" len="0.0" s="2.48034">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+      <node id="VLBT_C:DH18" type="DH" pos="0.1074749999999999" len="0.21495" s="1.450435">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture y="0.0625" x="0.0625" />
+            <magnet polarity="1" pathLength="0.21495" len="0.21495" />
+         </attributes>
+         <ps main="VLBT_C:PS_DH18"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT_C:DH18:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT_C:SOL19" type="SOL" pos="0.33976" len="0.1" s="1.68272">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+            <magnet polarity="1" len="0.1" dfltMagFld="0.04" solenoidKs="4.14215" />
+         </attributes>
+         <ps main="VLBT_C:PS_SOL19"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT_C:SOL19:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT_C:DCH20" type="DCH" pos="0.40976" len="0.0" s="1.75272">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+         <ps main="VLBT_C:PS_DCH20"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT_C:DCH20:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT_C:DCV21" type="DCV" pos="0.40976" len="0.0" s="1.75272">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+         <ps main="VLBT_C:PS_DCV21"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT_C:DCV21:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT_C:FC22" type="FC" pos="0.5008699999999999" len="0.0" s="1.8438299999999999">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+      <node id="VLBT_C:WS23" type="WS" pos="0.5008699999999999" len="0.0" s="1.8438299999999999">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+      <node id="VLBT_C:FC24" type="FC" pos="0.9938699999999999" len="0.0" s="2.33683">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+   </sequence>
+   <sequence id="VLBT_D" len="0.0">
+      <attributes>
+         <sequence predecessors="VLBT_C"/>
+      </attributes>
+      <node id="VLBT_D_START" type="marker" pos="0.0" len="0.0" s="2.33683">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+      <node id="VLBT_D_END" type="marker" pos="0.0" len="0.0" s="2.33683">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+   </sequence>
+   <sequence id="VLBT1_A" len="0.86039">
+      <attributes>
+         <sequence predecessors="VLBT_B"/>
+      </attributes>
+      <node id="VLBT1_A_START" type="marker" pos="0.0" len="0.0" s="1.34296">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+      <node id="VLBT1_A_END" type="marker" pos="0.86039" len="0.0" s="2.20335">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+      <node id="VLBT1_A:DCH25" type="DH" pos="0.11779999999999996" len="0.2356" s="1.46076">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture y="0.0625" x="0.0625" />
+            <magnet polarity="1" pathLength="0.2356" len="0.2356" />
+         </attributes>
+         <ps main="VLBT1_A:PS_DCH25"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT1_A:DCH25:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT1_A:DCV26" type="DCV" pos="0.3581299999999999" len="0.0" s="1.70109">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+         <ps main="VLBT1_A:PS_DCV26"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT1_A:DCV26:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT1_A:SLT27" type="SLT" pos="0.5796599999999998" len="0.0" s="1.92262">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+      <node id="VLBT1_A:FC28" type="FC" pos="0.5796599999999998" len="0.0" s="1.92262">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+      <node id="VLBT1_A:DCH29" type="DCH" pos="0.6740999999999999" len="0.0" s="2.01706">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+         <ps main="VLBT1_A:PS_DCH29"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT1_A:DCH29:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT1_A:DCV30" type="DCV" pos="0.6740999999999999" len="0.0" s="2.01706">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+         <ps main="VLBT1_A:PS_DCV30"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT1_A:DCV30:B" settable="false"/>
+         </channelsuite>
+      </node>
+   </sequence>
+   <sequence id="VLBT1_B" len="0.68057">
+      <attributes>
+         <sequence predecessors="VLBT1_A"/>
+      </attributes>
+      <node id="VLBT1_B_START" type="marker" pos="0.0" len="0.0" s="2.20335">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+      <node id="VLBT1_B_END" type="marker" pos="0.68057" len="0.0" s="2.88392">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+         </attributes>
+      </node>
+      <sequence id="VLBT1_B:CAV31" type="CAV" pos="0.0" len="0.0" s="2.20335">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+            <rfcavity freq="1300.0" phase="0.0" amp="0.1" len="null" />
+         </attributes>
+         <channelsuite name="rfsuite">
+            <channel handle="cavAmpSet" signal="VLBT1_B:CAV31:ampSet" settable="true"/>
+            <channel handle="cavPhaseSet" signal="VLBT1_B:CAV31:phaseSet" settable="true"/>
+            <channel handle="cavAmpAvg" signal="VLBT1_B:CAV31:amp" settable="false"/>
+            <channel handle="cavPhaseAvg" signal="VLBT1_B:CAV31:phase" settable="false"/>
+         </channelsuite>
+         <node type="RG" id="VLBT1_B:CAV31:RG01" pos="0.0">
+           <attributes>
+             <rfgap length="0.0" phaseFactor="0.0" ampFactor="1.0" TTF="1.0" endCell="1" gapOffset="0.0"/>
+           </attributes>
+         </node>
+      </sequence>
+      <node id="VLBT1_B:SOL32" type="SOL" pos="0.18024000000000023" len="0.3" s="2.3835900000000003">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+            <magnet polarity="1" len="0.3" dfltMagFld="0.4" solenoidKs="4.14215" />
+         </attributes>
+         <ps main="VLBT1_B:PS_SOL32"/>
+         <channelsuite name="magnetsuite">
+            <channel handle="fieldRB" signal="VLBT1_B:SOL32:B" settable="false"/>
+         </channelsuite>
+      </node>
+      <node id="VLBT1_B:FC33" type="FC" pos="0.6905700000000001" len="0.0" s="2.89392">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+      <node id="VLBT1_B:SLT34" type="SLT" pos="0.6905700000000001" len="0.0" s="2.89392">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+      <node id="VLBT1_B:WS35" type="WS" pos="0.6905700000000001" len="0.0" s="2.89392">
+         <attributes>
+            <align yaw="0.0" roll="0.0" pitch="0.0" z="0.0" y="0.0" x="0.0"/>
+            <aperture x="0.0625" />
+         </attributes>
+      </node>
+   </sequence>
+   <powersupplies>
+     <ps type="main" id="VGUN:PS_DCH1">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VGUN:PS_DCH1:B_Set"/>
+         <channel handle="B_Book" signal="VGUN:PS_DCH1:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VGUN:PS_DCV2">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VGUN:PS_DCV2:B_Set"/>
+         <channel handle="B_Book" signal="VGUN:PS_DCV2:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT_A:PS_SOL13">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT_A:PS_SOL13:B_Set"/>
+         <channel handle="B_Book" signal="VLBT_A:PS_SOL13:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT_B:PS_DCH9">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT_B:PS_DCH9:B_Set"/>
+         <channel handle="B_Book" signal="VLBT_B:PS_DCH9:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT_B:PS_DCV10">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT_B:PS_DCV10:B_Set"/>
+         <channel handle="B_Book" signal="VLBT_B:PS_DCV10:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT_B:PS_SOL15">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT_B:PS_SOL15:B_Set"/>
+         <channel handle="B_Book" signal="VLBT_B:PS_SOL15:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT_B:PS_DCH16">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT_B:PS_DCH16:B_Set"/>
+         <channel handle="B_Book" signal="VLBT_B:PS_DCH16:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT_B:PS_DCV17">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT_B:PS_DCV17:B_Set"/>
+         <channel handle="B_Book" signal="VLBT_B:PS_DCV17:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT_C:PS_DH18">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT_C:PS_DH18:B_Set"/>
+         <channel handle="B_Book" signal="VLBT_C:PS_DH18:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT_C:PS_SOL19">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT_C:PS_SOL19:B_Set"/>
+         <channel handle="B_Book" signal="VLBT_C:PS_SOL19:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT_C:PS_DCH20">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT_C:PS_DCH20:B_Set"/>
+         <channel handle="B_Book" signal="VLBT_C:PS_DCH20:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT_C:PS_DCV21">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT_C:PS_DCV21:B_Set"/>
+         <channel handle="B_Book" signal="VLBT_C:PS_DCV21:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT1_A:PS_DCH25">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT1_A:PS_DCH25:B_Set"/>
+         <channel handle="B_Book" signal="VLBT1_A:PS_DCH25:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT1_A:PS_DCV26">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT1_A:PS_DCV26:B_Set"/>
+         <channel handle="B_Book" signal="VLBT1_A:PS_DCV26:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT1_A:PS_DCH29">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT1_A:PS_DCH29:B_Set"/>
+         <channel handle="B_Book" signal="VLBT1_A:PS_DCH29:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT1_A:PS_DCV30">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT1_A:PS_DCV30:B_Set"/>
+         <channel handle="B_Book" signal="VLBT1_A:PS_DCV30:B_Book"/>
+       </channelsuite>
+     </ps>
+     <ps type="main" id="VLBT1_B:PS_SOL32">
+       <channelsuite name="pssuite">
+         <channel handle="fieldSet" signal="VLBT1_B:PS_SOL32:B_Set"/>
+         <channel handle="B_Book" signal="VLBT1_B:PS_SOL32:B_Book"/>
+       </channelsuite>
+     </ps>
+   </powersupplies>
+</xdxf>

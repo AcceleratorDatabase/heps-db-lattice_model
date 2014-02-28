@@ -24,27 +24,106 @@
          <attribute isPrimaryKey="false" name="mass" type="java.lang.Double"/>
          <attribute isPrimaryKey="false" name="charge" type="java.lang.Double"/>
      </schema>
+     <record name="Uranium33" mass="2.2169564816E11" charge="33"/>
+     <record name="Uranium78" mass="2.2169564816E11" charge="78"/>
   </table>
   <table name="beam">
      <schema>
          <attribute isPrimaryKey="true" name="name" type="java.lang.String"/>
-         <attribute isPrimaryKey="false" name="I" type="java.lang.Double"/>
-         <attribute isPrimaryKey="false" name="Q" type="java.lang.Double"/>
+         <attribute isPrimaryKey="false" name="current" type="java.lang.Double"/>
+         <attribute isPrimaryKey="false" name="bunchFreq" type="java.lang.Double"/>
+         <attribute isPrimaryKey="false" name="phase" type="java.lang.String"/>
+         <attribute isPrimaryKey="false" name="charge" type="java.lang.Double"/>
      </schema>
-     <record name="default" I="0.0" Q="0."/>
+     <record name="default" current="0.0" bunchFreq="0.0" phase="(0,0,0)" charge="4.96894E-11"/>
+     <record name="LS1 TO STRIPPER" current="0.0" charge="0.0" phase="(0, 0, 0)" bunchFreq="0.0"/>
+     <record name="CSS1" current="0.0" charge="0.0" phase="(0, 0, 0)" bunchFreq="0.0"/>
+     <record name="CSS1-CSS2" current="0.0" charge="0.0" phase="(0, 0, 0)" bunchFreq="0.0"/>
+     <record name="CSS2" current="0.0" charge="0.0" phase="(0, 0, 0)" bunchFreq="0.0"/>
+     <record name="FS1" current="0.0" charge="0.0" phase="(0, 0, 0)" bunchFreq="0.0"/>
+     <record name="DUMP2" current="0.0" charge="0.0" phase="(0, 0, 0)" bunchFreq="0.0"/>
+     <record name="LS2" current="0.0" charge="0.0" phase="(0, 0, 0)" bunchFreq="0.0"/>
+     <record name="FS2" current="0.0" charge="0.0" phase="(0, 0, 0)" bunchFreq="0.0"/>
+     <record name="LS3" current="0.0" charge="0.0" phase="(0, 0, 0)" bunchFreq="0.0"/>
+     <record name="BDS" current="0.0" charge="0.0" phase="(0, 0, 0)" bunchFreq="0.0"/>
   </table>
-  <table name="adaptivetracker">
+  <table name="Algorithm">
+     <schema>
+         <attribute isPrimaryKey="true" name="name" type="java.lang.String"/>
+         <attribute isPrimaryKey="false" name="type" type="java.lang.String" defaultValue="xal.model.alg.EnvTrackerAdapt"/>
+         <attribute isPrimaryKey="false" name="update" type="java.lang.Integer" defaultValue="2"/>
+         <attribute isPrimaryKey="false" name="debug" type="java.lang.Boolean" defaultValue="false"/>
+         <attribute isPrimaryKey="false" name="calcRfGapPhase" type="java.lang.Boolean" defaultValue="false"/>
+     </schema>
+     <record name="default"/>
+  </table>
+  <table name="SynchronousTracker">
+     <schema>
+         <attribute isPrimaryKey="true" name="name" type="java.lang.String"/>
+     </schema>
+     <record name="default"/>
+  </table>
+  <table name="ParticleTracker">
+     <schema>
+         <attribute isPrimaryKey="true" name="name" type="java.lang.String"/>
+     </schema>
+     <record name="default"/>
+  </table>
+  <table name="TransferMapTracker">
+     <schema>
+         <attribute isPrimaryKey="true" name="name" type="java.lang.String"/>
+     </schema>
+     <record name="default"/>
+  </table>
+  <table name="TwissTracker">
+     <schema>
+         <attribute isPrimaryKey="true" name="name" type="java.lang.String"/>
+         <attribute isPrimaryKey="false" name="emitgrowth" type="java.lang.Boolean" defaultValue="false"/>
+         <attribute isPrimaryKey="false" name="scheff" type="java.lang.Boolean" defaultValue="true"/>
+         <attribute isPrimaryKey="false" name="stepsize" type="java.lang.Double" defaultValue="0.004"/>
+     </schema>
+     <record name="default"/>
+  </table>
+  <table name="Trace3dTracker">
+     <schema>
+         <attribute isPrimaryKey="true" name="name" type="java.lang.String"/>
+         <attribute isPrimaryKey="false" name="stepsize" type="java.lang.Double" defaultValue="0.004"/>
+     </schema>
+     <record name="default"/>
+  </table>
+  <table name="EnvelopeBaseTracker">
+     <schema>
+         <attribute isPrimaryKey="true" name="name" type="java.lang.String"/>
+         <attribute isPrimaryKey="false" name="emitgrowth" type="java.lang.Boolean" defaultValue="false"/>
+         <attribute isPrimaryKey="false" name="scheff" type="java.lang.Boolean" defaultValue="true"/>
+         <attribute isPrimaryKey="false" name="stepsize" type="java.lang.Double" defaultValue="0.004"/>
+     </schema>
+     <record name="default"/>
+  </table>
+  <table name="EnvTrackerAdapt">
      <schema>
          <attribute isPrimaryKey="true" name="name" type="java.lang.String"/>
          <attribute isPrimaryKey="false" name="errortol" type="java.lang.Double" defaultValue="1.0E-5"/>
-         <attribute isPrimaryKey="false" name="initstep" type="java.lang.Double" defaultValue="0.1"/>
-         <attribute isPrimaryKey="false" name="maxstep" type="java.lang.Double" defaultValue="0."/>
+         <attribute isPrimaryKey="false" name="initstep" type="java.lang.Double" defaultValue="0.01"/>
+         <attribute isPrimaryKey="false" name="maxstep" type="java.lang.Double" defaultValue="0.0"/>
          <attribute isPrimaryKey="false" name="norm" type="java.lang.Integer" defaultValue="0"/>
          <attribute isPrimaryKey="false" name="order" type="java.lang.Integer" defaultValue="2"/>
          <attribute isPrimaryKey="false" name="slack" type="java.lang.Double" defaultValue="0.05"/>
-         <attribute isPrimaryKey="false" name="maxiter" type="java.lang.Integer" defaultValue="100"/>
-	</schema>
-	<record name="default"/>
+         <attribute isPrimaryKey="false" name="maxiter" type="java.lang.Integer" defaultValue="50"/>
+         <attribute isPrimaryKey="false" name="maxstepdriftpmq" type="java.lang.Double" defaultValue="0.0"/>
+     </schema>
+     <record name="default"/>
+     <record name="FE" errortol="1.0e-8" initstep="0.1" maxiter="1000"/>
+     <record name="LS1 TO STRIPPER" errortol="1.0e-8" initstep="0.1" maxiter="1000"/>
+     <record name="CSS1" errortol="1.0e-8" initstep="0.1" maxiter="1000"/>
+     <record name="CSS1-CSS2" errortol="1.0e-8" initstep="0.1" maxiter="1000"/>
+     <record name="CSS2" errortol="1.0e-8" initstep="0.1" maxiter="1000"/>
+     <record name="FS1" errortol="1.0e-8" initstep="0.1" maxiter="1000"/>
+     <record name="DUMP2" errortol="1.0e-8" initstep="0.1" maxiter="1000"/>
+     <record name="LS2" errortol="1.0e-8" initstep="0.1" maxiter="1000"/>
+     <record name="FS2" errortol="1.0e-8" initstep="0.1" maxiter="1000"/>
+     <record name="LS3" errortol="1.0e-8" initstep="0.1" maxiter="1000"/>
+     <record name="BDS" errortol="1.0e-8" initstep="0.1" maxiter="1000"/>
   </table>
   <table name="twiss">
      <schema>
@@ -53,16 +132,56 @@
          <attribute isPrimaryKey="false" name="alpha" type="java.lang.Double"/>
          <attribute isPrimaryKey="false" name="beta" type="java.lang.Double"/>
          <attribute isPrimaryKey="false" name="emittance" type="java.lang.Double"/>
-	</schema>
+     </schema>
+     <record name="LS1 TO STRIPPER" coordinate="x" alpha="-0.0724551" beta="0.828699" emittance="3.352398331306969E-6"/>
+     <record name="LS1 TO STRIPPER" coordinate="y" alpha="-0.0696203" beta="0.740557" emittance="3.4342430400581094E-6"/>
+     <record name="LS1 TO STRIPPER" coordinate="z" alpha="0.0353029" beta="0.383493" emittance="1.0079899118943593E-6"/>
+     <record name="CSS1" coordinate="x" alpha="1.35628" beta="2.2644" emittance="5.978536346886706E-7"/>
+     <record name="CSS1" coordinate="y" alpha="0.369282" beta="2.75475" emittance="6.017283688802948E-7"/>
+     <record name="CSS1" coordinate="z" alpha="1.75933" beta="29.3981" emittance="1.9517634659386648E-7"/>
+     <record name="CSS1-CSS2" coordinate="x" alpha="0.449083" beta="0.183235" emittance="5.963756544688127E-7"/>
+     <record name="CSS1-CSS2" coordinate="y" alpha="-0.664886" beta="0.510276" emittance="6.016985623065652E-7"/>
+     <record name="CSS1-CSS2" coordinate="z" alpha="0.641043" beta="2.30451" emittance="1.9308664451886405E-7"/>
+     <record name="CSS2" coordinate="x" alpha="0.374587" beta="0.171903" emittance="6.068894226150925E-7"/>
+     <record name="CSS2" coordinate="y" alpha="-0.664206" beta="0.500281" emittance="6.300953259464305E-7"/>
+     <record name="CSS2" coordinate="z" alpha="0.177994" beta="0.569987" emittance="7.726443626054023E-7"/>
+     <record name="FS1" coordinate="x" alpha="3.4813" beta="6.12132" emittance="6.06147596119122E-7"/>
+     <record name="FS1" coordinate="y" alpha="2.33181" beta="12.2225" emittance="6.302118271943093E-7"/>
+     <record name="FS1" coordinate="z" alpha="-0.208879" beta="125.573" emittance="7.681550294794614E-7"/>
+     <record name="DUMP2" coordinate="x" alpha="0.462777" beta="2.46212" emittance="6.140084371104667E-7"/>
+     <record name="DUMP2" coordinate="y" alpha="-0.729764" beta="3.8243" emittance="6.301747727249897E-7"/>
+     <record name="DUMP2" coordinate="z" alpha="-0.175702" beta="124.707" emittance="7.72299836547625E-7"/>
+     <record name="LS2" coordinate="x" alpha="0.772898" beta="3.28482" emittance="6.058582686705991E-7"/>
+     <record name="LS2" coordinate="y" alpha="-0.680418" beta="2.10391" emittance="6.313767267630414E-7"/>
+     <record name="LS2" coordinate="z" alpha="-0.0778199" beta="0.630462" emittance="7.691107649342599E-7"/>
+     <record name="FS2" coordinate="x" alpha="0.590482" beta="5.13591" emittance="1.9604892959136946E-7"/>
+     <record name="FS2" coordinate="y" alpha="-0.846453" beta="4.57301" emittance="2.083309947748553E-7"/>
+     <record name="FS2" coordinate="z" alpha="-0.968583" beta="6.59396" emittance="2.498589760330987E-7"/>
+     <record name="LS3" coordinate="x" alpha="-0.364322" beta="2.40721" emittance="1.6619839984988073E-7"/>
+     <record name="LS3" coordinate="y" alpha="0.376345" beta="3.16158" emittance="1.766835595918597E-7"/>
+     <record name="LS3" coordinate="z" alpha="1.53261" beta="8.28591" emittance="2.1368611921827923E-7"/>
+     <record name="BDS" coordinate="x" alpha="4.7584" beta="11.1153" emittance="1.668907076575018E-7"/>
+     <record name="BDS" coordinate="y" alpha="0.152069" beta="4.48342" emittance="1.758390015194921E-7"/>
+     <record name="BDS" coordinate="z" alpha="8.58961" beta="585.291" emittance="2.1253993326292315E-7"/>
   </table>
   <table name="location">
      <schema>
          <attribute isPrimaryKey="true" name="name" type="java.lang.String"/>
-         <attribute isPrimaryKey="false" name="species" type="java.lang.String" defaultValue="PROTON"/>
+         <attribute isPrimaryKey="false" name="species" type="java.lang.String"/>
          <attribute isPrimaryKey="false" name="W" type="java.lang.Double"/>
-         <attribute isPrimaryKey="false" name="start_elem" type="java.lang.String"/>
+         <attribute isPrimaryKey="false" name="elem" type="java.lang.String" defaultValue=""/>
          <attribute isPrimaryKey="false" name="s" type="java.lang.Double" defaultValue="0"/>
          <attribute isPrimaryKey="false" name="t" type="java.lang.Double" defaultValue="0"/>
-	</schema>
+     </schema>
+     <record name="LS1 TO STRIPPER" species="Uranium33" W="1.19E8" s="0"/>
+     <record name="CSS1" species="Uranium33" W="3.9853814E9" s="0"/>
+     <record name="CSS1-CSS2" species="Uranium33" W="3.9867380000000005E9" s="0"/>
+     <record name="CSS2" species="Uranium78" W="3.9214546E9" s="0"/>
+     <record name="FS1" species="Uranium78" W="3.9211928E9" s="0"/>
+     <record name="DUMP2" species="Uranium78" W="3.9211928E9" s="0"/>
+     <record name="LS2" species="Uranium78" W="3.921645E9" s="0"/>
+     <record name="FS2" species="Uranium78" W="3.575212199999999E10" s="0"/>
+     <record name="LS3" species="Uranium78" W="4.843895000000001E10" s="0"/>
+     <record name="BDS" species="Uranium78" W="4.843895000000001E10" s="0"/>
   </table>
 </tablegroup>
