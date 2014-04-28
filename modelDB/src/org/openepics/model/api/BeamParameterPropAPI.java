@@ -35,7 +35,7 @@ public class BeamParameterPropAPI {
      *
      * @param elem_name
      * @param prop_name
-     * @return
+     * @return beam parameter property
      */
     public Object getBeamParameterPropFor(String elem_name, String prop_name) {
         Query q;
@@ -63,7 +63,7 @@ public class BeamParameterPropAPI {
      * @param model_id model ID
      * @param elem_name element name
      * @param prop_name property name
-     * @return 
+     * @return beam parameter property
      */
     public Object getBeamParameterPropFor(int model_id, String elem_name, String prop_name) {
         Query q;
@@ -88,10 +88,31 @@ public class BeamParameterPropAPI {
         return null;
     }
     
-    public void setBeamParameterPropFor(String elem_name, int model_id, String prop_name, Object prop_val) {
-        // TODO
-        // determine object type and insert accordingly
+    /**
+     * get transfer matrix for the specified model ID and element name
+     * @param model_id model ID
+     * @param elem_name element name
+     * @return transfer matrix in a String
+     */
+    public Object getTransferMatrixFor(int model_id, String elem_name) {
+        Query q;
+        q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp WHERE bpp.beamParameterId.elementId.elementName=:elemName "
+                + "AND bpp.beamParameterId.modelId.modelId=:modelId ").setParameter("elemName", elem_name)
+                .setParameter("modelId", model_id);
+        List<BeamParameterProp> bppList = q.getResultList();
+        if (bppList.isEmpty()) {
+            return null;
+        } else {
+            BeamParameterProp bpp = bppList.get(0);
+            return bpp.getTrnsferMatrix();
+        }        
     }
+    
+//    public void setBeamParameterPropFor(String elem_name, int model_id, String prop_name, Object prop_val) {
+//        // TODO
+//        // determine object type and insert accordingly
+//        
+//    }
 
     /**
      * Set beam parameter property for the specified element.
