@@ -36,11 +36,19 @@ public class MadxParser {
 
     ArrayList<Device> devices = new ArrayList<>();        
 
+    public MadxParser() {
+        
+    }
+    
+    public MadxParser(File file) {
+        this.parse(file);
+    }
+    
     /**
      * Parse MAD-X output file
      * @param file MAD-X file path
      */
-    public void parse(File file) {
+    public final void parse(File file) {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
                         
@@ -170,6 +178,16 @@ public class MadxParser {
         	alpha_y.setBeamParameterDouble(Double.parseDouble(propMap.get("ALFY")));
         	beamParameterPropCollection.add(alpha_y);
 
+                BeamParameterProp d_x = new BeamParameterProp();
+        	d_x.setPropertyName("x_d");
+        	d_x.setBeamParameterDouble(Double.parseDouble(propMap.get("DX")));
+        	beamParameterPropCollection.add(d_x);
+
+                BeamParameterProp d_y = new BeamParameterProp();
+        	d_y.setPropertyName("y_d");
+        	d_y.setBeamParameterDouble(Double.parseDouble(propMap.get("DY")));
+        	beamParameterPropCollection.add(d_y);                
+                
                 beamParams.setBeamParameterPropCollection(beamParameterPropCollection);
                 // set beam parameters to the corresponding element
                 dev.setBeamParams(beamParams);
