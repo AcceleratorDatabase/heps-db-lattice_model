@@ -28,6 +28,10 @@ public class MadxParser {
     static double energy = 0.;
     static String modelName = "";
     
+    /**
+     * Parse MAD-X output file
+     * @param file MAD-X file path
+     */
     public void parse(File file) {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
@@ -91,15 +95,42 @@ public class MadxParser {
             for (String elemLine : elemLines) {
                 st = new StringTokenizer(elemLine);
                 int i = 0;
+                String elemName = "";
+                String pos = "0";
+                String type = "";
+                String k1Val = null;
+                String k2Val = null;
                 while (st.hasMoreTokens()) {
-                    String elemName = "";
-                    String type = "";
                     if (i==0) elemName = st.nextToken();
                     if (i==1) type = st.nextToken();
                     if (i>3) {
+                        switch (st.nextToken()) {
+                            case "S":
+                                pos = st.nextToken();
+                                break;
+                            case "K1":
+                                k1Val = st.nextToken();
+                                break;
+                            case "K2":
+                                k2Val = st.nextToken();
+                                break;
+                        }
+                        
+                        
                         
                     }
                     i++;
+                }
+                
+                if (k1Val != null) {
+                    Device dev = new Device(elemName, pos, "K1", k1Val);
+                    // add to device list 
+                    
+                } 
+                if (k2Val != null) {
+                    Device dev = new Device(elemName, pos, "K2", k1Val);
+                    // add to device list
+                    
                 }
             }
             
