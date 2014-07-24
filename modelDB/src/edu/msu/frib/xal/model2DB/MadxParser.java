@@ -98,41 +98,43 @@ public class MadxParser {
                     paramLabels = new String[count-3];
                     int i = 0;
                     while (st.hasMoreTokens()) {
+                        String s = st.nextToken();
                         if (i>2) {
-                            paramLabels[i-3] = st.nextToken();
+                            paramLabels[i-3] = s;
                         }
                         i++;
                     } 
                 }
                 // if it is a line of element data
-                else if (line.startsWith("\"")) elemLines.add(line);
+                else if (line.startsWith(" \"")) elemLines.add(line);
             }
             
             for (String elemLine : elemLines) {
                 st = new StringTokenizer(elemLine);
                 int i = 0;
                 String elemName = "";
-                String pos = "0";
+                double pos = 0.;
                 String type = "";
                 String k1Val = null;
                 String k2Val = null;
                 HashMap<String, String> propMap = new HashMap<>();
                 while (st.hasMoreTokens()) {
-                    if (i==0) elemName = st.nextToken();
-                    if (i==1) type = st.nextToken();
+                    String s = st.nextToken();
+                    if (i==0) elemName = s.replace("\"", "");
+                    if (i==1) type = s.replace("\"", "");
                     if (i>3) {
-                        switch (st.nextToken()) {
+                        switch (s) {
                             case "S":
-                                pos = st.nextToken();
+                                pos = Double.parseDouble(s);
                                 break;
                             case "K1":
-                                k1Val = st.nextToken();
+                                k1Val = s;
                                 break;
                             case "K2":
-                                k2Val = st.nextToken();
+                                k2Val = s;
                                 break;
                             default:
-                                propMap.put(paramLabels[i-3], st.nextToken());
+                                propMap.put(paramLabels[i-3], s);
                                 break;
                         }                                                                       
                     }
@@ -141,6 +143,10 @@ public class MadxParser {
                 
                 // define a device object
                 Device dev = new Device();
+                dev.setElementName(elemName);
+                dev.setPos(pos);
+                dev.setElementType(type);
+                dev.setBeamlineSequenceName(sequenceName);
                 // beam parameters
         	ArrayList<BeamParameterProp> beamParameterPropCollection = new ArrayList<>();
         	BeamParams beamParams = new BeamParams();
@@ -222,6 +228,14 @@ public class MadxParser {
             System.out.println("File reading error: " + file.getPath());
             System.out.println(e.toString());
         }
+    }
+    
+    /**
+     * Return all devices (modeling elements)
+     * @return all devices 
+     */
+    public ArrayList<Device> getDevices() {
+        return devices;
     }
     
     public void saveModel2DB() {
