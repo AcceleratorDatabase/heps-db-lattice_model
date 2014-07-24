@@ -111,21 +111,25 @@ public class MadxParser {
             
             for (String elemLine : elemLines) {
                 st = new StringTokenizer(elemLine);
-                int i = 0;
+                int i = 1;
                 String elemName = "";
                 double pos = 0.;
+                double len = 0.;
                 String type = "";
                 String k1Val = null;
                 String k2Val = null;
                 HashMap<String, String> propMap = new HashMap<>();
                 while (st.hasMoreTokens()) {
                     String s = st.nextToken();
-                    if (i==0) elemName = s.replace("\"", "");
-                    if (i==1) type = s.replace("\"", "");
-                    if (i>3) {
-                        switch (s) {
+                    if (i==1) elemName = s.replace("\"", "");
+                    if (i==2) type = s.replace("\"", "");
+                    if (i>2) {
+                        switch (paramLabels[i-3]) {
                             case "S":
                                 pos = Double.parseDouble(s);
+                                break;
+                            case "L":
+                                len = Double.parseDouble(s);
                                 break;
                             case "K1":
                                 k1Val = s;
@@ -145,6 +149,7 @@ public class MadxParser {
                 Device dev = new Device();
                 dev.setElementName(elemName);
                 dev.setPos(pos);
+                dev.setLen(len);
                 dev.setElementType(type);
                 dev.setBeamlineSequenceName(sequenceName);
                 // beam parameters
