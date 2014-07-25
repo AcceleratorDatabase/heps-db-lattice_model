@@ -61,6 +61,8 @@ public class MadxParser {
             while ((line=in.readLine()) != null) {
                 if (line.startsWith("@")) {
                     st = new StringTokenizer(line);
+                    // skip the "@"
+                    st.nextToken();  
                     String label = st.nextToken();
                     switch (label) {
                         case "SEQUENCE":
@@ -246,6 +248,7 @@ public class MadxParser {
     public void saveModel2DB() {
         ModelAPI theModel = new ModelAPI();
 
+        System.out.println("sequenceName = " + sequenceName);
         // saving model data
         theModel.setModel("XAL Model", sequenceName, devices);        
     }

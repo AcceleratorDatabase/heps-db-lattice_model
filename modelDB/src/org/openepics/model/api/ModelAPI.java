@@ -58,6 +58,18 @@ public class ModelAPI {
     }
 
     /**
+     * get the model with a specific model ID
+     * @param m_id Model ID
+     * @return Model with the specified ID
+     */
+    public Model getModel(int m_id) {
+        final Query q = em.createNamedQuery("Model.findByModelId").setParameter("modelId", m_id);
+        List<Model> m = q.getResultList();
+        
+        return m.get(0);
+    }
+    
+    /**
      * get models within a time range
      * @param start_time the start time of the range
      * @param end_time the end time of the range

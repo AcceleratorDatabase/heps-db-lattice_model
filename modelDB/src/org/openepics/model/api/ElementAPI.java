@@ -314,8 +314,20 @@ public class ElementAPI {
      * @return all elements within the specified lattice
      */
     public ArrayList<Element> getAllElementsForLattice(Lattice lattice) {
-        String latticeName = lattice.getLatticeName();
-        return getAllElementsForLattice(latticeName);
+        Query q;
+        ArrayList<Element> eList = new ArrayList();
+        q = em.createQuery("SELECT e FROM ElementProp e WHERE e.latticeId=:lattice_id ")
+                    .setParameter("lattice_id", lattice);
+        List<ElementProp> epList = q.getResultList();
+        Iterator<ElementProp> it1 = epList.iterator();
+        while (it1.hasNext()) {
+            ElementProp ep = it1.next();
+            Element elem = ep.getElementId();
+            if (!eList.contains(elem))
+                eList.add(elem);
+        }
+                 
+        return eList;        
     }
 
     public List<Element> getAllElements() {

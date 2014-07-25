@@ -56,6 +56,16 @@ public class BlsequenceLatticeAPI {
         return blsList;
     }
     
+    public List<BeamlineSequence> getSequencesForLattice(Lattice lattice) {
+        int lattice_id = lattice.getLatticeId();
+        System.out.println("Lattice ID = " + lattice_id);
+        Query q;
+        q = em.createQuery("SELECT blsl.beamlineSequenceId FROM BlsequenceLattice blsl WHERE blsl.latticeId.latticeId=:latticeId").setParameter("latticeId", lattice_id);
+        List<BeamlineSequence> blsList = q.getResultList();
+        System.out.println("There are " + blsList.size() + " beanline sequences.");
+        return blsList;        
+    }
+    
     public List<BlsequenceLattice> getBlsequenceLatticeForSequence(String seq_name){
         Query q;
         q = em.createQuery("SELECT blsl FROM BlsequenceLattice blsl WHERE blsl.beamlineSequenceId.sequenceName=:sequenceName").setParameter("sequenceName", seq_name);
