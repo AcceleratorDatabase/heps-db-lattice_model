@@ -199,7 +199,12 @@ public class MadxParser {
                 BeamParameterProp d_y = new BeamParameterProp();
         	d_y.setPropertyName("y_d");
         	d_y.setBeamParameterDouble(Double.parseDouble(propMap.get("DY")));
-        	beamParameterPropCollection.add(d_y);                
+        	beamParameterPropCollection.add(d_y);  
+                
+                BeamParameterProp energy = new BeamParameterProp();
+        	energy.setPropertyName("W");
+        	energy.setBeamParameterDouble(Double.parseDouble(propMap.get("ENERGY"))*1.e9 - mass*1.e9);
+        	beamParameterPropCollection.add(energy);                  
                 
                 beamParams.setBeamParameterPropCollection(beamParameterPropCollection);
                 // set beam parameters to the corresponding element
