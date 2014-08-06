@@ -57,6 +57,27 @@ public class BeamParameterPropAPI {
         }
         return null;
     }
+    
+    public Object getBeamParameterPropFor(Element elem, String prop_name) {
+          Query q;
+        q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp WHERE bpp.beamParameterId.elementId=:elem "
+                + "AND  bpp.propertyName=:propName").setParameter("elem", elem).setParameter("propName", prop_name);
+        List<BeamParameterProp> bppList = q.getResultList();
+        if (bppList.isEmpty()) {
+            return null;
+        } else {
+            BeamParameterProp bpp = bppList.get(0);
+            switch (bpp.getPropertyDatatype().toLowerCase()) {
+                case "string":
+                    return bpp.getBeamParameterString();
+                case "int":
+                    return bpp.getBeamParameterInt();
+                case "double":
+                    return bpp.getBeamParameterDouble();
+            }
+        }
+        return null;      
+    }
 
     /**
      * get beam parameter property for specified model ID, element name and property name
