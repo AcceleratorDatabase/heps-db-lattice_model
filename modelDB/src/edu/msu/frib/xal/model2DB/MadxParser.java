@@ -164,46 +164,64 @@ public class MadxParser {
                 BeamParameterProp x = new BeamParameterProp();
         	x.setPropertyName("x");
         	x.setBeamParameterDouble(Double.parseDouble(propMap.get("X")));
+                x.setPropertyDatatype("double");
+                x.setPropCategory("phaseMean");
                 beamParameterPropCollection.add(x);
                 
         	BeamParameterProp y = new BeamParameterProp();
         	y.setPropertyName("y");
         	y.setBeamParameterDouble(Double.parseDouble(propMap.get("Y")));        	
+                y.setPropertyDatatype("double");
+                y.setPropCategory("phaseMean");
                 beamParameterPropCollection.add(y);
                 
         	BeamParameterProp beta_x = new BeamParameterProp();
         	beta_x.setPropertyName("x_beta");
         	beta_x.setBeamParameterDouble(Double.parseDouble(propMap.get("BETX")));
+                beta_x.setPropertyDatatype("double");
+                beta_x.setPropCategory("twiss");
         	beamParameterPropCollection.add(beta_x);
                 
         	BeamParameterProp alpha_x = new BeamParameterProp();
         	alpha_x.setPropertyName("x_alpha");
         	alpha_x.setBeamParameterDouble(Double.parseDouble(propMap.get("ALFX")));
+                alpha_x.setPropertyDatatype("double");
+                alpha_x.setPropCategory("twiss");
         	beamParameterPropCollection.add(alpha_x);
 
                 BeamParameterProp beta_y = new BeamParameterProp();
         	beta_y.setPropertyName("y_beta");
         	beta_y.setBeamParameterDouble(Double.parseDouble(propMap.get("BETY")));
+                beta_y.setPropertyDatatype("double");
+                beta_y.setPropCategory("twiss");
         	beamParameterPropCollection.add(beta_y);
 
         	BeamParameterProp alpha_y = new BeamParameterProp();
         	alpha_y.setPropertyName("y_alpha");
         	alpha_y.setBeamParameterDouble(Double.parseDouble(propMap.get("ALFY")));
+                alpha_y.setPropertyDatatype("double");
+                alpha_y.setPropCategory("twiss");
         	beamParameterPropCollection.add(alpha_y);
 
                 BeamParameterProp d_x = new BeamParameterProp();
         	d_x.setPropertyName("x_d");
         	d_x.setBeamParameterDouble(Double.parseDouble(propMap.get("DX")));
+                d_x.setPropertyDatatype("double");
+                d_x.setPropCategory("twiss");
         	beamParameterPropCollection.add(d_x);
 
                 BeamParameterProp d_y = new BeamParameterProp();
         	d_y.setPropertyName("y_d");
         	d_y.setBeamParameterDouble(Double.parseDouble(propMap.get("DY")));
+                d_y.setPropertyDatatype("double");
+                d_y.setPropCategory("twiss");
         	beamParameterPropCollection.add(d_y);  
                 
                 BeamParameterProp energy = new BeamParameterProp();
         	energy.setPropertyName("W");
         	energy.setBeamParameterDouble(Double.parseDouble(propMap.get("ENERGY"))*1.e9 - mass*1.e9);
+                energy.setPropertyDatatype("double");
+                energy.setPropCategory("location");
         	beamParameterPropCollection.add(energy);                  
                 
                 beamParams.setBeamParameterPropCollection(beamParameterPropCollection);
