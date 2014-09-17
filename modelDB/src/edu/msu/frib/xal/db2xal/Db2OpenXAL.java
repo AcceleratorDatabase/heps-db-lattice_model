@@ -851,6 +851,10 @@ public class Db2OpenXAL {
             sb.append("         <channel handle=\"B_Book\" signal=\"");
             sb.append(psList.get(i));
             sb.append(":B_Book\"/>\n");
+            sb.append("         <channel handle=\"psFieldRB\" signal=\"");
+            String tmp_name = psList.get(i).replace("PS_", "");
+            sb.append(tmp_name);
+            sb.append(":B\"/>\n");
             sb.append("       </channelsuite>\n");
             sb.append("     </ps>\n");
         }

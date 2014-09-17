@@ -25,23 +25,25 @@ import org.openepics.model.extraEntity.Device;
  *
  * @author chu
  */
-public class MadxParser {
+public class MadxParser extends Model2DB {
     
     static String sequenceName = "";
     static String speciesName = "";
     static double mass = 0.;
     static double charge = 0.;
     static double energy = 0.;
-    static String modelName = "";
+    String modelName = "";
+    String MODEL = "MAD-X";
 
     ArrayList<Device> devices = new ArrayList<>();        
 
     public MadxParser() {
-        
+        setModelName(MODEL);
     }
     
     public MadxParser(File file) {
         this.parse(file);
+        setModelName(MODEL);
     }
     
     /**
@@ -268,10 +270,10 @@ public class MadxParser {
         return devices;
     }
     
-    public void saveModel2DB() {
-        ModelAPI theModel = new ModelAPI();
+//    public void saveModel2DB() {
+//        ModelAPI theModel = new ModelAPI();
 
-        // saving model data
-        theModel.setModel("XAL Model", sequenceName, devices);        
-    }
+//        // saving model data
+//        theModel.setModel("MAD-X Model", sequenceName, devices);        
+//    }
 }
