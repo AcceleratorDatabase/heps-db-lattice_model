@@ -46,15 +46,19 @@ public class Excel2DB {
                 String created_by = si.getAuthor();
                 Date create_date = si.getLastSaveDateTime();
                 String accName = si.getTitle();
+                String desc = si.getComments();
                 Accelerator acc = new AcceleratorAPI().getAcceleratorByName(accName);
                 if (acc != null) {
                     System.out.println("The Accelerator "+accName+" exists in the database! Please don't insert repeatedly! ");
                 } else {
-
+                    // write to Accelerator Table
+                    AcceleratorAPI accAPI = new AcceleratorAPI();
+                    accAPI.setAccelerator(accName, desc, create_date);
+                    
                     DevTpMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device types")));
                     DevModTpMap2BD.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "device-model types")));
                     SeqMap2DB seqMap2DB = new SeqMap2DB();
-                    seqMap2DB.instDB(SeqData2Map.getMapData(ReadSheet.getDataList(wb, "beamline sequences")), latticeName, created_by, create_date);
+                    seqMap2DB.instDB(SeqData2Map.getMapData(ReadSheet.getDataList(wb, "beamline sequences")), acc, latticeName, created_by, create_date);
                     EncapData2DB.instDB(wb, "elements", latticeName, created_by, create_date);
                     RfMap2DB.instDB(Data2Map.getMapData(ReadSheet.getDataList(wb, "RF Gaps")));
                     BeamEncapData2DB.instDB(wb, "init conditions", latticeName, created_by, create_date);

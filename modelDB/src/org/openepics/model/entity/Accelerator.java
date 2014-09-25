@@ -35,8 +35,10 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Accelerator.findByAcceleratorid", query = "SELECT a FROM Accelerator a WHERE a.acceleratorid = :acceleratorid"),
     @NamedQuery(name = "Accelerator.findByAcceleratorName", query = "SELECT a FROM Accelerator a WHERE a.acceleratorName = :acceleratorName"),
     @NamedQuery(name = "Accelerator.findByAcceleratorDescription", query = "SELECT a FROM Accelerator a WHERE a.acceleratorDescription = :acceleratorDescription"),
-    @NamedQuery(name = "Accelerator.findByDate", query = "SELECT a FROM Accelerator a WHERE a.date = :date")})
+    @NamedQuery(name = "Accelerator.findByDate", query = "SELECT a FROM Accelerator a WHERE a.createDate = :createDate")})
 public class Accelerator implements Serializable {
+    @OneToMany(mappedBy = "acceleratorId")
+    private Collection<BeamlineSequence> beamlineSequenceCollection;
     @Column(name = "create_date")
     @Temporal(TemporalType.DATE)
     private Date createDate;
@@ -52,8 +54,6 @@ public class Accelerator implements Serializable {
     @Size(max = 255)
     @Column(name = "accelerator_description")
     private String acceleratorDescription;
-    @OneToMany(mappedBy = "acceleratorId")
-    private Collection<Element> elementCollection;
 
     public Accelerator() {
     }
@@ -84,15 +84,6 @@ public class Accelerator implements Serializable {
 
     public void setAcceleratorDescription(String acceleratorDescription) {
         this.acceleratorDescription = acceleratorDescription;
-    }
-
-    @XmlTransient
-    public Collection<Element> getElementCollection() {
-        return elementCollection;
-    }
-
-    public void setElementCollection(Collection<Element> elementCollection) {
-        this.elementCollection = elementCollection;
     }
 
     @Override
@@ -126,6 +117,15 @@ public class Accelerator implements Serializable {
 
     public void setCreateDate(Date createDate) {
         this.createDate = createDate;
+    }
+
+    @XmlTransient
+    public Collection<BeamlineSequence> getBeamlineSequenceCollection() {
+        return beamlineSequenceCollection;
+    }
+
+    public void setBeamlineSequenceCollection(Collection<BeamlineSequence> beamlineSequenceCollection) {
+        this.beamlineSequenceCollection = beamlineSequenceCollection;
     }
     
 }

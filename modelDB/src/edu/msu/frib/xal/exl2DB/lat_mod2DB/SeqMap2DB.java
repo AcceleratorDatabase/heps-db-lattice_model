@@ -17,6 +17,7 @@ import org.openepics.model.api.BeamlineSequenceAPI;
 import org.openepics.model.api.BlsequenceLatticeAPI;
 import org.openepics.model.api.ElementAPI;
 import org.openepics.model.api.LatticeAPI;
+import org.openepics.model.entity.Accelerator;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.Element;
 import org.openepics.model.entity.Lattice;
@@ -28,7 +29,7 @@ import org.openepics.model.entity.Lattice;
  */
 public class SeqMap2DB {
 
-    public void instDB(ArrayList mapData, String latticeName, String created_by, Date create_date) {
+    public void instDB(ArrayList mapData, Accelerator acc, String latticeName, String created_by, Date create_date) {
         if (latticeName == null || "".equals(latticeName)) {
             System.out.println("Please insert the Lattice name!");
         } else {
@@ -70,6 +71,7 @@ public class SeqMap2DB {
                         bs.setPredecessorSequence(pre_seq);
                         bs.setSequenceLength(seq_length);
                         bs.setSequenceDescription(seq_des);
+                        bs.setAcceleratorId(acc);
                     }
 
                     new BlsequenceLatticeAPI().setBlsequenceLattice(bs, lattice, bl_seq_order);

@@ -9,12 +9,13 @@ USE `discs_model` ;
 -- Table `discs_model`.`accelerator`
 -- -----------------------------------------------------
 CREATE TABLE IF NOT EXISTS `discs_model`.`accelerator` (
-  `Accelerator_id` INT(11) NOT NULL,
+  `Accelerator_id` INT(11) NOT NULL AUTO_INCREMENT,
   `accelerator_name` VARCHAR(45) NULL DEFAULT NULL,
   `accelerator_description` VARCHAR(255) NULL DEFAULT NULL,
   `create_date` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`Accelerator_id`))
-ENGINE = InnoDB;
+ENGINE = InnoDB
+AUTO_INCREMENT = 0;
 
 
 -- -----------------------------------------------------
@@ -28,7 +29,14 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`beamline_sequence` (
   `sequence_description` VARCHAR(255) NULL DEFAULT NULL,
   `sequence_length` DOUBLE NULL DEFAULT NULL,
   `sequence_name` VARCHAR(255) NULL DEFAULT NULL,
-  PRIMARY KEY (`beamline_sequence_id`))
+  `accelerator_id` INT(11) NULL DEFAULT NULL,
+  PRIMARY KEY (`beamline_sequence_id`),
+  INDEX `FK_accelerator_id_idx` (`accelerator_id` ASC),
+  CONSTRAINT `FK_accelerator_id`
+    FOREIGN KEY (`accelerator_id`)
+    REFERENCES `discs_model`.`accelerator` (`Accelerator_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
 ENGINE = InnoDB
 AUTO_INCREMENT = 67
 DEFAULT CHARACTER SET = latin1;
@@ -66,16 +74,9 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`element` (
   `yaw` DOUBLE NULL DEFAULT NULL,
   `beamline_sequence_id` INT(11) NULL DEFAULT NULL,
   `element_type_id` INT(11) NULL DEFAULT NULL,
-  `accelerator_id` INT(11) NULL DEFAULT NULL,
   PRIMARY KEY (`element_id`),
   INDEX `FK_element_element_type_id_idx` (`element_type_id` ASC),
   INDEX `FK_element_beamline_sequence_id_idx` (`beamline_sequence_id` ASC),
-  INDEX `FK_accelerator_id_idx` (`accelerator_id` ASC),
-  CONSTRAINT `FK_accelerator_id`
-    FOREIGN KEY (`accelerator_id`)
-    REFERENCES `discs_model`.`accelerator` (`Accelerator_id`)
-    ON DELETE NO ACTION
-    ON UPDATE NO ACTION,
   CONSTRAINT `FK_element_beamline_sequence_id`
     FOREIGN KEY (`beamline_sequence_id`)
     REFERENCES `discs_model`.`beamline_sequence` (`beamline_sequence_id`),
@@ -161,8 +162,7 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`lattice` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 7
-DEFAULT CHARACTER SET = latin1;
+AUTO_INCREMENT = 0;
 
 
 -- -----------------------------------------------------
@@ -210,8 +210,7 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`model` (
     FOREIGN KEY (`model_code_id`)
     REFERENCES `discs_model`.`model_code` (`model_code_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 51
-DEFAULT CHARACTER SET = latin1;
+AUTO_INCREMENT = 0;
 
 
 -- -----------------------------------------------------

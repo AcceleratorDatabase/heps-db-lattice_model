@@ -1,5 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package org.openepics.model.entity;
@@ -27,7 +28,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author admin
+ * @author chu
  */
 @Entity
 @Table(name = "element")
@@ -48,9 +49,6 @@ import javax.xml.bind.annotation.XmlTransient;
     @NamedQuery(name = "Element.findByS", query = "SELECT e FROM Element e WHERE e.s = :s"),
     @NamedQuery(name = "Element.findByYaw", query = "SELECT e FROM Element e WHERE e.yaw = :yaw")})
 public class Element implements Serializable {
-    @JoinColumn(name = "accelerator_id", referencedColumnName = "Accelerator_id")
-    @ManyToOne
-    private Accelerator acceleratorId;
     private static final long serialVersionUID = 1L;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -286,14 +284,6 @@ public class Element implements Serializable {
     @Override
     public String toString() {
         return "org.openepics.model.entity.Element[ elementId=" + elementId + " ]";
-    }
-
-    public Accelerator getAcceleratorId() {
-        return acceleratorId;
-    }
-
-    public void setAcceleratorId(Accelerator acceleratorId) {
-        this.acceleratorId = acceleratorId;
     }
     
 }

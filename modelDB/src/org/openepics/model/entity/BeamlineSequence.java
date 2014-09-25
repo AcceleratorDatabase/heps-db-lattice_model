@@ -1,5 +1,6 @@
 /*
- * To change this template, choose Tools | Templates
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
 package org.openepics.model.entity;
@@ -12,6 +13,8 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToMany;
@@ -22,7 +25,7 @@ import javax.xml.bind.annotation.XmlTransient;
 
 /**
  *
- * @author admin
+ * @author chu
  */
 @Entity
 @Table(name = "beamline_sequence")
@@ -61,6 +64,9 @@ public class BeamlineSequence implements Serializable {
     @Size(max = 255)
     @Column(name = "sequence_name")
     private String sequenceName;
+    @JoinColumn(name = "accelerator_id", referencedColumnName = "Accelerator_id")
+    @ManyToOne
+    private Accelerator acceleratorId;
     @OneToMany(mappedBy = "beamlineSequenceId")
     private Collection<Element> elementCollection;
     @OneToMany(mappedBy = "beamlineSequenceId")
@@ -127,6 +133,14 @@ public class BeamlineSequence implements Serializable {
 
     public void setSequenceName(String sequenceName) {
         this.sequenceName = sequenceName;
+    }
+
+    public Accelerator getAcceleratorId() {
+        return acceleratorId;
+    }
+
+    public void setAcceleratorId(Accelerator acceleratorId) {
+        this.acceleratorId = acceleratorId;
     }
 
     @XmlTransient
