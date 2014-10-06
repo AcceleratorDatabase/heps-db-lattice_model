@@ -295,6 +295,7 @@ public class ModelAPI {
             ElementType et = new ElementTypeAPI().getElementTypeByType(device.getElementType());
             BeamlineSequence bls = new BeamlineSequenceAPI().getSequenceByName(device.getBeamlineSequenceName());
 
+            //TODO re-use Elements already in the DB, instead of generating new ones and populate the new one to DB.
             Element element = new Element();
             element.setDx(device.getDx());
             element.setDy(device.getDy());

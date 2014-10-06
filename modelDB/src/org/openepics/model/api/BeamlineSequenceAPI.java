@@ -15,6 +15,7 @@ import javax.persistence.Persistence;
 import javax.persistence.PersistenceContext;
 import javax.persistence.PersistenceUnit;
 import javax.persistence.Query;
+import org.openepics.model.entity.Accelerator;
 import org.openepics.model.entity.BeamlineSequence;
 import org.openepics.model.entity.BlsequenceLattice;
 import org.openepics.model.entity.Element;
@@ -109,7 +110,15 @@ public class BeamlineSequenceAPI {
         List<BeamlineSequence> seqList = q.getResultList();
 
         return seqList;
-    }    
+    } 
+    
+    public List<BeamlineSequence> getAllSequencesFor(Accelerator acc) {
+        Query q;
+        q = em.createQuery("SELECT bs FROM BeamlineSequence bs WHERE bs.acceleratorId = :acceleratorId").setParameter("acceleratorId", acc.getAcceleratorid());
+        List<BeamlineSequence> seqList = q.getResultList();
+
+        return seqList;        
+    }
 
     /**
      * get all elements within the specified sequence

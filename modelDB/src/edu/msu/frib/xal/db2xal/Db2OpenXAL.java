@@ -891,7 +891,7 @@ public class Db2OpenXAL {
 
       //  x.write2IMPL("frib");
        // x.write2ModelParam();
-        x.write2XDXF("frib", "lattice_model_template");
+        x.write2XDXF("FRIB_022012", "lattice_model_template");
        // x.write2XDXF("csns","Linac_lattice_model_template_2013");
     }
 }

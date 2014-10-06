@@ -15,7 +15,8 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`accelerator` (
   `create_date` DATE NULL DEFAULT NULL,
   PRIMARY KEY (`Accelerator_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 0;
+AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
@@ -38,7 +39,7 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`beamline_sequence` (
     ON DELETE NO ACTION
     ON UPDATE NO ACTION)
 ENGINE = InnoDB
-AUTO_INCREMENT = 67
+AUTO_INCREMENT = 78
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -51,7 +52,7 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`element_type` (
   `element_type_description` VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (`element_type_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 249
+AUTO_INCREMENT = 311
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -74,6 +75,7 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`element` (
   `yaw` DOUBLE NULL DEFAULT NULL,
   `beamline_sequence_id` INT(11) NULL DEFAULT NULL,
   `element_type_id` INT(11) NULL DEFAULT NULL,
+  `alias_name` VARCHAR(45) NULL DEFAULT NULL,
   PRIMARY KEY (`element_id`),
   INDEX `FK_element_element_type_id_idx` (`element_type_id` ASC),
   INDEX `FK_element_beamline_sequence_id_idx` (`beamline_sequence_id` ASC),
@@ -84,7 +86,7 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`element` (
     FOREIGN KEY (`element_type_id`)
     REFERENCES `discs_model`.`element_type` (`element_type_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 8094
+AUTO_INCREMENT = 9642
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -162,7 +164,8 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`lattice` (
     ON DELETE CASCADE
     ON UPDATE CASCADE)
 ENGINE = InnoDB
-AUTO_INCREMENT = 0;
+AUTO_INCREMENT = 2
+DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
@@ -210,7 +213,8 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`model` (
     FOREIGN KEY (`model_code_id`)
     REFERENCES `discs_model`.`model_code` (`model_code_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 0;
+AUTO_INCREMENT = 11
+DEFAULT CHARACTER SET = latin1;
 
 
 -- -----------------------------------------------------
@@ -223,7 +227,7 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`particle_type` (
   `particle_name` VARCHAR(255) NULL DEFAULT NULL,
   PRIMARY KEY (`particle_type_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 7
+AUTO_INCREMENT = 9
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -250,7 +254,7 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`beam_parameter` (
     FOREIGN KEY (`particle_type`)
     REFERENCES `discs_model`.`particle_type` (`particle_type_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 221
+AUTO_INCREMENT = 231
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -274,7 +278,7 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`beam_parameter_prop` (
     FOREIGN KEY (`beam_parameter_id`)
     REFERENCES `discs_model`.`beam_parameter` (`twiss_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 901
+AUTO_INCREMENT = 1081
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -296,7 +300,7 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`blsequence_lattice` (
     FOREIGN KEY (`lattice_id`)
     REFERENCES `discs_model`.`lattice` (`lattice_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 67
+AUTO_INCREMENT = 78
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -334,7 +338,7 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`element_type_prop` (
     FOREIGN KEY (`element_type_id`)
     REFERENCES `discs_model`.`element_type` (`element_type_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 249
+AUTO_INCREMENT = 311
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -367,7 +371,7 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`element_prop` (
     FOREIGN KEY (`lattice_id`)
     REFERENCES `discs_model`.`lattice` (`lattice_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 38453
+AUTO_INCREMENT = 46030
 DEFAULT CHARACTER SET = latin1;
 
 
@@ -432,7 +436,7 @@ CREATE TABLE IF NOT EXISTS `discs_model`.`rf_gap` (
     FOREIGN KEY (`cavity_id`)
     REFERENCES `discs_model`.`element` (`element_id`))
 ENGINE = InnoDB
-AUTO_INCREMENT = 1993
+AUTO_INCREMENT = 2325
 DEFAULT CHARACTER SET = latin1;
 
 
