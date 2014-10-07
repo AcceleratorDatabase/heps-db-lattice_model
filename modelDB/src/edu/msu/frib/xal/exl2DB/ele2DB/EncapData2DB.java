@@ -69,6 +69,7 @@ public class EncapData2DB {
 
                 //key:element_id value:element/s
                 HashMap<Integer, Double> hMap = new HashMap<>();
+                HashMap<Integer, String> aliasMap = new HashMap<>();
 
 
                 ArrayList encapDataList = DataEncap.getEncapData(wb, sheetName);
@@ -213,8 +214,19 @@ public class EncapData2DB {
                                             if (cellProp.getName().equals("s")) {
                                                 hMap.put(element_id, Double.valueOf(cellProp.getValue().toString()));
                                             }
+                                            
                                         }
                                     }
+                                    
+                                                                                // populate the alias_name
+                                            if (cellProp.getName().equals("pid")) {
+                                               String sql6 = "update element set alias_name =? where element_id=?";
+                                                state = (PreparedStatement) conn.prepareStatement(sql6);
+                                                state.setObject(1, cellProp.getValue().toString());
+                                                state.setInt(2, element_id);
+                                                state.executeUpdate();
+                                            }
+
                                 }
 
                             }
@@ -226,6 +238,7 @@ public class EncapData2DB {
                     while (eit.hasNext()) {
                         Element e = (Element) eit.next();
                         hMap.put(e.getElementId(), e.getS());
+                        aliasMap.put(e.getElementId(), e.getAliasName());
                     }
                     int i = 0;
                     if (!hMap.isEmpty()) {
