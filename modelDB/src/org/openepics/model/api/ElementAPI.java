@@ -75,6 +75,43 @@ public class ElementAPI {
             return eList.get(0);
         }
     }
+    
+    public Element getElementByName(String acc, String name) {
+        Query q;
+        q = em.createQuery("SELECT e FROM Element e WHERE e.elementName=:name AND e.beamlineSequenceId.acceleratorId.acceleratorName=:acc"
+                ).setParameter("name", name).setParameter("acc", acc);
+        List<Element> eList = q.getResultList();
+        if (eList.isEmpty()) {
+            return null;
+        } else {
+            return eList.get(0);
+        }        
+    }
+    
+    public Element getElementByAliasName(String name) {
+        Query q;
+        q = em.createNamedQuery("Element.findByAliasName").setParameter("aliasName", name);
+        List<Element> eList = q.getResultList();
+        if (eList.isEmpty()) {
+            return null;
+        } else {
+            return eList.get(0);
+        }        
+    }
+    
+    public Element getElementByAliasName(String acc, String aliasName) {
+        Query q;
+        q = em.createQuery("SELECT e FROM Element e WHERE e.aliasName=:aliasName AND e.beamlineSequenceId.acceleratorId.acceleratorName=:acc"
+                ).setParameter("aliasName", aliasName).setParameter("acc", acc);
+//        q = em.createQuery("SELECT e FROM Element e WHERE e.aliasName=:aliasName"
+//                ).setParameter("aliasName", aliasName);
+        List<Element> eList = q.getResultList();
+        if (eList.isEmpty()) {
+            return null;
+        } else {
+            return eList.get(0);
+        }              
+    }
 
     public Element getElementByNameAndType(String name, String type) {
         Query q;
@@ -316,7 +353,7 @@ public class ElementAPI {
     public ArrayList<Element> getAllElementsForLattice(Lattice lattice) {
         Query q;
         ArrayList<Element> eList = new ArrayList();
-        q = em.createQuery("SELECT e FROM ElementProp e WHERE e.latticeId=:lattice_id ")
+        q = em.createQuery("SELECT ep FROM ElementProp ep WHERE ep.latticeId=:lattice_id ")
                     .setParameter("lattice_id", lattice);
         List<ElementProp> epList = q.getResultList();
         Iterator<ElementProp> it1 = epList.iterator();

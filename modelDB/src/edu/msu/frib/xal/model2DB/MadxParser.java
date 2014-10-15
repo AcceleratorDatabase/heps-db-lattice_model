@@ -32,7 +32,7 @@ public class MadxParser extends Model2DB {
     static double mass = 0.;
     static double charge = 0.;
     static double energy = 0.;
-    String modelName = "";
+    String AcceleratorName = "";
     String MODEL = "MAD-X";
 
     ArrayList<Device> devices = new ArrayList<>();        
@@ -89,7 +89,7 @@ public class MadxParser extends Model2DB {
                             break;
                         case "TITLE":
                             st.nextToken();
-                            modelName = st.nextToken();
+                            AcceleratorName = st.nextToken().replace("\"", "");
                             break;
                         default:
                             break;
@@ -122,10 +122,12 @@ public class MadxParser extends Model2DB {
                 String type = "";
                 String k1Val = null;
                 String k2Val = null;
+                
                 HashMap<String, String> propMap = new HashMap<>();
                 while (st.hasMoreTokens()) {
                     String s = st.nextToken();
                     if (i==1) elemName = s.replace("\"", "");
+                    
                     if (i==2) type = s.replace("\"", "");
                     if (i>2) {
                         switch (paramLabels[i-3]) {
@@ -156,9 +158,12 @@ public class MadxParser extends Model2DB {
                 dev.setLen(len);
                 dev.setElementType(type);
                 dev.setBeamlineSequenceName(sequenceName);
+        	BeamParams beamParams = new BeamParams();
+                
+                
                 // beam parameters
         	ArrayList<BeamParameterProp> beamParameterPropCollection = new ArrayList<>();
-        	BeamParams beamParams = new BeamParams();
+                
         	// device settings
         	ArrayList<ElementProp> elementPropCollection = new ArrayList<>();
                 
@@ -268,6 +273,14 @@ public class MadxParser extends Model2DB {
      */
     public ArrayList<Device> getDevices() {
         return devices;
+    }
+    
+    /**
+     * Return the model name
+     * @return model name
+     */
+    public String getModelName() {
+        return AcceleratorName;
     }
     
 //    public void saveModel2DB() {

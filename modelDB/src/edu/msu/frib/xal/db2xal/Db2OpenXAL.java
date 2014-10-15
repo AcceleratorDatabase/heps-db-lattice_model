@@ -475,7 +475,7 @@ public class Db2OpenXAL {
         sb.append("\" system=\"");
         //TODO figure out the accelerator system name from DB
         sb.append(accName);
-        sb.append("\" ver=\"1.0.0\">\n");
+        sb.append("\" ver=\"2.0.0\">\n");
         //TODO set up combo sequences
 
         // for power supplies
@@ -584,18 +584,20 @@ public class Db2OpenXAL {
                     sb.append(e.getElementName());
                     // get physics name, if there is any
                     ElementPropAPI elementPropAPI = new ElementPropAPI();
-                    try {
-                        if (!elementPropAPI.getPidForElement(e.getElementName()).equals("")
-                                && !elementPropAPI.getPidForElement(e.getElementName()).isEmpty()) {
-                            sb.append("\" pid=\"");
-                            sb.append(elementPropAPI.getPidForElement(e.getElementName()));
-                        }
-                    } catch (NullPointerException ne) {
-                        // do nothing if there is no pid
-                    }
+//                    try {
+//                        if (!elementPropAPI.getPidForElement(e.getElementName()).equals("")
+//                                && !elementPropAPI.getPidForElement(e.getElementName()).isEmpty()) {
+//                            sb.append("\" pid=\"");
+//                            sb.append(elementPropAPI.getPidForElement(e.getElementName()));
+//                        }
+//                    } catch (NullPointerException ne) {
+//                        // do nothing if there is no pid
+//                    }
 
                     sb.append("\" type=\"");
                     sb.append(e.getElementTypeId().getElementType());
+                    sb.append("\" pid=\"");
+                    sb.append(e.getAliasName());
                     sb.append("\" pos=\"");
                     sb.append(e.getPos());
                     sb.append("\" len=\"");
@@ -891,7 +893,7 @@ public class Db2OpenXAL {
 
       //  x.write2IMPL("frib");
        // x.write2ModelParam();
-        x.write2XDXF("FRIB_022012", "lattice_model_template");
+        x.write2XDXF("FRIB_201202", "lattice_model_template");
        // x.write2XDXF("csns","Linac_lattice_model_template_2013");
     }
 }

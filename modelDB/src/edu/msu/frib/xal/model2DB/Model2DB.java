@@ -18,10 +18,19 @@ import org.openepics.model.extraEntity.Device;
 public abstract class Model2DB {
     ArrayList<Device> devices = new ArrayList<>();        
     String modelName;
+    String accName;
+    
+    public void setAcceleratorName(String name) {
+        accName = name;
+    }
     
     public void setModelName(String name) {
         modelName = name;
     };
+    
+    public String getAcceleratorName() {
+        return accName;
+    }
     
     public String getModelName() {
         return modelName;
@@ -31,6 +40,6 @@ public abstract class Model2DB {
         ModelAPI theModel = new ModelAPI();
 
         // saving model data
-        theModel.setModel("Model: " + modelName, sequenceName, devices);        
+        theModel.setModel(accName, "Model: " + modelName, sequenceName, devices);        
     }
 }

@@ -36,6 +36,7 @@ import javax.xml.bind.annotation.XmlTransient;
 @NamedQueries({
     @NamedQuery(name = "Element.findAll", query = "SELECT e FROM Element e"),
     @NamedQuery(name = "Element.findByElementId", query = "SELECT e FROM Element e WHERE e.elementId = :elementId"),
+    @NamedQuery(name = "Element.findByAliasName", query = "SELECT e FROM Element e WHERE e.aliasName = :aliasName"),
     @NamedQuery(name = "Element.findByCreatedBy", query = "SELECT e FROM Element e WHERE e.createdBy = :createdBy"),
     @NamedQuery(name = "Element.findByDx", query = "SELECT e FROM Element e WHERE e.dx = :dx"),
     @NamedQuery(name = "Element.findByDy", query = "SELECT e FROM Element e WHERE e.dy = :dy"),

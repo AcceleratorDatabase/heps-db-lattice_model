@@ -272,7 +272,7 @@ public class ModelAPI {
         return mList;
     }
 
-    public void setModel(String model_name, String lattice_name, Collection<Device> deviceCollection) {
+    public void setModel(String acc_name, String model_name, String lattice_name, Collection<Device> deviceCollection) {
         em.getTransaction().begin();
 
         Lattice l = new Lattice();
@@ -289,6 +289,7 @@ public class ModelAPI {
         m.setInitialConditionInd(0);
         em.persist(m);
 
+        int count = 0;
         Iterator it = deviceCollection.iterator();
         while (it.hasNext()) {
             Device device = (Device) it.next();
@@ -296,62 +297,88 @@ public class ModelAPI {
             BeamlineSequence bls = new BeamlineSequenceAPI().getSequenceByName(device.getBeamlineSequenceName());
 
             //TODO re-use Elements already in the DB, instead of generating new ones and populate the new one to DB.
-            Element element = new Element();
-            element.setDx(device.getDx());
-            element.setDy(device.getDy());
-            element.setDz(device.getDz());
-            element.setElementName(device.getElementName());
-            element.setLen(device.getLen());
-            element.setPitch(device.getPitch());
-            element.setPos(device.getPos());
-            element.setRoll(device.getRoll());
-            element.setS(device.getS());
-            element.setYaw(device.getYaw());
-            element.setElementTypeId(et);
-            element.setBeamlineSequenceId(bls);
-
-            element.setCreatedBy(System.getProperty("user.name"));
-            element.setInsertDate(new Date());
-
-            BeamParams beamParams = device.getBeamParams();
-            BeamParameter beamParameter = new BeamParameter();
-            ParticleType pt = new ParticleTypeAPI().getParticleType(beamParams.getParticleName());
-
-            beamParameter.setElementId(element);
-            beamParameter.setModelId(m);
-            beamParameter.setParticleType(pt);
-            em.persist(beamParameter);
-
-            Collection<BeamParameterProp> beamParameterPropCollection = beamParams.getBeamParameterPropCollection();
-            Iterator bppit = beamParameterPropCollection.iterator();
-            while (bppit.hasNext()) {
-                BeamParameterProp beamParameterProp = (BeamParameterProp) bppit.next();
-                beamParameterProp.setBeamParameterId(beamParameter);
-                em.persist(beamParameterProp);
+            ElementAPI elementAPI = new ElementAPI();
+            
+            String elementName = device.getElementName();
+            int slice_id = 0;
+            // If an Element name contains "_A", it is the 2nd slice of a thick Element.
+            // We need to strip off the "_A" and assign the slice_id as a beam parameter
+            if (device.getElementName().contains("_A")) {
+                elementName = elementName.replace("_A", "");
+                slice_id = 1;
             }
-
-
-            Collection<ElementProp> elementPropCollection = device.getElementPropCollection();
-            Iterator epit = elementPropCollection.iterator();
-            while (epit.hasNext()) {
-                ElementProp ep = new ElementProp();
-
-                ElementProp elementProp = (ElementProp) epit.next();
-
-                ep.setElementPropDouble(elementProp.getElementPropDouble());
-                ep.setElementPropInt(elementProp.getElementPropInt());
-                ep.setElementPropString(elementProp.getElementPropString());
-                ep.setElementPropName(elementProp.getElementPropName());
-                ep.setPropCategory(elementProp.getPropCategory());
-
-                ep.setElementId(element);
-                ep.setLatticeId(l);
-
-                em.persist(ep);
+            
+            Element element = null;
+            // If this is for XAL Model, use the Element_id; if this is MADX or other models, use the element's alias name
+            if (model_name.contains("XAL")) {
+                element = elementAPI.getElementByName(acc_name, elementName);
+            } else {
+                element = elementAPI.getElementByAliasName(acc_name, elementName);  
             }
-            em.persist(element);
+            
+            if (element != null) {
+//            Element element = new Element();
+//                element.setDx(device.getDx());
+//                element.setDy(device.getDy());
+//                element.setDz(device.getDz());
+//                element.setElementName(device.getElementName());
+//                element.setLen(device.getLen());
+//                element.setPitch(device.getPitch());
+//                element.setPos(device.getPos());
+//                element.setRoll(device.getRoll());
+//                element.setS(device.getS());
+//                element.setYaw(device.getYaw());
+//                element.setElementTypeId(et);
+//                element.setBeamlineSequenceId(bls);
+//
+//                element.setCreatedBy(System.getProperty("user.name"));
+//                element.setInsertDate(new Date());
+
+                BeamParams beamParams = device.getBeamParams();
+                BeamParameter beamParameter = new BeamParameter();
+                ParticleType pt = new ParticleTypeAPI().getParticleType(beamParams.getParticleName());
+
+                beamParameter.setElementId(element);
+                beamParameter.setModelId(m);
+                beamParameter.setParticleType(pt);
+                // set slice_id
+                beamParameter.setSliceId(slice_id);
+                em.persist(beamParameter);
+
+                Collection<BeamParameterProp> beamParameterPropCollection = beamParams.getBeamParameterPropCollection();
+                Iterator bppit = beamParameterPropCollection.iterator();
+                while (bppit.hasNext()) {
+                    BeamParameterProp beamParameterProp = (BeamParameterProp) bppit.next();
+                    beamParameterProp.setBeamParameterId(beamParameter);
+                    em.persist(beamParameterProp);
+                }
+
+                Collection<ElementProp> elementPropCollection = device.getElementPropCollection();
+                Iterator epit = elementPropCollection.iterator();
+                while (epit.hasNext()) {
+                    ElementProp ep = new ElementProp();
+
+                    ElementProp elementProp = (ElementProp) epit.next();
+
+                    ep.setElementPropDouble(elementProp.getElementPropDouble());
+                    ep.setElementPropInt(elementProp.getElementPropInt());
+                    ep.setElementPropString(elementProp.getElementPropString());
+                    ep.setElementPropName(elementProp.getElementPropName());
+                    ep.setPropCategory(elementProp.getPropCategory());
+
+                    ep.setElementId(element);
+                    ep.setLatticeId(l);
+
+                    em.persist(ep);
+                }
+//                System.out.println("acc_name = " + acc_name + ", elementName = " + elementName);
+
+                count++;
+//                em.persist(element);
+            } 
         }
         em.getTransaction().commit();
+        System.out.println(count + " elements' properties/beam properties saved to the DB.");
     }
 
     public void deleteModel(String model_name) {

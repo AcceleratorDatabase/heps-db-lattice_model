@@ -51,7 +51,7 @@ public class BeamlineSequenceAPI {
      * @param seq_desc description for this sequence
      */
     public int setBeamlineSequence(String seq_name, String first_elem_name,
-            String last_elem_name, String previous_seq, double seq_length, String seq_desc) {
+            String last_elem_name, String previous_seq, double seq_length, String seq_desc, Accelerator acc_id) {
         BeamlineSequence bs = new BeamlineSequence();
         bs.setSequenceName(seq_name);
         bs.setFirstElementName(first_elem_name);
@@ -59,6 +59,7 @@ public class BeamlineSequenceAPI {
         bs.setPredecessorSequence(previous_seq);
         bs.setSequenceLength(seq_length);
         bs.setSequenceDescription(seq_desc);
+        bs.setAcceleratorId(acc_id);
         em.getTransaction().begin();
         em.persist(bs);
         em.getTransaction().commit();
