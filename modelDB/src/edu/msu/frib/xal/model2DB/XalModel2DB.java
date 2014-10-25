@@ -14,7 +14,7 @@ import org.openepics.model.entity.ElementProp;
 import xal.model.IElement;
 import xal.model.probe.EnvelopeProbe;
 import xal.model.probe.traj.EnvelopeProbeState;
-import xal.model.probe.traj.EnvelopeTrajectory;
+import xal.model.probe.traj.Trajectory;
 import xal.sim.scenario.Scenario;
 import xal.smf.AcceleratorNode;
 import xal.smf.AcceleratorSeq;
@@ -57,7 +57,7 @@ public class XalModel2DB extends Model2DB {
         List<AcceleratorNode> nodes = accSeq.getAllNodesWithQualifier(ntq);
         
         EnvelopeProbe probe = (EnvelopeProbe) model.getProbe();
-        EnvelopeTrajectory traj = (EnvelopeTrajectory) probe.getTrajectory();
+        Trajectory traj = probe.getTrajectory();
         
         ArrayList devices = new ArrayList();
         double length = 0.;
