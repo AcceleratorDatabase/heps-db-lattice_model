@@ -21,6 +21,7 @@
     <class>org.openepics.model.entity.ModelLine</class>
     <class>org.openepics.model.entity.RfGap</class>
     <class>org.openepics.model.entity.ParticleType</class>
+    <class>org.openepics.model.entity.Accelerator</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/discs_model?rewriteBatchedStatements=true"/>
       <property name="javax.persistence.jdbc.password" value="model_test"/>
