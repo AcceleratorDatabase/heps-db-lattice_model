@@ -21,12 +21,14 @@
     <class>org.openepics.model.entity.ModelLine</class>
     <class>org.openepics.model.entity.RfGap</class>
     <class>org.openepics.model.entity.ParticleType</class>
+    <class>org.openepics.model.entity.Accelerator</class>
     <properties>
       <property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/discs_model?rewriteBatchedStatements=true"/>
       <property name="javax.persistence.jdbc.password" value="model_test"/>
       <property name="javax.persistence.jdbc.driver" value="com.mysql.jdbc.Driver"/>
       <property name="javax.persistence.jdbc.user" value="paul"/>
       <property name="eclipselink.ddl-generation" value="create-tables"/>
+      <property name="javax.persistence.schema-generation.database.action" value="drop-and-create"/>
     </properties>
   </persistence-unit>
 </persistence>
