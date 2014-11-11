@@ -22,7 +22,7 @@ import org.openepics.model.extraEntity.Device;
  *
  * @author chu
  */
-public class ImpactParser {
+public class ImpactParser  extends Model2DB {
     String AcceleratorName = "";
     String MODEL = "IMPACT";
     
@@ -30,9 +30,7 @@ public class ImpactParser {
     String xFile = "fort.24";
     String yFile = "fort.25";
     String zFile = "fort.26";
-    
-    ArrayList<Device> devices = new ArrayList<>(); 
-    
+        
     public void parseIMPACT(){
         
         parseRMS(new File(xFile), 1);
@@ -52,17 +50,25 @@ public class ImpactParser {
             String line = "";
             ArrayList<String> elemLines = new ArrayList<>();
             while ((line = in.readLine()) != null) {
-                String[] data = line.split("\\s");
-                double pos = Double.parseDouble(data[0]);
-                double x = Double.parseDouble(data[1]);
-                double sigma = Double.parseDouble(data[2]);
-                double xp = Double.parseDouble(data[3]);
-                double rms_xp = Double.parseDouble(data[4]);
-                double alpha = Double.parseDouble(data[5]);
-                double emit_n = Double.parseDouble(data[6]);
+                int count = 0;
+                
+                double pos = Double.parseDouble(line.substring(count, count + 14));
+                count = count + 14;
+                double x = Double.parseDouble(line.substring(count, count + 14));
+                count = count + 14;                
+                double sigma = Double.parseDouble(line.substring(count, count + 14));
+                count = count + 14;
+                double xp = Double.parseDouble(line.substring(count, count + 14));
+                count = count + 14;
+                double rms_xp = Double.parseDouble(line.substring(count, count + 14));
+                count = count + 14;
+                double alpha = Double.parseDouble(line.substring(count, count + 14));
+                count = count + 14;
+                double emit_n = Double.parseDouble(line.substring(count, count + 14));
+                System.out.println("pos = " + pos + " x = " + x + ", emit_n = " + emit_n);
                 
                 //TODO Element name, may need to modify IMPACT to accommodate this
-                String elemName = "";
+                String elemName = "xyz";
                 // define a device object
                 Device dev = new Device();
                 dev.setElementName(elemName);
@@ -124,6 +130,15 @@ public class ImpactParser {
                 beamParameterPropCollection.add(xp_prop);
                 emit_prop.setBeamParameterDouble(emit_n);
                 beamParameterPropCollection.add(emit_prop);
+
+                beamParams.setBeamParameterPropCollection(beamParameterPropCollection);
+                // set beam parameters to the corresponding element
+                dev.setBeamParams(beamParams);
+
+                dev.setElementPropCollection(elementPropCollection);
+                
+                devices.add(dev);
+
             }
 
         } catch (FileNotFoundException e) {

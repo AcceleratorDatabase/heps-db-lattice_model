@@ -35,7 +35,7 @@ public class MadxParser extends Model2DB {
     String AcceleratorName = "";
     String MODEL = "MAD-X";
 
-    ArrayList<Device> devices = new ArrayList<>();        
+//    ArrayList<Device> devices = new ArrayList<>();        
 
     public MadxParser() {
         setModelName(MODEL);
@@ -265,14 +265,6 @@ public class MadxParser extends Model2DB {
             System.out.println("File reading error: " + file.getPath());
             System.out.println(e.toString());
         }
-    }
-    
-    /**
-     * Return all devices (modeling elements)
-     * @return all devices 
-     */
-    public ArrayList<Device> getDevices() {
-        return devices;
     }
     
     /**

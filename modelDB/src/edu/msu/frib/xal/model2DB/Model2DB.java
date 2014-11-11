@@ -36,6 +36,14 @@ public abstract class Model2DB {
         return modelName;
     }
     
+    /**
+     * Return all devices (modeling elements)
+     * @return all devices 
+     */
+    public ArrayList<Device> getDevices() {
+        return devices;
+    }
+    
     public void saveModel2DB() {
         ModelAPI theModel = new ModelAPI();
 
