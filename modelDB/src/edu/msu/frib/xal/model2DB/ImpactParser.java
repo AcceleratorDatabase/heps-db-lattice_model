@@ -12,6 +12,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.StringTokenizer;
 import org.openepics.model.entity.BeamParameterProp;
 import org.openepics.model.entity.ElementProp;
@@ -30,12 +31,20 @@ public class ImpactParser  extends Model2DB {
     String xFile = "fort.24";
     String yFile = "fort.25";
     String zFile = "fort.26";
+    
+    HashMap<String, Device> elems = new HashMap<>();
         
     public void parseIMPACT(){
         
         parseRMS(new File(xFile), 1);
         parseRMS(new File(yFile), 2);
         parseRMS(new File(zFile), 3);
+
+        // get all Devices from elems and put into devices
+        elems.keySet().stream().forEach((key) -> {
+            devices.add(elems.get(key));
+        });
+
     }
     
     /**
@@ -46,7 +55,10 @@ public class ImpactParser  extends Model2DB {
     private final void parseRMS(File file, int ind) {
         try {
             BufferedReader in = new BufferedReader(new InputStreamReader(new FileInputStream(file)));
-
+            
+            // temporary name counter
+            int name_cnt = 0;
+            
             String line = "";
             ArrayList<String> elemLines = new ArrayList<>();
             while ((line = in.readLine()) != null) {
@@ -68,11 +80,19 @@ public class ImpactParser  extends Model2DB {
                 System.out.println("pos = " + pos + " x = " + x + ", emit_n = " + emit_n);
                 
                 //TODO Element name, may need to modify IMPACT to accommodate this
-                String elemName = "xyz";
-                // define a device object
-                Device dev = new Device();
-                dev.setElementName(elemName);
-                dev.setPos(pos);
+                String elemName = "xyz" + name_cnt;
+                name_cnt++;
+                
+                Device dev = null;
+                if (elems.containsKey(elemName)) {
+                    dev = elems.get(elemName);
+                } else {
+                // define a new device object
+                    dev = new Device();
+                    dev.setElementName(elemName);
+                    dev.setPos(pos);
+                    elems.put(elemName, dev);
+                }
                 
         	BeamParams beamParams = new BeamParams();
                 
@@ -137,10 +157,9 @@ public class ImpactParser  extends Model2DB {
 
                 dev.setElementPropCollection(elementPropCollection);
                 
-                devices.add(dev);
-
+//                devices.add(dev);
             }
-
+            
         } catch (FileNotFoundException e) {
             System.out.println("Cannot find file: " + file.getPath());
             System.out.println(e.toString());
