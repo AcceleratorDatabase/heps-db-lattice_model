@@ -44,10 +44,14 @@ public abstract class Model2DB {
         return devices;
     }
     
+    protected void setDevices(ArrayList<Device> devs) {
+        devices = devs;
+    }
+    
     public void saveModel2DB() {
         ModelAPI theModel = new ModelAPI();
-
+        
         // saving model data
-        theModel.setModel(accName, "Model: " + modelName, sequenceName, devices);        
+        theModel.setModel(getAcceleratorName(), "Model: " + modelName, sequenceName, devices);        
     }
 }

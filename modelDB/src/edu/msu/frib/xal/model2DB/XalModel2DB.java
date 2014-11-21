@@ -14,6 +14,7 @@ import org.openepics.model.entity.ElementProp;
 import xal.model.IElement;
 import xal.model.probe.EnvelopeProbe;
 import xal.model.probe.traj.EnvelopeProbeState;
+import xal.model.probe.traj.ProbeState;
 import xal.model.probe.traj.Trajectory;
 import xal.sim.scenario.Scenario;
 import xal.smf.AcceleratorNode;
@@ -40,10 +41,11 @@ public class XalModel2DB extends Model2DB {
         setModelName(MODEL);        
     }
     
-    public XalModel2DB(AcceleratorSeq accSeq, Scenario model) {
+    public XalModel2DB(String accName, AcceleratorSeq accSeq, Scenario model) {
         setModelName(MODEL);
         this.accSeq = accSeq;
         this.model = model;
+        setAcceleratorName(accName);
         sequenceName = accSeq.getId();
         modelData();
     }
@@ -66,6 +68,13 @@ public class XalModel2DB extends Model2DB {
         while (it.hasNext()) {
             AcceleratorNode node = it.next();
             List<IElement> states = model.elementsMappedTo(node);
+//            EnvelopeProbeState[] iStates = (EnvelopeProbeState[]) traj.statesForElement(node.getId());
+//            System.out.println("node = " + node.getId());
+            
+            
+            
+            
+            
             Iterator<IElement> it1 = states.iterator();
             while (it1.hasNext()) {
                 IElement elem = it1.next();
@@ -219,6 +228,7 @@ public class XalModel2DB extends Model2DB {
                 devices.add(dev);
             }
         }
+        setDevices(devices);
     }
     
     public void setSequence(AcceleratorSeq seq) {

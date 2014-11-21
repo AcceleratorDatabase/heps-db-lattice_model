@@ -90,6 +90,7 @@ public class MadxParser extends Model2DB {
                         case "TITLE":
                             st.nextToken();
                             AcceleratorName = st.nextToken().replace("\"", "");
+                            setAcceleratorName(AcceleratorName);
                             break;
                         default:
                             break;

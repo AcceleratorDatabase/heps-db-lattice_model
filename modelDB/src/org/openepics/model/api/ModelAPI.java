@@ -308,6 +308,8 @@ public class ModelAPI {
                 slice_id = 1;
             }
             
+            System.out.println("Acc name = " + acc_name + ", Element name = " + elementName);
+            
             Element element = null;
             // If this is for XAL Model, use the Element_id; if this is MADX or other models, use the element's alias name
             if (model_name.contains("XAL")) {
@@ -375,7 +377,9 @@ public class ModelAPI {
 
                 count++;
 //                em.persist(element);
-            } 
+            } else {
+                System.out.println("Cannot find Element: " + elementName);
+            }
         }
         em.getTransaction().commit();
         System.out.println(count + " elements' properties/beam properties saved to the DB.");
