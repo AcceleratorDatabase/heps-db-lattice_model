@@ -68,25 +68,27 @@ public class XalModel2DB extends Model2DB {
         while (it.hasNext()) {
             AcceleratorNode node = it.next();
             List<IElement> states = model.elementsMappedTo(node);
-//            EnvelopeProbeState[] iStates = (EnvelopeProbeState[]) traj.statesForElement(node.getId());
+            List<EnvelopeProbeState> iStates = traj.statesForElement(node.getId());
 //            System.out.println("node = " + node.getId());
             
+            Iterator<EnvelopeProbeState> it2 = iStates.iterator();            
             
-            
-            
-            
-            Iterator<IElement> it1 = states.iterator();
-            while (it1.hasNext()) {
-                IElement elem = it1.next();
-                EnvelopeProbeState state = (EnvelopeProbeState) traj.stateForElement(elem.getId());
+//            Iterator<IElement> it1 = states.iterator();
+//            while (it1.hasNext()) {
+            while (it2.hasNext()) {
+//                IElement elem = it1.next();
+//                EnvelopeProbeState state = (EnvelopeProbeState) traj.stateForElement(elem.getId());
+                EnvelopeProbeState state = it2.next();
                 double s = state.getPosition();
                 Twiss[] twiss = state.twissParameters();
                 
                 Device dev = new Device();
                 dev.setElementName(state.getElementId());
-                dev.setPos(s);
-                dev.setElementType(node.getType());
-                dev.setLen(elem.getLength());
+//                dev.setPos(s);
+//                dev.setElementType(node.getType());
+                
+                
+//                dev.setLen(elem.getLength());
                 dev.setBeamlineSequenceName(sequenceName);
                 
                 ArrayList beamParameterPropCollection = new ArrayList();
