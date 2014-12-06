@@ -13,6 +13,8 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
+import java.util.Set;
 import java.util.StringTokenizer;
 import org.openepics.model.entity.BeamParameterProp;
 import org.openepics.model.entity.ElementProp;
@@ -41,10 +43,17 @@ public class ImpactParser  extends Model2DB {
         parseRMS(new File(zFile), 3);
 
         // get all Devices from elems and put into devices
-        elems.keySet().stream().forEach((key) -> {
+        // for Java 8
+//        elems.keySet().stream().forEach((key) -> {
+//            devices.add(elems.get(key));
+//        });
+        // for Java 7 or earlier
+        Set<String> keySet = elems.keySet();
+        Iterator<String> it = keySet.iterator();
+        while (it.hasNext()) {
+            String key = it.next();
             devices.add(elems.get(key));
-        });
-
+        }
     }
     
     /**
