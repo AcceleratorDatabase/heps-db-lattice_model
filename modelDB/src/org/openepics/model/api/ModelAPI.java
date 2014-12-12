@@ -308,7 +308,7 @@ public class ModelAPI {
                 slice_id = 1;
             }
             
-            System.out.println("Acc name = " + acc_name + ", Element name = " + elementName);
+            // System.out.println("Acc name = " + acc_name + ", Element name = " + elementName);
             
             Element element = null;
             // If this is for XAL Model, use the Element_id; if this is MADX or other models, use the element's alias name
@@ -346,11 +346,9 @@ public class ModelAPI {
                 em.persist(beamParameter);
 
                 int max_slice_id = beamParams.getMaxSliceId();
-                System.out.println("max_slice_id = " + max_slice_id);
                 for (int i = 0; i <= max_slice_id; i++) {
                     // set slice_id
                     beamParameter.setSliceId(i);
-                    System.out.println("This is slice #" + i);
                     Collection<BeamParameterProp> beamParameterPropCollection = beamParams.getBeamParameterPropCollection(i);
                     Iterator bppit = beamParameterPropCollection.iterator();
                     while (bppit.hasNext()) {
