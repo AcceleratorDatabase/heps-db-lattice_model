@@ -313,7 +313,13 @@ public class ModelAPI {
             Element element = null;
             // If this is for XAL Model, use the Element_id; if this is MADX or other models, use the element's alias name
             if (model_name.contains("XAL")) {
-                element = elementAPI.getElementByName(acc_name, elementName);
+                // handle RF Gap 
+                if (elementName.contains("RG")) {
+                    element = elementAPI.getElementByName(acc_name, elementName.substring(0, elementName.indexOf("RG")-1));
+                } else {
+                
+                    element = elementAPI.getElementByName(acc_name, elementName);
+                }
             } else {
                 element = elementAPI.getElementByAliasName(acc_name, elementName);  
             }
