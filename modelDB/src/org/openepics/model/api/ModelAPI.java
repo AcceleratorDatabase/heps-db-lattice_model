@@ -314,6 +314,9 @@ public class ModelAPI {
             // If this is for XAL Model, use the Element_id; if this is MADX or other models, use the element's alias name
             if (model_name.contains("XAL")) {
                 // handle RF Gap 
+                // Here we rely on naming convention. A more reliable way should be loading the accelerator object and find
+                // the RF Gap's parent node; however, that also has its own flaw because the XDXF file might be out of sync from 
+                // the DB record.
                 if (elementName.contains("RG")) {
                     element = elementAPI.getElementByName(acc_name, elementName.substring(0, elementName.indexOf("RG")-1));
                 } else {
