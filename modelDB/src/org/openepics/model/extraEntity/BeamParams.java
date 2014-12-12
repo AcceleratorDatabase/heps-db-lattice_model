@@ -5,6 +5,7 @@
 package org.openepics.model.extraEntity;
 
 import java.util.Collection;
+import java.util.HashMap;
 import org.openepics.model.entity.BeamParameterProp;
 
 /**
@@ -13,7 +14,8 @@ import org.openepics.model.entity.BeamParameterProp;
  */
 public class BeamParams {
     private String particleName;
-    private Collection<BeamParameterProp> beamParameterPropCollection;
+    private HashMap<Integer,Collection<BeamParameterProp>> beamParameterPropCollections = new HashMap<>();
+    private int max_slice_id = 0;
 
     public String getParticleName() {
         return particleName;
@@ -23,13 +25,21 @@ public class BeamParams {
         this.particleName = particleName;
     }
 
-    public Collection<BeamParameterProp> getBeamParameterPropCollection() {
-        return beamParameterPropCollection;
+    public Collection<BeamParameterProp> getBeamParameterPropCollection(int slice_id) {
+        return beamParameterPropCollections.get(slice_id);
     }
 
-    public void setBeamParameterPropCollection(Collection<BeamParameterProp> beamParameterPropCollection) {
-        this.beamParameterPropCollection = beamParameterPropCollection;
+    public void setBeamParameterPropCollection(Collection<BeamParameterProp> beamParameterPropCollection, int slice_id) {
+        this.beamParameterPropCollections.put(slice_id, beamParameterPropCollection);
+        if (slice_id > max_slice_id)
+            max_slice_id = slice_id;
     }
     
-    
+    /**
+     * Get the maximum slice ID
+     * @return maximum slice ID
+     */
+    public int getMaxSliceId() {
+        return max_slice_id;
+    }
 }

@@ -232,7 +232,11 @@ public class MadxParser extends Model2DB {
                 energy.setPropCategory("location");
         	beamParameterPropCollection.add(energy);                  
                 
-                beamParams.setBeamParameterPropCollection(beamParameterPropCollection);
+                if (elemName.contains("_A")) {
+                    beamParams.setBeamParameterPropCollection(beamParameterPropCollection, 1);
+                } else {
+                    beamParams.setBeamParameterPropCollection(beamParameterPropCollection, 0);
+                }
                 // set beam parameters to the corresponding element
                 dev.setBeamParams(beamParams);
                 

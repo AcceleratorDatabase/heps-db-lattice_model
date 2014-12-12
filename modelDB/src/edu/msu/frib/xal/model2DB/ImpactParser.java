@@ -160,7 +160,7 @@ public class ImpactParser  extends Model2DB {
                 emit_prop.setBeamParameterDouble(emit_n);
                 beamParameterPropCollection.add(emit_prop);
 
-                beamParams.setBeamParameterPropCollection(beamParameterPropCollection);
+                beamParams.setBeamParameterPropCollection(beamParameterPropCollection, 0);
                 // set beam parameters to the corresponding element
                 dev.setBeamParams(beamParams);
 

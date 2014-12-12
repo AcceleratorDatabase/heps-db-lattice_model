@@ -343,18 +343,23 @@ public class ModelAPI {
                 beamParameter.setElementId(element);
                 beamParameter.setModelId(m);
                 beamParameter.setParticleType(pt);
-                // set slice_id
-                beamParameter.setSliceId(slice_id);
                 em.persist(beamParameter);
 
-                Collection<BeamParameterProp> beamParameterPropCollection = beamParams.getBeamParameterPropCollection();
-                Iterator bppit = beamParameterPropCollection.iterator();
-                while (bppit.hasNext()) {
-                    BeamParameterProp beamParameterProp = (BeamParameterProp) bppit.next();
-                    beamParameterProp.setBeamParameterId(beamParameter);
-                    em.persist(beamParameterProp);
+                int max_slice_id = beamParams.getMaxSliceId();
+                System.out.println("max_slice_id = " + max_slice_id);
+                for (int i = 0; i <= max_slice_id; i++) {
+                    // set slice_id
+                    beamParameter.setSliceId(i);
+                    System.out.println("This is slice #" + i);
+                    Collection<BeamParameterProp> beamParameterPropCollection = beamParams.getBeamParameterPropCollection(i);
+                    Iterator bppit = beamParameterPropCollection.iterator();
+                    while (bppit.hasNext()) {
+                        BeamParameterProp beamParameterProp = (BeamParameterProp) bppit.next();
+                        beamParameterProp.setBeamParameterId(beamParameter);
+                        em.persist(beamParameterProp);
+                    }
                 }
-
+                
                 Collection<ElementProp> elementPropCollection = device.getElementPropCollection();
                 Iterator epit = elementPropCollection.iterator();
                 while (epit.hasNext()) {

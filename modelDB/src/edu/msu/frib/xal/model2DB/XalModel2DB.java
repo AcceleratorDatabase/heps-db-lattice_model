@@ -67,14 +67,22 @@ public class XalModel2DB extends Model2DB {
         Iterator<AcceleratorNode> it = nodes.iterator();
         while (it.hasNext()) {
             AcceleratorNode node = it.next();
-            List<IElement> states = model.elementsMappedTo(node);
-            List<EnvelopeProbeState> iStates = traj.statesForElement(node.getId());
+//            List<IElement> states = model.elementsMappedTo(node);
+            
+            String node_name = node.getId();
+            List<EnvelopeProbeState> iStates = traj.statesForElement(node_name);
 //            System.out.println("node = " + node.getId());
+            // for each accelerator node, there's a device
+            Device dev = new Device();
+            dev.setElementName(node_name);
             
             Iterator<EnvelopeProbeState> it2 = iStates.iterator();            
             
 //            Iterator<IElement> it1 = states.iterator();
 //            while (it1.hasNext()) {
+            int slice_cnt = 0;
+            BeamParams beamParams = new BeamParams();
+            
             while (it2.hasNext()) {
 //                IElement elem = it1.next();
 //                EnvelopeProbeState state = (EnvelopeProbeState) traj.stateForElement(elem.getId());
@@ -82,8 +90,6 @@ public class XalModel2DB extends Model2DB {
                 double s = state.getPosition();
                 Twiss[] twiss = state.twissParameters();
                 
-                Device dev = new Device();
-                dev.setElementName(state.getElementId());
 //                dev.setPos(s);
 //                dev.setElementType(node.getType());
                 
@@ -92,7 +98,7 @@ public class XalModel2DB extends Model2DB {
                 dev.setBeamlineSequenceName(sequenceName);
                 
                 ArrayList beamParameterPropCollection = new ArrayList();
-                BeamParams beamParams = new BeamParams();
+                
                 ArrayList elementPropCollection = new ArrayList();
                 
                 if (s > length)
@@ -197,7 +203,7 @@ public class XalModel2DB extends Model2DB {
                 energy.setPropCategory("location");
                 beamParameterPropCollection.add(energy);
 
-                beamParams.setBeamParameterPropCollection(beamParameterPropCollection);
+                beamParams.setBeamParameterPropCollection(beamParameterPropCollection, slice_cnt);
                 dev.setBeamParams(beamParams);
                 
                 // element properties
@@ -226,9 +232,10 @@ public class XalModel2DB extends Model2DB {
                 
                 dev.setElementPropCollection(elementPropCollection);
                 
-                // add this device to the device collection
-                devices.add(dev);
+                slice_cnt++;
             }
+            // add this device to the device collection
+            devices.add(dev);
         }
         setDevices(devices);
     }
