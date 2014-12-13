@@ -355,6 +355,7 @@ public class ModelAPI {
                 em.persist(beamParameter);
 
                 int max_slice_id = beamParams.getMaxSliceId();
+//                System.out.println(elementName + " has max_slice_id = " + max_slice_id);
                 for (int i = 0; i <= max_slice_id; i++) {
                     // set slice_id
                     beamParameter.setSliceId(i);

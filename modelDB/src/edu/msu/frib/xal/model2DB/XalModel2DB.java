@@ -71,12 +71,18 @@ public class XalModel2DB extends Model2DB {
             
             String node_name = node.getId();
             List<EnvelopeProbeState> iStates = traj.statesForElement(node_name);
-//            System.out.println("node = " + node.getId());
             // for each accelerator node, there's a device
             Device dev = new Device();
             dev.setElementName(node_name);
+//                dev.setPos(s);
+//                dev.setElementType(node.getType());
+                
+                
+//                dev.setLen(elem.getLength());
+            dev.setBeamlineSequenceName(sequenceName);
             
             Iterator<EnvelopeProbeState> it2 = iStates.iterator();            
+//            System.out.println("node = " + node.getId() + " has " + iStates.size() + " slices.");
             
 //            Iterator<IElement> it1 = states.iterator();
 //            while (it1.hasNext()) {
@@ -89,14 +95,7 @@ public class XalModel2DB extends Model2DB {
                 EnvelopeProbeState state = it2.next();
                 double s = state.getPosition();
                 Twiss[] twiss = state.twissParameters();
-                
-//                dev.setPos(s);
-//                dev.setElementType(node.getType());
-                
-                
-//                dev.setLen(elem.getLength());
-                dev.setBeamlineSequenceName(sequenceName);
-                
+                               
                 ArrayList beamParameterPropCollection = new ArrayList();
                 
                 ArrayList elementPropCollection = new ArrayList();
@@ -211,6 +210,8 @@ public class XalModel2DB extends Model2DB {
                     case "SOL":
                     case "QH":
                     case "QV":
+                    case "DH":
+                    case "DV":
                     case "DCH":
                     case "DCV":
                         ElementProp B = new ElementProp();
