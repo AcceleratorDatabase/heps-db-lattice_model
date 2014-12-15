@@ -169,6 +169,13 @@ public class MadxParser extends Model2DB {
         	ArrayList<ElementProp> elementPropCollection = new ArrayList<>();
                 
                 // fill in parameters
+                BeamParameterProp model_s = new BeamParameterProp();
+        	model_s.setPropertyName("s");
+        	model_s.setBeamParameterDouble(pos);
+                model_s.setPropertyDatatype("double");
+                model_s.setPropCategory("phaseMean");
+                beamParameterPropCollection.add(model_s);
+
                 BeamParameterProp x = new BeamParameterProp();
         	x.setPropertyName("x");
         	x.setBeamParameterDouble(Double.parseDouble(propMap.get("X")));

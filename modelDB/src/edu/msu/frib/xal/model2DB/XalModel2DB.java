@@ -104,6 +104,12 @@ public class XalModel2DB extends Model2DB {
                     length = s;
                 
                 // beam parameters
+                BeamParameterProp model_s = new BeamParameterProp();
+                model_s.setPropertyName("s");
+                model_s.setBeamParameterDouble(state.getPosition());
+                model_s.setPropertyDatatype("double");
+                model_s.setPropCategory("location");
+                beamParameterPropCollection.add(model_s);
                 BeamParameterProp x = new BeamParameterProp();
                 x.setPropertyName("x");
                 x.setBeamParameterDouble(state.phaseMean().getx());
