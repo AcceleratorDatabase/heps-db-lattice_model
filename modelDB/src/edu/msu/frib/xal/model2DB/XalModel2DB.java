@@ -98,8 +98,6 @@ public class XalModel2DB extends Model2DB {
                                
                 ArrayList beamParameterPropCollection = new ArrayList();
                 
-                ArrayList elementPropCollection = new ArrayList();
-                
                 if (s > length)
                     length = s;
                 
@@ -209,38 +207,40 @@ public class XalModel2DB extends Model2DB {
                 beamParameterPropCollection.add(energy);
 
                 beamParams.setBeamParameterPropCollection(beamParameterPropCollection, slice_cnt);
-                dev.setBeamParams(beamParams);
-                
-                // element properties
-                switch (node.getType()) {
-                    case "SOL":
-                    case "QH":
-                    case "QV":
-                    case "DH":
-                    case "DV":
-                    case "DCH":
-                    case "DCV":
-                        ElementProp B = new ElementProp();
-                        B.setElementPropName("magFld");
-                        B.setElementPropDouble(((Electromagnet)node).getDfltField());
-                        elementPropCollection.add(B);
-                        break;
-                    case "RG":
-                        ElementProp ph = new ElementProp();
-                        ph.setElementPropName("phase");
-                        ph.setElementPropDouble(((RfCavity) (node.getParent())).getDfltAvgCavPhase());
-                        elementPropCollection.add(ph);
-                        ElementProp amp = new ElementProp();
-                        amp.setElementPropName("amp");
-                        amp.setElementPropDouble(((RfCavity) (node.getParent())).getDfltCavAmp());
-                        elementPropCollection.add(amp);
-                        break;
-                }
-                
-                dev.setElementPropCollection(elementPropCollection);
                 
                 slice_cnt++;
             }
+            ArrayList elementPropCollection = new ArrayList();
+
+            // element properties
+            switch (node.getType()) {
+                case "SOL":
+                case "QH":
+                case "QV":
+                case "DH":
+                case "DV":
+                case "DCH":
+                case "DCV":
+                    ElementProp B = new ElementProp();
+                    B.setElementPropName("magFld");
+                    B.setElementPropDouble(((Electromagnet) node).getDfltField());
+                    elementPropCollection.add(B);
+                    break;
+                case "RG":
+                    ElementProp ph = new ElementProp();
+                    ph.setElementPropName("phase");
+                    ph.setElementPropDouble(((RfCavity) (node.getParent())).getDfltAvgCavPhase());
+                    elementPropCollection.add(ph);
+                    ElementProp amp = new ElementProp();
+                    amp.setElementPropName("amp");
+                    amp.setElementPropDouble(((RfCavity) (node.getParent())).getDfltCavAmp());
+                    elementPropCollection.add(amp);
+                    break;
+            }
+
+            dev.setBeamParams(beamParams);
+            dev.setElementPropCollection(elementPropCollection);
+
             // add this device to the device collection
             devices.add(dev);
         }

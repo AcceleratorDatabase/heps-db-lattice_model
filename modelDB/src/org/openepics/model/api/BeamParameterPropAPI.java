@@ -47,9 +47,9 @@ public class BeamParameterPropAPI {
             String[] stringParams = new String[bppList.size()];
             Integer[] intParams = new Integer[bppList.size()];
             Double[] doubleParams = new Double[bppList.size()];
-            
+
             int switcher = -1;
-            
+
             switch (bppList.get(0).getPropertyDatatype().toLowerCase()) {
                 case "string":
                     switcher = 0;
@@ -58,7 +58,7 @@ public class BeamParameterPropAPI {
                 case "double":
                     switcher = 2;
             }
-            
+
             for (int i = 0; i < bppList.size(); i++) {
 
                 BeamParameterProp bpp = bppList.get(i);
@@ -71,21 +71,21 @@ public class BeamParameterPropAPI {
                         doubleParams[bpp.getBeamParameterId().getSliceId()] = bpp.getBeamParameterDouble();
                 }
             }
-                switch (switcher) {
-                    case 0:
-                        return stringParams;
-                    case 1:
-                        return intParams;
-                    case 2:
-                        return doubleParams;
-                }
-            
+            switch (switcher) {
+                case 0:
+                    return stringParams;
+                case 1:
+                    return intParams;
+                case 2:
+                    return doubleParams;
+            }
+
         }
         return null;
     }
-    
+
     public Object[] getBeamParameterPropFor(Element elem, String prop_name) {
-          Query q;
+        Query q;
         q = em.createQuery("SELECT bpp FROM BeamParameterProp bpp WHERE bpp.beamParameterId.elementId=:elem "
                 + "AND  bpp.propertyName=:propName").setParameter("elem", elem).setParameter("propName", prop_name);
         List<BeamParameterProp> bppList = q.getResultList();
@@ -95,9 +95,9 @@ public class BeamParameterPropAPI {
             String[] stringParams = new String[bppList.size()];
             Integer[] intParams = new Integer[bppList.size()];
             Double[] doubleParams = new Double[bppList.size()];
-            
+
             int switcher = -1;
-            
+
             switch (bppList.get(0).getPropertyDatatype().toLowerCase()) {
                 case "string":
                     switcher = 0;
@@ -106,7 +106,7 @@ public class BeamParameterPropAPI {
                 case "double":
                     switcher = 2;
             }
-            
+
             for (int i = 0; i < bppList.size(); i++) {
 
                 BeamParameterProp bpp = bppList.get(i);
@@ -119,21 +119,23 @@ public class BeamParameterPropAPI {
                         doubleParams[bpp.getBeamParameterId().getSliceId()] = bpp.getBeamParameterDouble();
                 }
             }
-                switch (switcher) {
-                    case 0:
-                        return stringParams;
-                    case 1:
-                        return intParams;
-                    case 2:
-                        return doubleParams;
-                }
-            
+            switch (switcher) {
+                case 0:
+                    return stringParams;
+                case 1:
+                    return intParams;
+                case 2:
+                    return doubleParams;
+            }
+
         }
-        return null;      
+        return null;
     }
 
     /**
-     * get beam parameter property for specified model ID, element name and property name
+     * get beam parameter property for specified model ID, element name and
+     * property name
+     *
      * @param model_id model ID
      * @param elem_name element name
      * @param prop_name property name
@@ -152,9 +154,9 @@ public class BeamParameterPropAPI {
             String[] stringParams = new String[bppList.size()];
             Integer[] intParams = new Integer[bppList.size()];
             Double[] doubleParams = new Double[bppList.size()];
-            
+
             int switcher = -1;
-            
+
             switch (bppList.get(0).getPropertyDatatype().toLowerCase()) {
                 case "string":
                     switcher = 0;
@@ -163,7 +165,7 @@ public class BeamParameterPropAPI {
                 case "double":
                     switcher = 2;
             }
-            
+
             for (int i = 0; i < bppList.size(); i++) {
 
                 BeamParameterProp bpp = bppList.get(i);
@@ -176,21 +178,23 @@ public class BeamParameterPropAPI {
                         doubleParams[bpp.getBeamParameterId().getSliceId()] = bpp.getBeamParameterDouble();
                 }
             }
-                switch (switcher) {
-                    case 0:
-                        return stringParams;
-                    case 1:
-                        return intParams;
-                    case 2:
-                        return doubleParams;
-                }
-            
+            switch (switcher) {
+                case 0:
+                    return stringParams;
+                case 1:
+                    return intParams;
+                case 2:
+                    return doubleParams;
+            }
+
         }
         return null;
     }
-    
+
     /**
-     * get beam parameter property for specified model ID, element name and property name
+     * get beam parameter property for specified model ID, element name and
+     * property name
+     *
      * @param model_id model ID
      * @param elem element
      * @param prop_name property name
@@ -203,51 +207,59 @@ public class BeamParameterPropAPI {
                 + "AND bpp.beamParameterId.modelId.modelId=:modelId ").setParameter("elem", elem)
                 .setParameter("propName", prop_name).setParameter("modelId", model_id);
         List<BeamParameterProp> bppList = q.getResultList();
-        
+
         if (bppList.isEmpty()) {
             return null;
         } else {
             String[] stringParams = new String[bppList.size()];
             Integer[] intParams = new Integer[bppList.size()];
             Double[] doubleParams = new Double[bppList.size()];
-            
+
             int switcher = -1;
-            
+
             switch (bppList.get(0).getPropertyDatatype().toLowerCase()) {
                 case "string":
                     switcher = 0;
+                    break;
                 case "int":
                     switcher = 1;
+                    break;
                 case "double":
                     switcher = 2;
+                    break;
             }
-            
+
             for (int i = 0; i < bppList.size(); i++) {
 
                 BeamParameterProp bpp = bppList.get(i);
                 switch (switcher) {
                     case 0:
                         stringParams[bpp.getBeamParameterId().getSliceId()] = bpp.getBeamParameterString();
+                        break;
                     case 1:
                         intParams[bpp.getBeamParameterId().getSliceId()] = bpp.getBeamParameterInt();
+                        break;
                     case 2:
                         doubleParams[bpp.getBeamParameterId().getSliceId()] = bpp.getBeamParameterDouble();
+                        break;
                 }
             }
-                switch (switcher) {
-                    case 0:
-                        return stringParams;
-                    case 1:
-                        return intParams;
-                    case 2:
-                        return doubleParams;
-                }
-            
+            switch (switcher) {
+                case 0:
+                    return stringParams;
+                case 1:
+                    return intParams;
+                case 2:
+                    return doubleParams;
+            }
+
         }
         return null;
     }
+
     /**
      * get transfer matrix for the specified model ID and element name
+     *
      * @param model_id model ID
      * @param elem_name element name
      * @return transfer matrix in a String
@@ -263,15 +275,14 @@ public class BeamParameterPropAPI {
         } else {
             BeamParameterProp bpp = bppList.get(0);
             return bpp.getTrnsferMatrix();
-        }        
+        }
     }
-    
+
 //    public void setBeamParameterPropFor(String elem_name, int model_id, String prop_name, Object prop_val) {
 //        // TODO
 //        // determine object type and insert accordingly
 //        
 //    }
-
     /**
      * Set beam parameter property for the specified element.
      *

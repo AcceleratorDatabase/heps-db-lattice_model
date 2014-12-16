@@ -346,17 +346,18 @@ public class ModelAPI {
 //                element.setInsertDate(new Date());
 
                 BeamParams beamParams = device.getBeamParams();
-                BeamParameter beamParameter = new BeamParameter();
-                ParticleType pt = new ParticleTypeAPI().getParticleType(beamParams.getParticleName());
-
-                beamParameter.setElementId(element);
-                beamParameter.setModelId(m);
-                beamParameter.setParticleType(pt);
-                em.persist(beamParameter);
 
                 int max_slice_id = beamParams.getMaxSliceId();
 //                System.out.println(elementName + " has max_slice_id = " + max_slice_id);
+                
+                // loop through all slices
                 for (int i = 0; i <= max_slice_id; i++) {
+                    BeamParameter beamParameter = new BeamParameter();
+                    ParticleType pt = new ParticleTypeAPI().getParticleType(beamParams.getParticleName());
+
+                    beamParameter.setElementId(element);
+                    beamParameter.setModelId(m);
+                    beamParameter.setParticleType(pt);
                     // set slice_id
                     beamParameter.setSliceId(i);
                     Collection<BeamParameterProp> beamParameterPropCollection = beamParams.getBeamParameterPropCollection(i);
@@ -366,6 +367,7 @@ public class ModelAPI {
                         beamParameterProp.setBeamParameterId(beamParameter);
                         em.persist(beamParameterProp);
                     }
+                    em.persist(beamParameter);
                 }
                 
                 Collection<ElementProp> elementPropCollection = device.getElementPropCollection();
