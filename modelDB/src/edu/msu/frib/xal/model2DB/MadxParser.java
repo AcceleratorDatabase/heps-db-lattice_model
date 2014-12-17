@@ -58,6 +58,8 @@ public class MadxParser extends Model2DB {
             ArrayList<String> elemLines = new ArrayList<>();
             StringTokenizer st = null;
             String[] paramLabels = null;
+            
+            HashMap<String, Device> deviceNameMap = new HashMap<>();
 
             // first read in all lines, find out general info and element lines
             while ((line=in.readLine()) != null) {
@@ -152,16 +154,23 @@ public class MadxParser extends Model2DB {
                     i++;
                 }
                 
-                // define a device object
-                Device dev = new Device();
-                dev.setElementName(elemName);
-                dev.setPos(pos);
-                dev.setLen(len);
-                dev.setElementType(type);
-                dev.setBeamlineSequenceName(sequenceName);
-        	BeamParams beamParams = new BeamParams();
+                Device dev;
+                BeamParams beamParams;
+                if (elemName.contains("_A") && deviceNameMap.containsKey(elemName)) {
+                    dev = deviceNameMap.get(elemName);
+                    beamParams = dev.getBeamParams();
+                } else {
+                    // define a device object
+                    dev = new Device();
+                    dev.setElementName(elemName);
+                    dev.setPos(pos);
+                    dev.setLen(len);
+                    dev.setElementType(type);
+                    dev.setBeamlineSequenceName(sequenceName);
+                    beamParams = new BeamParams(); 
+                }
                 
-                
+              
                 // beam parameters
         	ArrayList<BeamParameterProp> beamParameterPropCollection = new ArrayList<>();
                 
