@@ -156,8 +156,8 @@ public class MadxParser extends Model2DB {
                 
                 Device dev;
                 BeamParams beamParams;
-                if (elemName.contains("_A") && deviceNameMap.containsKey(elemName)) {
-                    dev = deviceNameMap.get(elemName);
+                if (elemName.contains("_A") && deviceNameMap.containsKey(elemName.replace("_A", ""))) {
+                    dev = deviceNameMap.get(elemName.replace("_A", ""));
                     beamParams = dev.getBeamParams();
                 } else {
                     // define a device object
@@ -168,6 +168,7 @@ public class MadxParser extends Model2DB {
                     dev.setElementType(type);
                     dev.setBeamlineSequenceName(sequenceName);
                     beamParams = new BeamParams(); 
+                    deviceNameMap.put(elemName, dev);
                 }
                 
               
